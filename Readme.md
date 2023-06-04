@@ -127,3 +127,73 @@ public static IServiceCollection AddPostgres(this IServiceCollection services, I
 ```
 
 If everything went well app should start with no errors and in the logs there should be some DB queries executed, which is exactly what we want since it means that the connection with DB has been successfully established.
+
+# Adding User Entity
+
+An **entity** refers to a class or object that represents a domain concept or a data structure. Entities typically map to tables in a database or other data storage systems with the help of ORMs: EF Core in our case. They encapsulate the properties and behaviors related to a specific entity in the system, such as a user, product, order, or any other meaningful concept in the domain.
+
+As it’s gonna be the first entity in the project, in Taskophobia.Core create directory Entities in which all entities will be defined.
+
+Next, I’ll create ValueObject directory for **value objects**: a type that represents a concept in the domain with its own attributes but does not have an identity of its own. Unlike entities, which are identified by their unique identifiers, value objects are defined by the values they contain. They are immutable. In the case of value-objects we can use implicit conversion operators so it will make easier to implicitly convert between ex. Email and string (see completed Email value object below).
+
+At this point some values can not fit domain rules ex. email is not a valid email. For that I’ll use domain exceptions:
+
+1. Create abstract **************\*\***************CustomException**************\*\*************** class which derives from the built-in ********\*\*********Exception********\*\********* class. This will be helpful later on when we’ll implement exception handling.
+
+```csharp
+public abstract class CustomException : Exception
+{
+    protected CustomException(string message) : base(message)
+    {
+    }
+}
+```
+
+1. Exceptions will look like this
+
+```csharp
+public sealed class InvalidEmailException : CustomException
+{
+    public InvalidEmailException(string emailValue) : base($"{emailValue} is not a valid email.")
+    {
+    }
+}
+```
+
+1. We can throw them once we encounter some clash between data provided and business/domain requirements and rules.
+
+```csharp
+public sealed record Email
+{
+    public Email(string value)
+    {
+        if (string.IsNullOrEmpty(value) || !IsValid(value)) throw new InvalidEmailException(value);
+        Value = value;
+    }
+
+    public string Value { get; }
+
+    private static bool IsValid(string emailToValidate)
+    {
+        return Regex.IsMatch(emailToValidate,
+            @"^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$");
+    }
+
+		public static implicit operator string(Email email) => email.Value;
+
+    public static implicit operator Email(string email) => new(email);
+}
+```
+
+For now User will have
+
+1. Id
+2. Email
+3. Username
+4. Password
+5. Role
+6. CreatedAt
+
+properties. Each one of them except for Created at will have its own value-objects.
+
+In the next part I’m going to connect entity to DB to perform CRUD operations.
