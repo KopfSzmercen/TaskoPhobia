@@ -8,9 +8,11 @@ namespace TaskoPhobia.Infrastructure.DAL.Repositories;
 internal sealed class PostgresUserRepository : IUserRepository
 {
     private readonly DbSet<User> _users;
+    private readonly TaskoPhobiaDbContext _dbContext;
     
-    public PostgresUserRepository(TaskoPhobiaDbContext dbContext)
+    public PostgresUserRepository(TaskoPhobiaDbContext dbContext, TaskoPhobiaDbContext dbContext1)
     {
+        _dbContext = dbContext1;
         _users = dbContext.Users;
     }
     
@@ -31,6 +33,7 @@ internal sealed class PostgresUserRepository : IUserRepository
 
     public async Task AddAsync(User user)
     {
-         await _users.AddAsync(user);
+         _users.Add(user);
+         await _dbContext.SaveChangesAsync();
     }
 }

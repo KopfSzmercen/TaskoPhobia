@@ -138,7 +138,7 @@ Next, I’ll create ValueObject directory for **value objects**: a type that rep
 
 At this point some values can not fit domain rules ex. email is not a valid email. For that I’ll use domain exceptions:
 
-1. Create abstract ******\*\*******\*\*******\*\*******CustomException******\*\*******\*\*******\*\******* class which derives from the built-in **\*\*\*\***\*\***\*\*\*\***Exception**\*\*\*\***\*\***\*\*\*\*** class. This will be helpful later on when we’ll implement exception handling.
+1. Create abstract **\*\***\*\***\*\***\*\***\*\***\*\***\*\***CustomException**\*\***\*\***\*\***\*\***\*\***\*\***\*\*** class which derives from the built-in **\*\*\*\***\*\***\*\*\*\***Exception**\*\*\*\***\*\***\*\*\*\*** class. This will be helpful later on when we’ll implement exception handling.
 
 ```csharp
 public abstract class CustomException : Exception
@@ -255,3 +255,35 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 in the Extensions as well.
 
 If everything went well the project should be starting and runnig with no errors. At the moment I’ll work a bit on the Application layer to intertact with repositories.
+
+# Application Layer
+
+Now it’s the time to implement the base for application layer.
+
+I’ll start with some abstractions for Commands and Queries. For this I create a solution Shared in src and Abstractions class project. In the project I’ll define interfaces for commands an queries. I’ll also create ICommandDispatcher
+
+After interfaces are added, I’ll create a class library Shared to provide implementations for them.
+
+### IServiceProvider
+
+This is an interface responsible for providing instances of services or dependencies. It defines a method GetService used to retrive an instance of a service based on its type.
+
+To be able to use \_serviceProvider.CreateScope() install Microsoft.Extensions.DependencyInjection.Abstractions
+
+In dispatcher I create a scope for each command handler of TCommand type.
+
+### IServiceCollection
+
+Interface used to register and configure services in DI. IServiceCollection acts as a container where we can add service registrations
+
+Using IServiceCollection command dispatcher should be registered in a separate Extensions class in Shared class library.
+
+Now let’s implement a mechanism to automatically register all command/query handlers. To to this I’ll install a package Scrutor. It’ll scan assemby and register every class of type ICommandHandler<> with scoped lifetime.
+
+Now reference Shared class lib. in Application Extension class and call AddCommands().
+
+After settimng up DI, in Application I’ll create first command - SignUpCommand. Commands are just data-objects with no behaviour so nothing fancy here. In the Commands folder I’ll create Handlers directory.
+
+Now let’s implement basic logic of sign up, now with no password security. After that I register Command dispatcher in Users controller and I call handleAsync(). In SignUpHandler normal known logic. User is added to DB and proper exceptions are thrown if there are duplications.
+
+In the next part I’ll implement UoW pattern as well as password hashing.
