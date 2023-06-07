@@ -12,12 +12,13 @@ public class User
    
    public DateTime CreatedAt { get; private set; }
 
-   public User(UserId id, Email email, Username username, Password password, Role role)
+   public User(UserId id, Email email, Username username, Password password, Role role, DateTime createdAt)
    {
       Id = id;
       Email = email;
       Username = username;
       Password = password;
       Role = role;
+      CreatedAt = createdAt;
    }
 }
