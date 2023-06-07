@@ -2,7 +2,9 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TaskoPhobia.Core.Repositories;
+using TaskoPhobia.Infrastructure.DAL.Decorators;
 using TaskoPhobia.Infrastructure.DAL.Repositories;
+using TaskoPhobia.Shared.Abstractions.Commands;
 
 namespace TaskoPhobia.Infrastructure.DAL;
 
@@ -19,6 +21,9 @@ internal static class Extensions
         services.AddDbContext<TaskoPhobiaDbContext>(x => x.UseNpgsql(options.ConnectionString));
         services.AddScoped<IUserRepository, PostgresUserRepository>();
         services.AddHostedService<DatabaseInitializer>();
+        services.AddScoped<IUnitOfWork, PostgresUnitOfWork>();
+        services.TryDecorate(typeof(ICommandHandler<>), typeof(UnitOfWorkCommandHandlerDecorator<>));
+        
      
         
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);

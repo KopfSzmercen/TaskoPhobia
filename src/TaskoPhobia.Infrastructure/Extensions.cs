@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TaskoPhobia.Infrastructure.DAL;
+using TaskoPhobia.Infrastructure.Security;
 
 namespace TaskoPhobia.Infrastructure;
 
@@ -14,7 +15,8 @@ public static class Extensions
         
         services.AddEndpointsApiExplorer()
             .AddSwaggerGen()
-            .AddPostgres(configuration);
+            .AddPostgres(configuration)
+            .AddSecurity();
 
         return services;
     }
