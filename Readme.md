@@ -287,3 +287,37 @@ After settimng up DI, in Application I’ll create first command - SignUpCommand
 Now let’s implement basic logic of sign up, now with no password security. After that I register Command dispatcher in Users controller and I call handleAsync(). In SignUpHandler normal known logic. User is added to DB and proper exceptions are thrown if there are duplications.
 
 In the next part I’ll implement UoW pattern as well as password hashing.
+
+# UoW and Password Security
+
+### Implementing Unit Of Work Decorator
+
+In this part I’ll implement UoW pattern and password security. Let’s start with the first one. At the same time I’ll implement decorator pattern.
+
+Decorator pattern helps to hide some functionalities in a layer or place that is not responsible for it and should not know about this functionality ex. application service handler should not be responsible for logging. Decorato also helps to sustain open-closed principle in classes. Decorators work onion-like, a class is not aware of the existence of some additional functionalities.
+
+THE ORDER OF DECORATORS IS IMPORTANT.
+
+We decorate from inside → outside and decorators will work from outside → inside.
+
+Unit Of Work: a pattern which ensures that all related DB operations are treated as a single transaction.
+
+To implement UoW, I’ll create IUnitOfWork interface with a single method ExecuteAsync. In its implementstion PostgresUnitOfWork I’ll take action as argument, handle transaction and commit or rollback it if something goes wrong.
+
+The code below is creating an asynchronous database transaction using the **`_dbContext`** object. The **`BeginTransactionAsync`** method returns a task representing the transaction, which is then assigned to the **`transaction`** variable. The **`await using`** pattern ensures that the transaction is disposed of correctly when it's no longer needed, freeing up any associated resources
+
+```csharp
+await using var transaction = await _dbContext.Database.BeginTransactionAsync();
+```
+
+Now, register Postgres UoW in services and make the decorator generic so it’ll decorate every command handler. To make it do so, in extensions use Scrutor and TryDecorate method on IService collection which will take typeof ICommandHandler<> and UnitOfWorkCommandHandlerDecorator<> as arguments.
+
+Also the users repository will require some changes: AddAsync will not require SaveChangesAsync to be called after that and UpdateAsync does not have to await updating and can use _users.Update().
+
+Decorator will be registered with the same life-cycle as the decorated object’s.
+
+### Implementing Password Security
+
+So far, passwords are not hashed which is not a good practice as far as security is concerned.
+
+In Application I’ll define interfaces for password security. Implementations will go into the Infrastructure layer. For managing hashes I’ll use IPasswordHasher shipped with .NET Core. After the implementation of password manager, I’ll create Security Extension (convention I use to register services).
