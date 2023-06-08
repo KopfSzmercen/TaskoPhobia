@@ -321,3 +321,84 @@ Decorator will be registered with the same life-cycle as the decorated object’
 So far, passwords are not hashed which is not a good practice as far as security is concerned.
 
 In Application I’ll define interfaces for password security. Implementations will go into the Infrastructure layer. For managing hashes I’ll use IPasswordHasher shipped with .NET Core. After the implementation of password manager, I’ll create Security Extension (convention I use to register services).
+
+# User Endpoints And JWT
+
+In this part I’ll create endpoints to get users and user by id. These endpoints are going to be available only for admin, so JWT authorization has to be implemented beforehand.
+
+## JWT
+
+Firstly I’ll install Microsoft.AspNetCore.Authentication.JwtBearer package in Infrastructure. I’ll create Auth directory as well. I’ll define AuthOptions class which will be responsible for getting options for generating JWT such as Issuer or SigningKey which are set in app settings.
+
+I’ll put all these settings in appsettings.json. Of course I’ll create Extensions class in which I’ll bind configuration to AuthOptions class as in for example configuring postgres connection. In Extensions  I have to register authentication using services.AddAuthentication and configure it.
+
+Next, in AddJwtBearer configuration I configure options based on which incoming tokens will be validated.
+
+After finishing the configuration we have to register UseAuthentication middleware in UseInfrastructure method.
+
+After these steps the app is able to validate tokens, however still we do not generate them whatsoever.
+
+In application layer I’ll define IAuthenticator interface as well as JwtDto. In Infrastructure I’ll implement the IAuthenticator interface. In ctor I’ll configure the class by getting proper values to generate tokens.
+
+Important: while configuring the list of claims, UniqueName claim will be available in HttpContext later on and it’ll make it possible to get user id. When done, register Authenticator as singleton in Auth/Extensions.
+
+Now it’s time to create SignIn command to sign in the user. In this case however we have to return something from the SignInCommand but generally CommandHandler should not return any value. For handling this case I’ll create an interface ITokenStorage.  Token storage will have scoped life cycle.
+
+For the HttpContextTokenStorage I’ll register IHttoContextAccessor which will allow me to manipulate values in http context.
+
+Important: register HttpContextAccessor in extension class, otherwise it won’t be avaliable. TokenStorage may be registered as singleton since HttpContextAccessor has already scoped life cycle.
+
+### Get me Quyery
+
+For queries I’ll create abstractions and wire up handlers in the same way I did with commands. There is one difference between commands and queries: queries will have their handlers in infrastructure layer.
+
+```csharp
+public async Task<TResult> QueryAsync<TResult>(IQuery<TResult> query)
+    {
+        using var scope = _serviceProvider.CreateScope();
+        var handlerType = typeof(IQueryHandler<,>).MakeGenericType(query.GetType(), typeof(TResult));
+        var handler = scope.ServiceProvider.GetRequiredService(handlerType);
+
+        return await (Task<TResult>)handlerType.GetMethod(nameof(IQueryHandler<IQuery<TResult>, TResult>.HandleAsync))?
+            .Invoke(handler, new []{query});
+    }
+```
+
+Using reflection I can get type of query and result, then I can get the handler for the query as object.
+
+**`QueryAsync<TResult>`** method dynamically creates a handler type based on the query type and result type, retrieves an instance of that handler from the service provider, and invokes the **`HandleAsync`** method of the handler, passing the query as a parameter. The method then awaits the task returned by **`HandleAsync`** and returns the result.
+
+Once I have registered Query Handlers I’ll implement GetUser handler and an extension to User entity which will allow me to construct UserDto from user entity.
+
+To make the process of accessing authorized routes easier through swagger, I'll add the following settings.
+```csharp
+    services.AddEndpointsApiExplorer()
+            .AddSwaggerGen(swagger =>
+            {
+                swagger.EnableAnnotations();
+                swagger.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[] { }
+                    }
+                });
+                swagger.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "Input your JWT Authorization header to access this API. Example: \"Authorization: Bearer {token}\"",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+                
+            })
+```
+Now after signing up and signing in I'm able to get information about the current used account.
