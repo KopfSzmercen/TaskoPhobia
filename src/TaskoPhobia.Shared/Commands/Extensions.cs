@@ -1,9 +1,8 @@
 ﻿using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using TaskoPhobia.Shared.Abstractions.Commands;
-using TaskoPhobia.Shared.Commands;
 
-namespace TaskoPhobia.Shared;
+namespace TaskoPhobia.Shared.Commands;
 
 public static class Extensions
 {
