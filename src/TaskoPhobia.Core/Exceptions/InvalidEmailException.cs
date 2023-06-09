@@ -1,4 +1,6 @@
-﻿namespace TaskoPhobia.Core.Exceptions;
+﻿using TaskoPhobia.Shared.Abstractions.Exceptions;
+
+namespace TaskoPhobia.Core.Exceptions;
 
 public sealed class InvalidEmailException : CustomException
 {

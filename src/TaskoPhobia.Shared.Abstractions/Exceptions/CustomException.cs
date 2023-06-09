@@ -1,4 +1,4 @@
-﻿namespace TaskoPhobia.Core.Exceptions;
+﻿namespace TaskoPhobia.Shared.Abstractions.Exceptions;
 
 public abstract class CustomException : Exception
 {
