@@ -312,7 +312,7 @@ await using var transaction = await _dbContext.Database.BeginTransactionAsync();
 
 Now, register Postgres UoW in services and make the decorator generic so it’ll decorate every command handler. To make it do so, in extensions use Scrutor and TryDecorate method on IService collection which will take typeof ICommandHandler<> and UnitOfWorkCommandHandlerDecorator<> as arguments.
 
-Also the users repository will require some changes: AddAsync will not require SaveChangesAsync to be called after that and UpdateAsync does not have to await updating and can use _users.Update().
+Also the users repository will require some changes: AddAsync will not require SaveChangesAsync to be called after that and UpdateAsync does not have to await updating and can use \_users.Update().
 
 Decorator will be registered with the same life-cycle as the decorated object’s.
 
@@ -330,7 +330,7 @@ In this part I’ll create endpoints to get users and user by id. These endpoint
 
 Firstly I’ll install Microsoft.AspNetCore.Authentication.JwtBearer package in Infrastructure. I’ll create Auth directory as well. I’ll define AuthOptions class which will be responsible for getting options for generating JWT such as Issuer or SigningKey which are set in app settings.
 
-I’ll put all these settings in appsettings.json. Of course I’ll create Extensions class in which I’ll bind configuration to AuthOptions class as in for example configuring postgres connection. In Extensions  I have to register authentication using services.AddAuthentication and configure it.
+I’ll put all these settings in appsettings.json. Of course I’ll create Extensions class in which I’ll bind configuration to AuthOptions class as in for example configuring postgres connection. In Extensions I have to register authentication using services.AddAuthentication and configure it.
 
 Next, in AddJwtBearer configuration I configure options based on which incoming tokens will be validated.
 
@@ -342,7 +342,7 @@ In application layer I’ll define IAuthenticator interface as well as JwtDto. I
 
 Important: while configuring the list of claims, UniqueName claim will be available in HttpContext later on and it’ll make it possible to get user id. When done, register Authenticator as singleton in Auth/Extensions.
 
-Now it’s time to create SignIn command to sign in the user. In this case however we have to return something from the SignInCommand but generally CommandHandler should not return any value. For handling this case I’ll create an interface ITokenStorage.  Token storage will have scoped life cycle.
+Now it’s time to create SignIn command to sign in the user. In this case however we have to return something from the SignInCommand but generally CommandHandler should not return any value. For handling this case I’ll create an interface ITokenStorage. Token storage will have scoped life cycle.
 
 For the HttpContextTokenStorage I’ll register IHttoContextAccessor which will allow me to manipulate values in http context.
 
@@ -371,6 +371,7 @@ Using reflection I can get type of query and result, then I can get the handler 
 Once I have registered Query Handlers I’ll implement GetUser handler and an extension to User entity which will allow me to construct UserDto from user entity.
 
 To make the process of accessing authorized routes easier through swagger, I'll add the following settings.
+
 ```csharp
     services.AddEndpointsApiExplorer()
             .AddSwaggerGen(swagger =>
@@ -398,7 +399,20 @@ To make the process of accessing authorized routes easier through swagger, I'll 
                     Type = SecuritySchemeType.ApiKey,
                     Scheme = "Bearer"
                 });
-                
+
             })
 ```
+
 Now after signing up and signing in I'm able to get information about the current used account.
+
+# Exception Middleware
+
+Now when the base of the app is working, I have to create exception middleware because so far whenever I throw custom exception or some other errors occur I do not get the desired response so middleware is the way to tackle this problem.
+
+Important: having registered 3 middlewares 1,2,3 (in this order), they will start in the order 1, 2, 3 but finish in the reverse order 3, 2, 1. That is because 1 awaits next(ctx), 2 awaits next(ctx) and 3 awaits next(ctx) so if 3 awaited the result, controll is given to 2, then to 1 and the process finishes.
+
+I’ll create the middleware in Infrastructure/Exceptions/ExceptionMiddleware.cs.
+
+I create HandleExceptionAsync mehod in which I use destructurization to get proper code and error message.
+
+I moved abstractions of Errors and Exceptions into Shared for better separation of code. I also adjusted swagger documentation to match error responses.

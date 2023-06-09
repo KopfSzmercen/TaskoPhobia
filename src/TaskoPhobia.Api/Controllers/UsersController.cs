@@ -1,4 +1,5 @@
 ﻿
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +9,7 @@ using TaskoPhobia.Application.DTO;
 using TaskoPhobia.Application.Queries;
 using TaskoPhobia.Application.Security;
 using TaskoPhobia.Shared.Abstractions.Commands;
+using TaskoPhobia.Shared.Abstractions.Exceptions.Errors;
 using TaskoPhobia.Shared.Abstractions.Queries;
 
 namespace TaskoPhobia.Api.Controllers;
@@ -31,7 +33,7 @@ public class UsersController : ControllerBase
     [HttpPost("sign-up")]
     [SwaggerOperation("Create user account")]
     [ProducesResponseType(typeof(void),StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Error),StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> Post([FromBody] SignUp command)
     {
         command = command with { UserId = Guid.NewGuid() };
@@ -43,7 +45,7 @@ public class UsersController : ControllerBase
     [HttpPost("sign-in")]
     [SwaggerOperation("Sign in")]
     [ProducesResponseType(typeof(JwtDto), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Error),StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<JwtDto>> Post(SignIn command)
     {
         await _commandDispatcher.DispatchAsync(command);
@@ -54,8 +56,9 @@ public class UsersController : ControllerBase
     [Authorize]
     [HttpGet("me")]
     [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(void),StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(void),StatusCodes.Status404NotFound)]
+    [SuppressMessage("ReSharper.DPA", "DPA0006: Large number of DB commands")]
     public async Task<ActionResult<UserDto>> Get()
     {
         if (string.IsNullOrWhiteSpace(User.Identity?.Name))
