@@ -416,3 +416,35 @@ I’ll create the middleware in Infrastructure/Exceptions/ExceptionMiddleware.cs
 I create HandleExceptionAsync mehod in which I use destructurization to get proper code and error message.
 
 I moved abstractions of Errors and Exceptions into Shared for better separation of code. I also adjusted swagger documentation to match error responses.
+
+# Integration tests
+
+In this part I’ll write e2e tests for the routes currently present in the app. For that I’ll create a new project in tests directory called TaskoPhobia.Tests.Integration. I’ll use xUnit as a testing framework. Moreover I’ll install Shouldly package to make assertions easier as well as Microsoft Mvc Testing package.
+
+## Writing tests
+
+1. Firstly I’ll create a class which will create an instance of the WebApp. It will extend the built in WebApplicationFactory
+2. To get the builder of a project, in TaskoPhobia.Api I have to make its internals visibe to unit tests project. For that I’ll write
+
+    ```csharp
+    <ItemGroup>
+        <InternalsVisibleTo Include="TaskoPhobia.Tests.Integration" />
+    </ItemGroup>
+    ```
+
+   in appsettings. Also testing class has to be made internal to be able to access Program.
+
+3. For every controller I’ll create a testing class, marking every testing method with the [Fact] annotation
+4. Also I have to configure app settings to match testing environment ex. testing db
+5. I’ll instaciate the app in the abstract controller testing class
+6. I’ll use the approach of deleting db for each group of tests
+7. For that I’ll make use of options provider used earlier and create a class TestDatabase in which I’ll implement the interface IDisposable provided by XUnit which gives me a Dispose method in which I can ensure deleting DB after every test.
+8. To run tests sequentially to avoid dropping db and accessing it at the same time by different tests I’ll add [Collection] annotation to the ControllerTests class.
+
+We can overwrite service collection for the purpose of testing using Actionc<IServiceCollection> in the constructor of the testing class. This allows for mocking some external services like payment gateway or email sender. I’ll use it for users repository just for tests. To my abstract class in tests I’ll add a virtuak method
+
+```csharp
+protected virtual void ConfigureServices(IServiceCollection services){}
+```
+
+which I will be able to use later to configure services in my testing classes.

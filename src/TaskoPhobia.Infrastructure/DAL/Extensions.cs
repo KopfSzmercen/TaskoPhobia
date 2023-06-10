@@ -30,7 +30,7 @@ internal static class Extensions
 
         return services;
     }
-
+    
     public static T GetOptions<T>(this IConfiguration configuration, string sectionName) where T : class, new()
     {
         var options = new T();
