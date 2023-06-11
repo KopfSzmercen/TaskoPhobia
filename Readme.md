@@ -493,3 +493,15 @@ I’ll create 3 new routes:
 - GET /projects/{projectId} → get owned project by id
 
 The process of creating queries is known so I’wont describe it.
+
+# Second Business Requirement
+
+In the second business requirement I need to allow a project to have main tasks.
+
+### UserReadService
+
+But before that I’ll create a UsersRead service to make the app a bit more efficient since now in a few places like SignInHandler I needlessly fetch Projects alingside User when actually I do not need them. For that I’ll create an interface and implement the UserReadService in infrastructure.
+
+### Domain
+
+As previously with projects, I have to add ProjectTask entity to domain and tweak other entities to reflect the change.
