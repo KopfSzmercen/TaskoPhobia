@@ -5,7 +5,7 @@ using TaskoPhobia.Shared.Abstractions.Commands;
 
 namespace TaskoPhobia.Application.Commands.Handlers;
 
-public class SignInHandler : ICommandHandler<SignIn>
+public sealed class SignInHandler : ICommandHandler<SignIn>
 {
     private readonly IUserRepository _userRepository;
     private readonly IAuthenticator _authenticator;

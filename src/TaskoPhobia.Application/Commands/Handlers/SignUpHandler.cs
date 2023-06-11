@@ -7,7 +7,7 @@ using TaskoPhobia.Shared.Abstractions.Commands;
 
 namespace TaskoPhobia.Application.Commands.Handlers;
 
-public class SignUpHandler : ICommandHandler<SignUp>
+public sealed class SignUpHandler : ICommandHandler<SignUp>
 {
     public SignUpHandler(IUserRepository userRepository, IPasswordManager passwordManager)
     {
@@ -34,7 +34,7 @@ public class SignUpHandler : ICommandHandler<SignUp>
         var userWithSameUsername = await _userRepository.GetByUsernameAsync(username);
         if (userWithSameUsername is not null) throw new UsernameExistsException();
 
-        var user = new User(userId, email, username, password, role, DateTime.UtcNow);
+        var user = new User(userId, email, username, password, role, DateTime.UtcNow, AccountType.Free());
         await _userRepository.AddAsync(user);
 
     }

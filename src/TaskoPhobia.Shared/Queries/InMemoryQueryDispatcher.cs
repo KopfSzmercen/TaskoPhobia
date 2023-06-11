@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using TaskoPhobia.Shared.Abstractions.Queries;
-
 namespace TaskoPhobia.Shared.Queries;
 
 internal sealed class InMemoryQueryDispatcher : IQueryDispatcher
