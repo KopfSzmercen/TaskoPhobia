@@ -38,8 +38,7 @@ public class ProjectsController : ControllerBase
 
         command = command with { ProjectId = Guid.NewGuid(), OwnerId = Guid.Parse(currentUserIdStr)};
         await _commandDispatcher.DispatchAsync(command);
-
-        //Temporal nameof(Post)
+        
         return  CreatedAtAction(nameof(Get), new {command.ProjectId}, null);
     }
 

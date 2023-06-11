@@ -21,4 +21,13 @@ public static class Extensions
         Status = entity.Status,
         CreatedAt = entity.CreatedAt
     };
+
+    public static ProjectTaskDto AsDto(this ProjectTask entity) => new()
+    {
+        Id = entity.Id,
+        Name = entity.Name,
+        Status = entity.Status,
+        EndDate = entity.TimeSpan.End,
+        StartDate = entity.TimeSpan.Start
+    };
 }

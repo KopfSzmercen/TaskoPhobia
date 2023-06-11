@@ -17,6 +17,5 @@ public sealed record UserId
     }
 
     public static implicit operator Guid(UserId value) => value.Value;
-    
     public static implicit operator UserId(Guid value) => new(value);
 }
