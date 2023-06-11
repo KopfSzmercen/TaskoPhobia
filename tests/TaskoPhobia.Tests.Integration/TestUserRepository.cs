@@ -23,4 +23,11 @@ internal class TestUserRepository : IUserRepository
         _users.Add(user);
         return Task.CompletedTask;
     }
+
+    public Task UpdateAsync(User user)
+    {
+        var userIndex = _users.FindIndex(x => x.Id == user.Id);
+        _users[userIndex] = user;
+        return Task.CompletedTask;
+    }
 }

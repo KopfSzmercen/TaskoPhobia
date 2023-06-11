@@ -12,4 +12,13 @@ public static class Extensions
         Email = entity.Email,
         Role = entity.Role
     };
+
+    public static ProjectDto AsDto(this Project entity) => new()
+    {
+        Id = entity.Id,
+        Description = entity.Description,
+        Name = entity.Name,
+        Status = entity.Status,
+        CreatedAt = entity.CreatedAt
+    };
 }

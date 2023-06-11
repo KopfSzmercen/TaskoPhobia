@@ -7,6 +7,7 @@ internal sealed class TaskoPhobiaDbContext : DbContext
 {
 
     public DbSet<User> Users { get; set; }
+    public DbSet<Project> Projects { get; set; }
     public TaskoPhobiaDbContext(DbContextOptions<TaskoPhobiaDbContext> dbContextOptions) : base(dbContextOptions)
     {
     }

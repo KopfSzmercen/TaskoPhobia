@@ -35,7 +35,7 @@ public class UsersControllerTests : ControllerTests, IDisposable
         var securedPassword = passwordManager.Secure(Password);
 
         var user = new User(Guid.NewGuid(), "test@t.pl",
-            "test", securedPassword, Role.User(), DateTime.UtcNow);
+            "test", securedPassword, Role.User(), DateTime.UtcNow, AccountType.Free());
 
         await _testDatabase.DbContext.Users.AddAsync(user);
         await _testDatabase.DbContext.SaveChangesAsync();

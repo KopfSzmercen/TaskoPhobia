@@ -426,11 +426,11 @@ In this part I’ll write e2e tests for the routes currently present in the app.
 1. Firstly I’ll create a class which will create an instance of the WebApp. It will extend the built in WebApplicationFactory
 2. To get the builder of a project, in TaskoPhobia.Api I have to make its internals visibe to unit tests project. For that I’ll write
 
-    ```csharp
-    <ItemGroup>
-        <InternalsVisibleTo Include="TaskoPhobia.Tests.Integration" />
-    </ItemGroup>
-    ```
+   ```csharp
+   <ItemGroup>
+       <InternalsVisibleTo Include="TaskoPhobia.Tests.Integration" />
+   </ItemGroup>
+   ```
 
    in appsettings. Also testing class has to be made internal to be able to access Program.
 
@@ -448,3 +448,48 @@ protected virtual void ConfigureServices(IServiceCollection services){}
 ```
 
 which I will be able to use later to configure services in my testing classes.
+
+# First business requirement
+
+Just to remind, the first business requirement will be
+
+1. There are 3 account types:
+
+- free
+- basic
+- extended
+
+1. User can create a project (3 projects for free account, 6 for basic and unlimited number of project for extended account)
+
+### Working on a domain
+
+To do this I need to tweek the domain:
+
+- add account type to User
+- add a collection of project to User
+- add a method AddProject to User
+- create Project Entity
+
+The process of implementing the above-mentioned requirements is fairly similar to creating User entity. However in the AddProject entity I have to apply DDD-like approach where I check the requirement numbrt 2 _User can create a project (3 projects for free account, 6 for basic and unlimited number of project for extended account)_. I throw a custom exception if user has exceeded the maximum allowed number of projects for their account.
+
+### Configuring EF Core
+
+Of course now I have to configure EF core to reflect changes in my domain. The steps are:
+
+1. Add Projects DB set to the TaskoPhobiaDbContext.
+2. Configure Project entity (with relation to user) [source](https://www.entityframeworktutorial.net/efcore/configure-one-to-many-relationship-using-fluent-api-in-ef-core.aspx)
+3. Tweak UserRepository: include projects (temporal solution as for some cases including projects is not neccessary ex. check if user exists)
+4. Configure User Entity → add AccountType field.
+5. Add UpdateAsync method to UserRepository
+
+After that create migrations.
+
+### New Routes
+
+I’ll create 3 new routes:
+
+- POST /projects → create a project
+- GET /projects → get all owned projects (for now with no pagination)
+- GET /projects/{projectId} → get owned project by id
+
+The process of creating queries is known so I’wont describe it.

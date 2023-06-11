@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TaskoPhobia.Infrastructure.DAL;
@@ -11,9 +12,11 @@ using TaskoPhobia.Infrastructure.DAL;
 namespace TaskoPhobia.Infrastructure.DAL.Migrations
 {
     [DbContext(typeof(TaskoPhobiaDbContext))]
-    partial class TaskoPhobiaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230610182612_Remove-User-Account-Type-Default-Value")]
+    partial class RemoveUserAccountTypeDefaultValue
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,35 +24,6 @@ namespace TaskoPhobia.Infrastructure.DAL.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("TaskoPhobia.Core.Entities.Project", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid?>("OwnerId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OwnerId");
-
-                    b.ToTable("Projects");
-                });
 
             modelBuilder.Entity("TaskoPhobia.Core.Entities.User", b =>
                 {
@@ -88,20 +62,6 @@ namespace TaskoPhobia.Infrastructure.DAL.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("TaskoPhobia.Core.Entities.Project", b =>
-                {
-                    b.HasOne("TaskoPhobia.Core.Entities.User", "Owner")
-                        .WithMany("OwnedProjects")
-                        .HasForeignKey("OwnerId");
-
-                    b.Navigation("Owner");
-                });
-
-            modelBuilder.Entity("TaskoPhobia.Core.Entities.User", b =>
-                {
-                    b.Navigation("OwnedProjects");
                 });
 #pragma warning restore 612, 618
         }

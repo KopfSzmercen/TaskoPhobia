@@ -30,5 +30,8 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(x => x.CreatedAt).IsRequired();
 
+        builder.Property(x => x.AccountType)
+            .HasConversion(x => x.Value, x => new AccountType(x))
+            .IsRequired();
     }
 }
