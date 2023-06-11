@@ -15,7 +15,7 @@ internal sealed class ExceptionMiddleware : IMiddleware
         }
         catch (Exception e)
         {
-            Console.WriteLine(e.Message.ToString());
+            Console.WriteLine(e.ToString());
             await HandleExceptionAsync(e, context);
         }
     }

@@ -2,8 +2,10 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TaskoPhobia.Core.Repositories;
+using TaskoPhobia.Core.Services;
 using TaskoPhobia.Infrastructure.DAL.Decorators;
 using TaskoPhobia.Infrastructure.DAL.Repositories;
+using TaskoPhobia.Infrastructure.DAL.Services;
 using TaskoPhobia.Shared.Abstractions.Commands;
 using TaskoPhobia.Shared.Queries;
 
@@ -21,6 +23,9 @@ internal static class Extensions
         
         services.AddDbContext<TaskoPhobiaDbContext>(x => x.UseNpgsql(options.ConnectionString));
         services.AddScoped<IUserRepository, PostgresUserRepository>();
+        services.AddScoped<IUserReadService, PostgresUserReadService>();
+        services.AddScoped<IProjectRepository, PostgresProjectRepository>();
+        
         services.AddHostedService<DatabaseInitializer>();
         services.AddScoped<IUnitOfWork, PostgresUnitOfWork>();
         services.TryDecorate(typeof(ICommandHandler<>), typeof(UnitOfWorkCommandHandlerDecorator<>));
