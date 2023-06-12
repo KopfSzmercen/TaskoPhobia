@@ -21,6 +21,7 @@ internal sealed class BrowseProjectTasksHandler : IQueryHandler<BrowseProjectTas
         var userId = new UserId(query.UserId);
 
         var project = await _projects.Include(x => x.Tasks)
+            .AsNoTracking()
             .SingleOrDefaultAsync(x => x.Id == projectId && x.OwnerId == userId);
 
         return project?.Tasks.Select(x => x.AsDto());

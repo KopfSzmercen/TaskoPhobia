@@ -8,7 +8,7 @@ using TaskoPhobia.Shared.Abstractions.Commands;
 
 namespace TaskoPhobia.Application.Commands.Handlers;
 
-public sealed class SignUpHandler : ICommandHandler<SignUp>
+internal sealed class SignUpHandler : ICommandHandler<SignUp>
 {
     public SignUpHandler(IUserRepository userRepository, IUserReadService userReadService,IPasswordManager passwordManager)
     {

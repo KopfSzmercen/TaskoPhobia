@@ -24,6 +24,7 @@ internal sealed class GetProjectTaskHandler : IQueryHandler<GetProjectTask ,Proj
         
         var projectTask = await _projectTasks
             .Where(x => x.Id == projectTaskId && x.Project.Id == projectId && x.Project.OwnerId == userId)
+            .AsNoTracking()
             .SingleOrDefaultAsync();
 
         return projectTask?.AsDto();

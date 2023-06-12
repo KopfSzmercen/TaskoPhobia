@@ -8,10 +8,10 @@ using TaskoPhobia.Shared.Abstractions.Commands;
 using TaskoPhobia.Shared.Abstractions.Exceptions.Errors;
 using TaskoPhobia.Shared.Abstractions.Queries;
 
-namespace TaskoPhobia.Api.Controllers;
+namespace TaskoPhobia.Api.ProjectTasks;
 
 [ApiController]
-[Route("projects{projectId:guid}/tasks")]
+[Route("projects/{projectId:guid}/tasks")]
 [Authorize]
 public class ProjectTasksController : ControllerBase
 {
@@ -28,14 +28,14 @@ public class ProjectTasksController : ControllerBase
     [SwaggerOperation("Create project task")]
     [ProducesResponseType(typeof(void), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult> Post([FromBody] CreateProjectTask command, Guid projectId)
+    public async Task<ActionResult> Post([FromBody] CreateProjectTaskRequest request, [FromRoute]Guid projectId)
     {
         var currentUserIdStr = User.Identity?.Name;
         if (string.IsNullOrWhiteSpace(currentUserIdStr))   return NotFound();
-        command = command with { UserId = Guid.Parse(currentUserIdStr), ProjectId = projectId, TaskId = Guid.NewGuid()};
+        var command = request.ToCommand(Guid.Parse(currentUserIdStr), projectId);
 
         await _commandDispatcher.DispatchAsync(command);
-        return CreatedAtAction(nameof(Post), new {command.TaskId}, null);
+        return CreatedAtAction(nameof(Get), new {projectId, projectTaskId = command.TaskId}, null);
 
     }
     
@@ -43,7 +43,7 @@ public class ProjectTasksController : ControllerBase
     [SwaggerOperation("Get list of project tasks (no pagination so far)")]
     [ProducesResponseType(typeof(IEnumerable<ProjectTaskDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<IEnumerable<ProjectTaskDto>>>Get(Guid projectId)
+    public async Task<ActionResult<IEnumerable<ProjectTaskDto>>>Get([FromRoute]Guid projectId)
     {
         var currentUserIdStr = User.Identity?.Name;
         if (string.IsNullOrWhiteSpace(currentUserIdStr))   return NotFound();
@@ -58,7 +58,7 @@ public class ProjectTasksController : ControllerBase
     [SwaggerOperation("Get project task")]
     [ProducesResponseType(typeof(ProjectTaskDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<ProjectTaskDto>> Get(Guid projectId, Guid projectTaskId)
+    public async Task<ActionResult<ProjectTaskDto>> Get([FromRoute]Guid projectId, [FromRoute]Guid projectTaskId)
     {
         var currentUserIdStr = User.Identity?.Name;
         if (string.IsNullOrWhiteSpace(currentUserIdStr))   return NotFound();

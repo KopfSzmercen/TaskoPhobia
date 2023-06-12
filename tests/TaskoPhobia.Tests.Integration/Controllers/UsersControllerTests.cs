@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Identity;
 using Shouldly;
+using TaskoPhobia.Api.Users;
 using TaskoPhobia.Application.Commands;
 using TaskoPhobia.Application.DTO;
 using TaskoPhobia.Core.Entities;
@@ -47,9 +48,10 @@ public class UsersControllerTests : ControllerTests, IDisposable
     [Fact]
     public async Task given_valid_command_sign_up_should_return_created_201_code()
     {
-        var command = new SignUp(Guid.Empty, "test@t.pl", "test", Password);
+   
+        var request = new  SignUpRequest {Password = Password, Email = "test@t.pl", Username = "test"};
 
-        var response = await HttpClient.PostAsJsonAsync("users/sign-up", command);
+        var response = await HttpClient.PostAsJsonAsync("users/sign-up", request);
 
         response.StatusCode.ShouldBe(HttpStatusCode.Created);
         response.Headers.Location.ShouldNotBeNull();
@@ -60,8 +62,8 @@ public class UsersControllerTests : ControllerTests, IDisposable
     {
         var user = await CreateUserAsync();
         
-        var command = new SignIn(user.Email, Password);
-        var response = await HttpClient.PostAsJsonAsync("users/sign-in", command);
+        var request = new SignInRequest {Email = user.Email, Password = Password};
+        var response = await HttpClient.PostAsJsonAsync("users/sign-in", request);
         
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
@@ -89,8 +91,8 @@ public class UsersControllerTests : ControllerTests, IDisposable
     public async Task given_email_already_in_use_post_sign_up_should_return_400_bad_request_email_in_use_error()
     {
         var user = await CreateUserAsync();
-        var command = new SignUp(Guid.NewGuid(), user.Email, "username", Password);
-        var response = await HttpClient.PostAsJsonAsync("users/sign-up", command);
+        var request = new SignUpRequest { Email = user.Email, Password = Password, Username = "username" };
+        var response = await HttpClient.PostAsJsonAsync("users/sign-up", request);
 
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
         var errorResult= response.Content.ReadFromJsonAsync<Error>().Result;
@@ -102,8 +104,8 @@ public class UsersControllerTests : ControllerTests, IDisposable
     public async Task given_invalid_credentials_post_sign_in_should_return_400_invalid_credentials_error()
     {
         var user = await CreateUserAsync();
-        var command = new SignIn($"dfs{user.Email.Value}", user.Password.Value);
-        var response = await HttpClient.PostAsJsonAsync("users/sign-in", command);
+        var request = new SignInRequest { Email = "dfs{user.Email.Value}", Password = user.Password.Value };
+        var response = await HttpClient.PostAsJsonAsync("users/sign-in", request);
         
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
         var errorResult= response.Content.ReadFromJsonAsync<Error>().Result;

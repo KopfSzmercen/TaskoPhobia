@@ -1,7 +1,4 @@
-﻿
-using System.Diagnostics.CodeAnalysis;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using TaskoPhobia.Application.Commands;
@@ -12,7 +9,7 @@ using TaskoPhobia.Shared.Abstractions.Commands;
 using TaskoPhobia.Shared.Abstractions.Exceptions.Errors;
 using TaskoPhobia.Shared.Abstractions.Queries;
 
-namespace TaskoPhobia.Api.Controllers;
+namespace TaskoPhobia.Api.Users;
 
 [ApiController]
 [Route("users")]
@@ -34,9 +31,9 @@ public class UsersController : ControllerBase
     [SwaggerOperation("Create user account")]
     [ProducesResponseType(typeof(void),StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(Error),StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult> Post([FromBody] SignUp command)
+    public async Task<ActionResult> Post([FromBody] SignUpRequest request)
     {
-        command = command with { UserId = Guid.NewGuid() };
+        var command = request.ToCommand();
         await _commandDispatcher.DispatchAsync(command);
         
         return  CreatedAtAction(nameof(Get), new {command.UserId}, null);
@@ -46,9 +43,9 @@ public class UsersController : ControllerBase
     [SwaggerOperation("Sign in")]
     [ProducesResponseType(typeof(JwtDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Error),StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<JwtDto>> Post(SignIn command)
+    public async Task<ActionResult<JwtDto>> Post(SignInRequest request)
     {
-        await _commandDispatcher.DispatchAsync(command);
+        await _commandDispatcher.DispatchAsync(request.ToCommand());
         var jwt = _tokenStorage.Get();
         return Ok(jwt);
     }
@@ -58,7 +55,6 @@ public class UsersController : ControllerBase
     [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void),StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(void),StatusCodes.Status404NotFound)]
-    [SuppressMessage("ReSharper.DPA", "DPA0006: Large number of DB commands")]
     public async Task<ActionResult<UserDto>> Get()
     {
         if (string.IsNullOrWhiteSpace(User.Identity?.Name))
