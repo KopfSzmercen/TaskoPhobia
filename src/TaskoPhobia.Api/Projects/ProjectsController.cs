@@ -9,7 +9,7 @@ using TaskoPhobia.Shared.Abstractions.Commands;
 using TaskoPhobia.Shared.Abstractions.Exceptions.Errors;
 using TaskoPhobia.Shared.Abstractions.Queries;
 
-namespace TaskoPhobia.Api.Controllers;
+namespace TaskoPhobia.Api.Projects;
 
 [ApiController]
 [Route("projects")]
@@ -31,12 +31,12 @@ public class ProjectsController : ControllerBase
     [SwaggerOperation("Create a project")]
     [ProducesResponseType(typeof(void), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult> Post([FromBody] CreateProject command)
+    public async Task<ActionResult> Post([FromBody] CreateProjectRequest request)
     {
         var currentUserIdStr = User.Identity?.Name;
         if (string.IsNullOrWhiteSpace(currentUserIdStr))   return NotFound();
 
-        command = command with { ProjectId = Guid.NewGuid(), OwnerId = Guid.Parse(currentUserIdStr)};
+        var command = request.ToCommand(Guid.Parse(currentUserIdStr));
         await _commandDispatcher.DispatchAsync(command);
         
         return  CreatedAtAction(nameof(Get), new {command.ProjectId}, null);
@@ -63,7 +63,7 @@ public class ProjectsController : ControllerBase
     [SwaggerOperation("Get single owned project")]
     [ProducesResponseType(typeof(ProjectDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<ProjectDto>> Get(Guid projectId)
+    public async Task<ActionResult<ProjectDto>> Get([FromRoute]Guid projectId)
     {
         var currentUserIdStr = User.Identity?.Name;
         if (string.IsNullOrWhiteSpace(currentUserIdStr))   return NotFound();
