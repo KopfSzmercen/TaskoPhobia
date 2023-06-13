@@ -11,7 +11,7 @@ builder.Services
     .AddInfrastructure(builder.Configuration)
     .AddControllers();
 
-
+// #CR usunąć puste linie
 
 var app = builder.Build();
 

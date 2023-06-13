@@ -22,6 +22,7 @@ internal sealed class BrowseProjectsHandler : IQueryHandler<BrowseProjects, IEnu
             .AsNoTracking()
             .ToListAsync();
 
+        // #CR można to wszystko zamknąć jednej linijce, zamiast "var projects =" dać return i od razu selectować 
         return projects.Select(x => x.AsDto());
     }
 }

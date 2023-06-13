@@ -20,6 +20,7 @@ public class CreateProjectTaskHandler : ICommandHandler<CreateProjectTask>
     {
         var project = await _projectRepository.FindByIdAsync(command.ProjectId);
 
+        // #CR nie do końca podoba mi sie to sprawdzanie "project.OwnerId.Value != command.UserId", wydaje mi się, że tu powinno być nadpisanie operatora na OwnerId, który porówna guidy
         if (project is null || project.OwnerId.Value != command.UserId) throw new ProjectNotFoundException();
 
         var projectTaskId = new ProjectTaskId(command.TaskId);
@@ -29,7 +30,7 @@ public class CreateProjectTaskHandler : ICommandHandler<CreateProjectTask>
         
         var task = new ProjectTask(projectTaskId, projectTaskName, projectTimeSpan, projectId, ProgressStatus.InProgress());
         project.AddTask(task);
- 
+        // #CR pusta linijka
         
         await _projectRepository.UpdateAsync(project);
     }

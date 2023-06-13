@@ -4,12 +4,13 @@ using TaskoPhobia.Core.Entities;
 using TaskoPhobia.Core.ValueObjects;
 
 namespace TaskoPhobia.Infrastructure.DAL.Configurations;
+// #CR Dotyczy całego DAL, ogólnie ddd i podejście value objectowe jest super ale... wymaga dwóch dbContextów, jednego głównego do zapisu, i drugiego tylko do odczytu, inaczej będziesz się strasznie męczyć z Query
 
 internal sealed class ProjectConfiguration : IEntityTypeConfiguration<Project>
 {
     public void Configure(EntityTypeBuilder<Project> builder)
     {
-
+// #CR pusta linijka
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id)
             .HasConversion(x => x.Value, 

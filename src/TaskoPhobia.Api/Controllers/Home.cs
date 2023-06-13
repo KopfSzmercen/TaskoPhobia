@@ -6,7 +6,7 @@ namespace TaskoPhobia.Api.Controllers;
 [Route("home")]
 public class HomeController : ControllerBase
 {
-
+    // #CR niepotrzebny home controller :D
     [HttpGet]
     public ActionResult<String> Get()
     {

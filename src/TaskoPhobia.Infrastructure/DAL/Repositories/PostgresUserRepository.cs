@@ -8,7 +8,7 @@ namespace TaskoPhobia.Infrastructure.DAL.Repositories;
 internal sealed class PostgresUserRepository : IUserRepository
 {
     private readonly DbSet<User> _users;
-
+// #CR usunąć pustą linie (powinna być jedna linia odstępu zazwyczaj)
     
     public PostgresUserRepository(TaskoPhobiaDbContext dbContext)
     {

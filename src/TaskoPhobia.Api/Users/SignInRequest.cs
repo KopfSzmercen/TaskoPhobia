@@ -5,6 +5,7 @@ namespace TaskoPhobia.Api.Users;
 
 public class SignInRequest
 {
+    // #CR jak wcześniej
     [Required]
     [EmailAddress]
     public string Email { get; init; }

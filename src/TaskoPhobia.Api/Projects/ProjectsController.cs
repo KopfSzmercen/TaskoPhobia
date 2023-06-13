@@ -16,6 +16,7 @@ namespace TaskoPhobia.Api.Projects;
 public class ProjectsController : ControllerBase 
 {
     private readonly ICommandDispatcher _commandDispatcher;
+    // #CR nieużywana interfejs, do wyrzucenia
     private readonly ITokenStorage _tokenStorage;
     private readonly IQueryDispatcher _queryDispatcher;
 
@@ -30,16 +31,21 @@ public class ProjectsController : ControllerBase
     [HttpPost]
     [SwaggerOperation("Create a project")]
     [ProducesResponseType(typeof(void), StatusCodes.Status201Created)]
+    // #CR wskazywanie typu tupeof(void) lub typeof(error) jest zbędne
+    // #CR nie używamy raczej bazowej klasy Error, dobrze jest mieć zbudowany własny middleware z swoją własną klasą  
     [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> Post([FromBody] CreateProjectRequest request)
     {
+        // #CR to można wydzielić sobie to interfejsu, gdzie jego implementacja pobierze sobie dane z tokenu, i użyć tego np już w handlerze
         var currentUserIdStr = User.Identity?.Name;
+        
+        // #CR jw. wydzielić sobie do metody w interfejsie, i jeśli nie ma userId zapisanego to raczej wyrzucić wyjątek, że user jest np niezalogowany
         if (string.IsNullOrWhiteSpace(currentUserIdStr))   return NotFound();
 
         var command = request.ToCommand(Guid.Parse(currentUserIdStr));
         await _commandDispatcher.DispatchAsync(command);
         
-        return  CreatedAtAction(nameof(Get), new {command.ProjectId}, null);
+        return CreatedAtAction(nameof(Get), new {command.ProjectId}, null);
     }
 
     [Authorize]
@@ -49,6 +55,7 @@ public class ProjectsController : ControllerBase
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<IEnumerable<ProjectDto>>> Get()
     {
+        // #CR jw
         var currentUserIdStr = User.Identity?.Name;
         if (string.IsNullOrWhiteSpace(currentUserIdStr))   return NotFound();
 
@@ -65,6 +72,7 @@ public class ProjectsController : ControllerBase
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<ProjectDto>> Get([FromRoute]Guid projectId)
     {
+        // #CR jw
         var currentUserIdStr = User.Identity?.Name;
         if (string.IsNullOrWhiteSpace(currentUserIdStr))   return NotFound();
 

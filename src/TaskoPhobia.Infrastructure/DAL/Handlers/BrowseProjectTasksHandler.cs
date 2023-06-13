@@ -24,6 +24,7 @@ internal sealed class BrowseProjectTasksHandler : IQueryHandler<BrowseProjectTas
             .AsNoTracking()
             .SingleOrDefaultAsync(x => x.Id == projectId && x.OwnerId == userId);
 
+        // #CR do zastanawienia, czy nie chcemy może rzucić wyjątku gdy nie będzie żadnego projektu?
         return project?.Tasks.Select(x => x.AsDto());
     }
 }

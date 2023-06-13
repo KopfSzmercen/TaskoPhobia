@@ -14,7 +14,7 @@ public static class Extensions
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration )
     {
-        
+        // #CR pusta linijka
         services.AddHttpContextAccessor();        
         services.AddEndpointsApiExplorer()
             .AddSwaggerGen(ConfigureSwagger)

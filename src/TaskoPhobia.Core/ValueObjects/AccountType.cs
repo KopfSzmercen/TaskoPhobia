@@ -4,6 +4,7 @@ namespace TaskoPhobia.Core.ValueObjects;
 
 public record AccountType
 {
+    // #CR notka odnośnie valueObjectów, nie wszystkie będą w tym Core, niektóre takie jak Email, mogą być wykorzystane w różnych miejscach i dobrze byłoby je wydzielić
     public static IEnumerable<string> AvailableAccountTypes { get; } = new[] {"free", "basic", "extended"};
     
     public string Value { get; }

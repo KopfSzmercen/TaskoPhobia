@@ -7,6 +7,7 @@ public class CreateProjectTaskRequest
 {
     [Required]
     [MaxLength(50)]
+    // #CR jak wcześniej wszystko
     public string TaskName { get; init; }
     
     [Required]
