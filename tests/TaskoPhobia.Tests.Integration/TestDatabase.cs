@@ -5,8 +5,6 @@ namespace TaskoPhobia.Tests.Integration;
 
 internal class TestDatabase : IDisposable
 {
-    public TaskoPhobiaDbContext DbContext { get; }
-
     public TestDatabase()
     {
         var options = new OptionsProvider().Get<PostgresOptions>("database");
@@ -14,6 +12,8 @@ internal class TestDatabase : IDisposable
             .UseNpgsql(options.ConnectionString)
             .Options);
     }
+
+    public TaskoPhobiaDbContext DbContext { get; }
 
     public void Dispose()
     {

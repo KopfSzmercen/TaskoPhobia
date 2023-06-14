@@ -1,21 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using TaskoPhobia.Application.Commands;
-using TaskoPhobia.Core.Entities;
 
-namespace TaskoPhobia.Api.Users;
+namespace TaskoPhobia.Application.Commands.Users.SignUp;
 
 public class SignUpRequest
 {
-    [Required]
-    [EmailAddress]
+    
     public string Email { get; init; }
-    
-    [Required]
-    [MaxLength(50)]
+
     public string Username { get; init; }
-    
-    [Required]
-    [MaxLength(50)]
+
     public string Password { get; init; }
 
     public SignUp ToCommand()

@@ -4,24 +4,20 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using TaskoPhobia.Application.Security;
-using TaskoPhobia.Infrastructure.DAL;
 
 namespace TaskoPhobia.Infrastructure.Auth;
 
 internal static class Extensions
 {
     private const string SectionName = "auth";
-    
+
     public static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<AuthOptions>(configuration.GetRequiredSection(SectionName));
         var options = configuration.GetOptions<AuthOptions>(SectionName);
 
         services
-            .AddAuthentication(x =>
-            {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
+            .AddAuthentication(x => { x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme; })
             .AddJwtBearer(x =>
             {
                 x.Audience = options.Audience;
@@ -38,7 +34,7 @@ internal static class Extensions
 
         services.AddSingleton<IAuthenticator, Authenticator>();
         services.AddSingleton<ITokenStorage, HttpContextTokenStorage>();
-        
+
         return services;
     }
 }

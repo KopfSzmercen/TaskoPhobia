@@ -12,6 +12,7 @@ internal sealed class DatabaseInitializer : IHostedService
     {
         _serviceProvider = serviceProvider;
     }
+
     public Task StartAsync(CancellationToken cancellationToken)
     {
         using (var scope = _serviceProvider.CreateScope())
@@ -19,7 +20,7 @@ internal sealed class DatabaseInitializer : IHostedService
             var dbContext = scope.ServiceProvider.GetRequiredService<TaskoPhobiaDbContext>();
             dbContext.Database.Migrate();
         }
-        
+
         return Task.CompletedTask;
     }
 

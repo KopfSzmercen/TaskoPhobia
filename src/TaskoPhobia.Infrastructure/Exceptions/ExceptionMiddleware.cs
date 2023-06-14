@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using TaskoPhobia.Core.Exceptions;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Http;
 using TaskoPhobia.Shared.Abstractions.Exceptions;
 using TaskoPhobia.Shared.Abstractions.Exceptions.Errors;
 
@@ -24,13 +24,18 @@ internal sealed class ExceptionMiddleware : IMiddleware
     {
         var (statusCode, error) = exception switch
         {
-            CustomException =>  (StatusCodes.Status400BadRequest, 
-                new Error(exception.GetType().Name.Replace("Exception", string.Empty), exception.Message)),
-            _ => (StatusCodes.Status500InternalServerError, new Error("error", "Something went wrong")),
+            CustomException => (StatusCodes.Status400BadRequest,
+               new ErrorsResponse( new Error(exception.GetType().Name.Replace("Exception", string.Empty), exception.Message))),
+            
+            ValidationException validationException => (StatusCodes.Status400BadRequest, 
+                new ErrorsResponse(validationException.Errors.Select(
+                    e => new Error(e.ErrorCode, e.ErrorMessage, e.PropertyName)).ToArray()
+                )),
+            
+            _ => (StatusCodes.Status500InternalServerError, new ErrorsResponse( new Error("error", "Something went wrong")))
         };
 
         context.Response.StatusCode = statusCode;
         await context.Response.WriteAsJsonAsync(error);
     }
-    
 }

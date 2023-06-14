@@ -13,7 +13,7 @@ internal sealed class ProjectTaskConfiguration : IEntityTypeConfiguration<Projec
         builder.Property(x => x.Id)
             .HasConversion(x => x.Value,
                 x => new ProjectTaskId(x));
-
+        
         builder.Property(x => x.Name)
             .IsRequired()
             .HasConversion(x => x.Value,
@@ -27,10 +27,10 @@ internal sealed class ProjectTaskConfiguration : IEntityTypeConfiguration<Projec
 
         builder.Property(x => x.Status)
             .IsRequired()
-            .HasConversion(x => x.Value, 
+            .HasConversion(x => x.Value,
                 x => new ProgressStatus(x));
 
-        builder.HasOne<Project>(x => x.Project)
+        builder.HasOne(x => x.Project)
             .WithMany(p => p.Tasks)
             .HasForeignKey(x => x.ProjectId);
 

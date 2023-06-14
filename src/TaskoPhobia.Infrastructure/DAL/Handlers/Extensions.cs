@@ -5,29 +5,38 @@ namespace TaskoPhobia.Infrastructure.DAL.Handlers;
 
 public static class Extensions
 {
-    public static UserDto AsDto(this User entity) => new()
+    public static UserDto AsDto(this User entity)
     {
-        Id = entity.Id,
-        Username = entity.Username,
-        Email = entity.Email,
-        Role = entity.Role
-    };
+        return new UserDto
+        {
+            Id = entity.Id,
+            Username = entity.Username,
+            Email = entity.Email,
+            Role = entity.Role
+        };
+    }
 
-    public static ProjectDto AsDto(this Project entity) => new()
+    public static ProjectDto AsDto(this Project entity)
     {
-        Id = entity.Id,
-        Description = entity.Description,
-        Name = entity.Name,
-        Status = entity.Status,
-        CreatedAt = entity.CreatedAt
-    };
+        return new ProjectDto
+        {
+            Id = entity.Id,
+            Description = entity.Description,
+            Name = entity.Name,
+            Status = entity.Status,
+            CreatedAt = entity.CreatedAt
+        };
+    }
 
-    public static ProjectTaskDto AsDto(this ProjectTask entity) => new()
+    public static ProjectTaskDto AsDto(this ProjectTask entity)
     {
-        Id = entity.Id,
-        Name = entity.Name,
-        Status = entity.Status,
-        EndDate = entity.TimeSpan.End,
-        StartDate = entity.TimeSpan.Start
-    };
+        return new ProjectTaskDto
+        {
+            Id = entity.Id,
+            Name = entity.Name,
+            Status = entity.Status,
+            EndDate = entity.TimeSpan.End,
+            StartDate = entity.TimeSpan.Start
+        };
+    }
 }

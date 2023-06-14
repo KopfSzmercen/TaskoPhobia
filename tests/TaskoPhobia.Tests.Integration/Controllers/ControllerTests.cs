@@ -1,5 +1,4 @@
-﻿
-using System.Net.Http.Headers;
+﻿using System.Net.Http.Headers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using TaskoPhobia.Application.DTO;
@@ -14,10 +13,7 @@ namespace TaskoPhobia.Tests.Integration.Controllers;
 public abstract class ControllerTests : IClassFixture<OptionsProvider>
 {
     private readonly IAuthenticator _authenticator;
-    protected HttpClient HttpClient { get; }
-    
-    protected virtual void ConfigureServices(IServiceCollection services){}
-    
+
     protected ControllerTests(OptionsProvider optionsProvider)
     {
         var app = new TaskoPhobiaTestApp(ConfigureServices);
@@ -26,6 +22,12 @@ public abstract class ControllerTests : IClassFixture<OptionsProvider>
         var authOptions = optionsProvider.Get<AuthOptions>("auth");
 
         _authenticator = new Authenticator(new OptionsWrapper<AuthOptions>(authOptions));
+    }
+
+    protected HttpClient HttpClient { get; }
+
+    protected virtual void ConfigureServices(IServiceCollection services)
+    {
     }
 
     protected JwtDto Authorize(Guid userId, string role)

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using TaskoPhobia.Shared.Abstractions.Queries;
+
 namespace TaskoPhobia.Shared.Queries;
 
 internal sealed class InMemoryQueryDispatcher : IQueryDispatcher
@@ -10,8 +11,8 @@ internal sealed class InMemoryQueryDispatcher : IQueryDispatcher
     {
         _serviceProvider = serviceProvider;
     }
-    
-    
+
+
     public async Task<TResult> QueryAsync<TResult>(IQuery<TResult> query)
     {
         using var scope = _serviceProvider.CreateScope();
@@ -19,6 +20,6 @@ internal sealed class InMemoryQueryDispatcher : IQueryDispatcher
         var handler = scope.ServiceProvider.GetRequiredService(handlerType);
 
         return await (Task<TResult>)handlerType.GetMethod(nameof(IQueryHandler<IQuery<TResult>, TResult>.HandleAsync))?
-            .Invoke(handler, new []{query});
+            .Invoke(handler, new[] { query });
     }
 }

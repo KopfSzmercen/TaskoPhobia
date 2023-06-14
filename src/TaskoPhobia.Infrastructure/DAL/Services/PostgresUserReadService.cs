@@ -13,7 +13,7 @@ internal sealed class PostgresUserReadService : IUserReadService
     {
         _users = dbContext.Users;
     }
-    
+
     public async Task<bool> ExistsByEmailAsync(Email email)
     {
         return await _users.AnyAsync(x => x.Email == email);

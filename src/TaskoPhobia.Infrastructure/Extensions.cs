@@ -12,10 +12,9 @@ namespace TaskoPhobia.Infrastructure;
 
 public static class Extensions
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration )
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        
-        services.AddHttpContextAccessor();        
+        services.AddHttpContextAccessor();
         services.AddEndpointsApiExplorer()
             .AddSwaggerGen(ConfigureSwagger)
             .AddPostgres(configuration)
@@ -25,8 +24,7 @@ public static class Extensions
 
         return services;
     }
-
-    private static void ConfigureSwagger( SwaggerGenOptions swagger)
+    private static void ConfigureSwagger(SwaggerGenOptions swagger)
     {
         swagger.EnableAnnotations();
         swagger.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -43,31 +41,30 @@ public static class Extensions
                 Array.Empty<string>()
             }
         });
-        
+
         swagger.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
         {
-            Description = "Input your JWT Authorization header to access this API. Example: \"Authorization: Bearer {token}\"",
+            Description =
+                "Input your JWT Authorization header to access this API. Example: \"Authorization: Bearer {token}\"",
             Name = "Authorization",
             In = ParameterLocation.Header,
             Type = SecuritySchemeType.ApiKey,
             Scheme = "Bearer"
         });
     }
-
     public static WebApplication UseInfrastructure(this WebApplication app)
     {
         app.UseSwagger();
         app.UseSwaggerUI();
 
         app.UseMiddleware<ExceptionMiddleware>();
-        
+
         app.UseAuthentication();
         app.UseAuthorization();
         app.MapControllers();
 
         return app;
     }
-    
     public static T GetOptions<T>(this IConfiguration configuration, string sectionName) where T : class, new()
     {
         var options = new T();

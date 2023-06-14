@@ -1,10 +1,9 @@
-﻿
-using System.Net;
+﻿using System.Net;
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Identity;
 using Shouldly;
-using TaskoPhobia.Api.Users;
-using TaskoPhobia.Application.Commands;
+using TaskoPhobia.Application.Commands.Users.SignIn;
+using TaskoPhobia.Application.Commands.Users.SignUp;
 using TaskoPhobia.Application.DTO;
 using TaskoPhobia.Core.Entities;
 using TaskoPhobia.Core.ValueObjects;
@@ -16,40 +15,10 @@ namespace TaskoPhobia.Tests.Integration.Controllers;
 
 public class UsersControllerTests : ControllerTests, IDisposable
 {
-    #region setup
-    private const string Password = "secret";
-    private readonly TestDatabase _testDatabase;
-
-    public UsersControllerTests(OptionsProvider optionsProvider) : base(optionsProvider)
-    {
-        _testDatabase = new TestDatabase();
-    }
-    
-    
-    public void Dispose()
-    {
-        _testDatabase.Dispose();
-    }
-    private async Task<User> CreateUserAsync()
-    {
-        var passwordManager = new PasswordManager(new PasswordHasher<object>());
-        var securedPassword = passwordManager.Secure(Password);
-
-        var user = new User(Guid.NewGuid(), "test@t.pl",
-            "test", securedPassword, Role.User(), DateTime.UtcNow, AccountType.Free());
-
-        await _testDatabase.DbContext.Users.AddAsync(user);
-        await _testDatabase.DbContext.SaveChangesAsync();
-
-        return user;
-    }
-    #endregion
-
     [Fact]
     public async Task given_valid_command_sign_up_should_return_created_201_code()
     {
-   
-        var request = new  SignUpRequest {Password = Password, Email = "test@t.pl", Username = "test"};
+        var request = new SignUpRequest { Password = Password, Email = "test@t.pl", Username = "test" };
 
         var response = await HttpClient.PostAsJsonAsync("users/sign-up", request);
 
@@ -61,10 +30,10 @@ public class UsersControllerTests : ControllerTests, IDisposable
     public async Task given_valid_credentials_post_sign_in_should_return_200_ok_status_and_jwt()
     {
         var user = await CreateUserAsync();
-        
-        var request = new SignInRequest {Email = user.Email, Password = Password};
+
+        var request = new SignInRequest { Email = user.Email, Password = Password };
         var response = await HttpClient.PostAsJsonAsync("users/sign-in", request);
-        
+
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
         var jwt = await response.Content.ReadFromJsonAsync<JwtDto>();
@@ -82,7 +51,7 @@ public class UsersControllerTests : ControllerTests, IDisposable
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
         var userDto = await response.Content.ReadFromJsonAsync<UserDto>();
-        
+
         userDto.Id.ShouldBe(user.Id.Value);
         userDto.Email.ShouldBe(user.Email.Value);
     }
@@ -95,7 +64,7 @@ public class UsersControllerTests : ControllerTests, IDisposable
         var response = await HttpClient.PostAsJsonAsync("users/sign-up", request);
 
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
-        var errorResult= response.Content.ReadFromJsonAsync<Error>().Result;
+        var errorResult = response.Content.ReadFromJsonAsync<Error>().Result;
 
         errorResult.ShouldBeOfType<Error>();
     }
@@ -106,10 +75,42 @@ public class UsersControllerTests : ControllerTests, IDisposable
         var user = await CreateUserAsync();
         var request = new SignInRequest { Email = "dfs{user.Email.Value}", Password = user.Password.Value };
         var response = await HttpClient.PostAsJsonAsync("users/sign-in", request);
-        
+
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
-        var errorResult= response.Content.ReadFromJsonAsync<Error>().Result;
-        
+        var errorResult = response.Content.ReadFromJsonAsync<Error>().Result;
+
         errorResult.ShouldBeOfType<Error>();
     }
+
+    #region setup
+
+    private const string Password = "secret";
+    private readonly TestDatabase _testDatabase;
+
+    public UsersControllerTests(OptionsProvider optionsProvider) : base(optionsProvider)
+    {
+        _testDatabase = new TestDatabase();
+    }
+
+
+    public void Dispose()
+    {
+        _testDatabase.Dispose();
+    }
+
+    private async Task<User> CreateUserAsync()
+    {
+        var passwordManager = new PasswordManager(new PasswordHasher<object>());
+        var securedPassword = passwordManager.Secure(Password);
+
+        var user = new User(Guid.NewGuid(), "test@t.pl",
+            "test", securedPassword, Role.User(), DateTime.UtcNow, AccountType.Free());
+
+        await _testDatabase.DbContext.Users.AddAsync(user);
+        await _testDatabase.DbContext.SaveChangesAsync();
+
+        return user;
+    }
+
+    #endregion
 }

@@ -1,5 +1,4 @@
-﻿using TaskoPhobia.Core.Exceptions;
-using TaskoPhobia.Shared.Abstractions.Exceptions;
+﻿using TaskoPhobia.Shared.Abstractions.Exceptions;
 
 namespace TaskoPhobia.Application.Exceptions;
 

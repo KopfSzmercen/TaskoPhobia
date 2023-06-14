@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using TaskoPhobia.Shared;
 using TaskoPhobia.Shared.Commands;
 
 namespace TaskoPhobia.Application;

@@ -16,7 +16,7 @@ internal sealed class GetProjectHandler : IQueryHandler<GetProject, ProjectDto>
         _projects = dbContext.Projects;
     }
 
-    
+
     public async Task<ProjectDto> HandleAsync(GetProject query)
     {
         var projectId = new ProjectId(query.ProjectId);
