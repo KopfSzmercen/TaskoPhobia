@@ -1,10 +1,12 @@
-﻿namespace TaskoPhobia.Infrastructure.DAL;
+﻿using TaskoPhobia.Infrastructure.DAL.Contexts;
+
+namespace TaskoPhobia.Infrastructure.DAL;
 
 internal sealed class PostgresUnitOfWork : IUnitOfWork
 {
-    private readonly TaskoPhobiaDbContext _dbContext;
+    private readonly TaskoPhobiaWriteDbContext _dbContext;
 
-    public PostgresUnitOfWork(TaskoPhobiaDbContext dbContext)
+    public PostgresUnitOfWork(TaskoPhobiaWriteDbContext dbContext)
     {
         _dbContext = dbContext;
     }

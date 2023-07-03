@@ -3,15 +3,17 @@ using TaskoPhobia.Application.DTO;
 using TaskoPhobia.Application.Queries;
 using TaskoPhobia.Core.Entities;
 using TaskoPhobia.Core.ValueObjects;
+using TaskoPhobia.Infrastructure.DAL.Configurations.Read.Model;
+using TaskoPhobia.Infrastructure.DAL.Contexts;
 using TaskoPhobia.Shared.Abstractions.Queries;
 
 namespace TaskoPhobia.Infrastructure.DAL.Handlers;
 
 internal sealed class GetProjectHandler : IQueryHandler<GetProject, ProjectDto>
 {
-    private readonly DbSet<Project> _projects;
+    private readonly DbSet<ProjectReadModel> _projects;
 
-    public GetProjectHandler(TaskoPhobiaDbContext dbContext)
+    public GetProjectHandler(TaskoPhobiaReadDbContext dbContext)
     {
         _projects = dbContext.Projects;
     }
@@ -19,12 +21,10 @@ internal sealed class GetProjectHandler : IQueryHandler<GetProject, ProjectDto>
 
     public async Task<ProjectDto> HandleAsync(GetProject query)
     {
-        var projectId = new ProjectId(query.ProjectId);
-        var userId = new UserId(query.UserId);
-
+        
         var project = await _projects
             .AsNoTracking()
-            .Where(x => x.OwnerId == userId && x.Id == projectId)
+            .Where(x => x.OwnerId == query.UserId && x.Id == query.ProjectId)
             .SingleOrDefaultAsync();
 
         return project?.AsDto();

@@ -1,42 +1,43 @@
 ﻿using TaskoPhobia.Application.DTO;
 using TaskoPhobia.Core.Entities;
+using TaskoPhobia.Infrastructure.DAL.Configurations.Read.Model;
 
 namespace TaskoPhobia.Infrastructure.DAL.Handlers;
 
 public static class Extensions
 {
-    public static UserDto AsDto(this User entity)
+    public static UserDto AsDto(this UserReadModel user)
     {
         return new UserDto
         {
-            Id = entity.Id,
-            Username = entity.Username,
-            Email = entity.Email,
-            Role = entity.Role
+            Id = user.Id,
+            Username = user.Username,
+            Email = user.Email,
+            Role = user.Role
         };
     }
 
-    public static ProjectDto AsDto(this Project entity)
+    public static ProjectDto AsDto(this ProjectReadModel project)
     {
         return new ProjectDto
         {
-            Id = entity.Id,
-            Description = entity.Description,
-            Name = entity.Name,
-            Status = entity.Status,
-            CreatedAt = entity.CreatedAt
+            Id = project.Id,
+            Description = project.Description,
+            Name = project.Name,
+            Status = project.Status,
+            CreatedAt = project.CreatedAt
         };
     }
 
-    public static ProjectTaskDto AsDto(this ProjectTask entity)
+    public static ProjectTaskDto AsDto(this ProjectTaskReadModel projectTask)
     {
         return new ProjectTaskDto
         {
-            Id = entity.Id,
-            Name = entity.Name,
-            Status = entity.Status,
-            EndDate = entity.TimeSpan.End,
-            StartDate = entity.TimeSpan.Start
+            Id = projectTask.Id,
+            Name = projectTask.Name,
+            Status = projectTask.Status,
+            EndDate = projectTask.EndDate,
+            StartDate = projectTask.StartDate
         };
     }
 }

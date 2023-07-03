@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TaskoPhobia.Infrastructure.DAL;
+using TaskoPhobia.Infrastructure.DAL.Contexts;
 
 namespace TaskoPhobia.Tests.Integration;
 
@@ -8,16 +9,26 @@ internal class TestDatabase : IDisposable
     public TestDatabase()
     {
         var options = new OptionsProvider().Get<PostgresOptions>("database");
-        DbContext = new TaskoPhobiaDbContext(new DbContextOptionsBuilder<TaskoPhobiaDbContext>()
+        
+        
+        
+        ReadDbContext = new TaskoPhobiaReadDbContext(new DbContextOptionsBuilder<TaskoPhobiaReadDbContext>()
             .UseNpgsql(options.ConnectionString)
             .Options);
+        
+        
+        WriteDbContext = new TaskoPhobiaWriteDbContext(new DbContextOptionsBuilder<TaskoPhobiaWriteDbContext>()
+            .UseNpgsql(options.ConnectionString)
+            .Options);
+        
     }
 
-    public TaskoPhobiaDbContext DbContext { get; }
+    public TaskoPhobiaReadDbContext ReadDbContext { get; }
+    public TaskoPhobiaWriteDbContext WriteDbContext { get; }
 
     public void Dispose()
     {
-        DbContext.Database.EnsureDeleted();
-        DbContext?.Dispose();
+        WriteDbContext.Database.EnsureDeleted();
+        WriteDbContext?.Dispose();
     }
 }

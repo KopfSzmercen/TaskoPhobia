@@ -2,6 +2,7 @@
 using TaskoPhobia.Core.Entities;
 using TaskoPhobia.Core.Services;
 using TaskoPhobia.Core.ValueObjects;
+using TaskoPhobia.Infrastructure.DAL.Contexts;
 
 namespace TaskoPhobia.Infrastructure.DAL.Services;
 
@@ -9,7 +10,7 @@ internal sealed class PostgresUserReadService : IUserReadService
 {
     private readonly DbSet<User> _users;
 
-    public PostgresUserReadService(TaskoPhobiaDbContext dbContext)
+    public PostgresUserReadService(TaskoPhobiaWriteDbContext dbContext)
     {
         _users = dbContext.Users;
     }

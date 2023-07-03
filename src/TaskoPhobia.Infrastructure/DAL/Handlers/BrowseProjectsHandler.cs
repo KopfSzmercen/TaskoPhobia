@@ -1,25 +1,24 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TaskoPhobia.Application.DTO;
 using TaskoPhobia.Application.Queries;
-using TaskoPhobia.Core.Entities;
-using TaskoPhobia.Core.ValueObjects;
+using TaskoPhobia.Infrastructure.DAL.Configurations.Read.Model;
+using TaskoPhobia.Infrastructure.DAL.Contexts;
 using TaskoPhobia.Shared.Abstractions.Queries;
 
 namespace TaskoPhobia.Infrastructure.DAL.Handlers;
 
 internal sealed class BrowseProjectsHandler : IQueryHandler<BrowseProjects, IEnumerable<ProjectDto>>
 {
-    private readonly DbSet<Project> _projects;
+    private readonly DbSet<ProjectReadModel> _projects;
 
-    public BrowseProjectsHandler(TaskoPhobiaDbContext dbContext)
+    public BrowseProjectsHandler(TaskoPhobiaReadDbContext dbContext)
     {
         _projects = dbContext.Projects;
     }
 
     public async Task<IEnumerable<ProjectDto>> HandleAsync(BrowseProjects query)
     {
-        return (await _projects.AsNoTracking().Where(x => x.OwnerId == new UserId(query.UserId))
-                .ToListAsync())
-            .Select(x => x.AsDto());
+        var projects = await _projects.AsNoTracking().Where(x => x.OwnerId == query.UserId).ToListAsync();
+        return projects?.Select(x => x.AsDto());
     }
 }

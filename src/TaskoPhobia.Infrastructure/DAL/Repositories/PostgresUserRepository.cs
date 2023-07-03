@@ -2,13 +2,14 @@
 using TaskoPhobia.Core.Entities;
 using TaskoPhobia.Core.Repositories;
 using TaskoPhobia.Core.ValueObjects;
+using TaskoPhobia.Infrastructure.DAL.Contexts;
 
 namespace TaskoPhobia.Infrastructure.DAL.Repositories;
 
 internal sealed class PostgresUserRepository : IUserRepository
 {
     private readonly DbSet<User> _users;
-    public PostgresUserRepository(TaskoPhobiaDbContext dbContext)
+    public PostgresUserRepository(TaskoPhobiaWriteDbContext dbContext)
     {
         _users = dbContext.Users;
     }

@@ -6,20 +6,22 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TaskoPhobia.Infrastructure.DAL;
+using TaskoPhobia.Infrastructure.DAL.Contexts;
 
 #nullable disable
 
 namespace TaskoPhobia.Infrastructure.DAL.Migrations
 {
-    [DbContext(typeof(TaskoPhobiaDbContext))]
-    [Migration("20230611153609_Add-Project-Tasks")]
-    partial class AddProjectTasks
+    [DbContext(typeof(TaskoPhobiaWriteDbContext))]
+    [Migration("20230703145415_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("taskophobia")
                 .HasAnnotation("ProductVersion", "7.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
@@ -51,7 +53,7 @@ namespace TaskoPhobia.Infrastructure.DAL.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.ToTable("Projects");
+                    b.ToTable("Projects", "taskophobia");
                 });
 
             modelBuilder.Entity("TaskoPhobia.Core.Entities.ProjectTask", b =>
@@ -60,19 +62,21 @@ namespace TaskoPhobia.Infrastructure.DAL.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<Guid?>("ProjectId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Status")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("ProjectTasks");
+                    b.ToTable("ProjectTasks", "taskophobia");
                 });
 
             modelBuilder.Entity("TaskoPhobia.Core.Entities.User", b =>
@@ -111,7 +115,7 @@ namespace TaskoPhobia.Infrastructure.DAL.Migrations
                     b.HasIndex("Username")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", "taskophobia");
                 });
 
             modelBuilder.Entity("TaskoPhobia.Core.Entities.Project", b =>
@@ -144,7 +148,7 @@ namespace TaskoPhobia.Infrastructure.DAL.Migrations
 
                             b1.HasKey("ProjectTaskId");
 
-                            b1.ToTable("ProjectTasks");
+                            b1.ToTable("ProjectTasks", "taskophobia");
 
                             b1.WithOwner()
                                 .HasForeignKey("ProjectTaskId");

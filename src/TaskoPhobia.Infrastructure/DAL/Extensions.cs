@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TaskoPhobia.Core.Repositories;
 using TaskoPhobia.Core.Services;
+using TaskoPhobia.Infrastructure.DAL.Contexts;
 using TaskoPhobia.Infrastructure.DAL.Decorators;
 using TaskoPhobia.Infrastructure.DAL.Repositories;
 using TaskoPhobia.Infrastructure.DAL.Services;
@@ -21,11 +22,12 @@ internal static class Extensions
         services.Configure<PostgresOptions>(section);
 
         var options = GetOptions<PostgresOptions>(configuration, SectionName);
+        
+        services.AddDbContext<TaskoPhobiaReadDbContext>(x => x.UseNpgsql(options.ConnectionString));
+        services.AddDbContext<TaskoPhobiaWriteDbContext>(x => x.UseNpgsql(options.ConnectionString));
 
-        services.AddDbContext<TaskoPhobiaDbContext>(x => x.UseNpgsql(options.ConnectionString));
-        services.AddScoped<IUserRepository, PostgresUserRepository>();
+        services.AddRepositories();
         services.AddScoped<IUserReadService, PostgresUserReadService>();
-        services.AddScoped<IProjectRepository, PostgresProjectRepository>();
 
         services.AddHostedService<DatabaseInitializer>();
         services.AddScoped<IUnitOfWork, PostgresUnitOfWork>();
@@ -37,7 +39,7 @@ internal static class Extensions
         return services;
     }
 
-    public static T GetOptions<T>(this IConfiguration configuration, string sectionName) where T : class, new()
+    private static T GetOptions<T>(this IConfiguration configuration, string sectionName) where T : class, new()
     {
         var options = new T();
         var section = configuration.GetSection(sectionName);
