@@ -12,7 +12,10 @@ public class OptionsProvider
         _configuration = GetConfigurationRoot();
     }
 
-    public T Get<T>(string sectionName) where T : class, new() => _configuration.GetOptions<T>(sectionName);
+    public T Get<T>(string sectionName) where T : class, new()
+    {
+        return _configuration.GetOptions<T>(sectionName);
+    }
 
     private static IConfigurationRoot GetConfigurationRoot()
     {

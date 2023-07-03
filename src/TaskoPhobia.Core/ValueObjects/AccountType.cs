@@ -4,30 +4,46 @@ namespace TaskoPhobia.Core.ValueObjects;
 
 public record AccountType
 {
-    public static IEnumerable<string> AvailableAccountTypes { get; } = new[] {"free", "basic", "extended"};
-    
-    public string Value { get; }
-
     public AccountType(string value)
     {
-        if (string.IsNullOrWhiteSpace(value) || value.Length > 30)
-        {
-            throw new InvalidAccountTypeException(value);
-        }
+        if (string.IsNullOrWhiteSpace(value) || value.Length > 30) throw new InvalidAccountTypeException(value);
 
-        if (!AvailableAccountTypes.Contains(value))
-        {
-            throw new InvalidAccountTypeException(value);
-        }
+        if (!AvailableAccountTypes.Contains(value)) throw new InvalidAccountTypeException(value);
 
         Value = value;
     }
 
-    public static AccountType Free() => new AccountType("free");
-    public static AccountType Basic() => new AccountType("basic");
-    public static AccountType Extended() => new AccountType("extended");
+    public static IEnumerable<string> AvailableAccountTypes { get; } = new[] { "free", "basic", "extended" };
 
-    public static implicit operator AccountType(string value) => new(value);
-    public static implicit operator string(AccountType value) => value.Value;
-    public override string ToString() => Value;
+    public string Value { get; }
+
+    public static AccountType Free()
+    {
+        return new AccountType("free");
+    }
+
+    public static AccountType Basic()
+    {
+        return new AccountType("basic");
+    }
+
+    public static AccountType Extended()
+    {
+        return new AccountType("extended");
+    }
+
+    public static implicit operator AccountType(string value)
+    {
+        return new AccountType(value);
+    }
+
+    public static implicit operator string(AccountType value)
+    {
+        return value.Value;
+    }
+
+    public override string ToString()
+    {
+        return Value;
+    }
 }

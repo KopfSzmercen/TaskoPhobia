@@ -18,10 +18,19 @@ public sealed record Email
         return Regex.IsMatch(emailToValidate,
             @"^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$");
     }
-    
-    public static implicit operator string(Email email) => email.Value;
 
-    public static implicit operator Email(string email) => new(email);
-        
-    public override string ToString() => Value;
+    public static implicit operator string(Email email)
+    {
+        return email.Value;
+    }
+
+    public static implicit operator Email(string email)
+    {
+        return new Email(email);
+    }
+
+    public override string ToString()
+    {
+        return Value;
+    }
 }

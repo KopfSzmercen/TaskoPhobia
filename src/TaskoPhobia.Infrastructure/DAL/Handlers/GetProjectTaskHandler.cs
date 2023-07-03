@@ -7,7 +7,7 @@ using TaskoPhobia.Shared.Abstractions.Queries;
 
 namespace TaskoPhobia.Infrastructure.DAL.Handlers;
 
-internal sealed class GetProjectTaskHandler : IQueryHandler<GetProjectTask ,ProjectTaskDto>
+internal sealed class GetProjectTaskHandler : IQueryHandler<GetProjectTask, ProjectTaskDto>
 {
     private readonly DbSet<ProjectTask> _projectTasks;
 
@@ -21,7 +21,7 @@ internal sealed class GetProjectTaskHandler : IQueryHandler<GetProjectTask ,Proj
         var projectTaskId = new ProjectTaskId(query.ProjectTaskId);
         var userId = new UserId(query.UserId);
         var projectId = new ProjectId(query.ProjectId);
-        
+
         var projectTask = await _projectTasks
             .Where(x => x.Id == projectTaskId && x.Project.Id == projectId && x.Project.OwnerId == userId)
             .AsNoTracking()

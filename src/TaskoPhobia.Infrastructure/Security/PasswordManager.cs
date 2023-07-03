@@ -10,11 +10,16 @@ internal sealed class PasswordManager : IPasswordManager
     public PasswordManager(IPasswordHasher<object> passwordHasher)
     {
         _passwordHasher = passwordHasher;
-        
     }
 
-    public string Secure(string password) => _passwordHasher.HashPassword( new object(), password);
+    public string Secure(string password)
+    {
+        return _passwordHasher.HashPassword(new object(), password);
+    }
 
-    public bool Validate(string password, string securedPassword) =>
-        _passwordHasher.VerifyHashedPassword(new object(), securedPassword, password) is PasswordVerificationResult.Success;
+    public bool Validate(string password, string securedPassword)
+    {
+        return _passwordHasher.VerifyHashedPassword(new object(), securedPassword, password) is
+            PasswordVerificationResult.Success;
+    }
 }

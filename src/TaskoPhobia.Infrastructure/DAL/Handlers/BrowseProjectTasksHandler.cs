@@ -15,6 +15,7 @@ internal sealed class BrowseProjectTasksHandler : IQueryHandler<BrowseProjectTas
     {
         _projects = dbContext.Projects;
     }
+
     public async Task<IEnumerable<ProjectTaskDto>> HandleAsync(BrowseProjectTasks query)
     {
         var projectId = new ProjectId(query.ProjectId);

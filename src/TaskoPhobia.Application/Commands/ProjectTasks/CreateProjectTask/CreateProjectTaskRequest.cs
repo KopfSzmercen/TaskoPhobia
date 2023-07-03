@@ -1,18 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using TaskoPhobia.Application.Commands;
 
-namespace TaskoPhobia.Api.ProjectTasks;
+namespace TaskoPhobia.Application.Commands.ProjectTasks.CreateProjectTask;
 
 public class CreateProjectTaskRequest
 {
-    [Required]
-    [MaxLength(50)]
     public string TaskName { get; init; }
-    
-    [Required]
+
     public DateTime Start { get; init; }
-    
-    [Required]
+
     public DateTime End { get; init; }
 
     public CreateProjectTask ToCommand(Guid userId, Guid projectId)

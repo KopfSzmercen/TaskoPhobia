@@ -8,12 +8,9 @@ internal sealed class TaskoPhobiaTestApp : WebApplicationFactory<Program>
 {
     public TaskoPhobiaTestApp(Action<IServiceCollection> services)
     {
-        Client = base.WithWebHostBuilder(builder =>
+        Client = WithWebHostBuilder(builder =>
         {
-            if (services is not null)
-            {
-                builder.ConfigureServices(services);
-            }
+            if (services is not null) builder.ConfigureServices(services);
             builder.UseEnvironment("test");
         }).CreateClient();
     }
