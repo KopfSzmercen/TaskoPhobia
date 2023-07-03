@@ -5,6 +5,7 @@ using TaskoPhobia.Application.DTO;
 using TaskoPhobia.Application.Security;
 using TaskoPhobia.Infrastructure.Auth;
 using TaskoPhobia.Infrastructure.DAL;
+using TaskoPhobia.Shared.Abstractions.Time;
 using Xunit;
 
 namespace TaskoPhobia.Tests.Integration.Controllers;
@@ -14,14 +15,14 @@ public abstract class ControllerTests : IClassFixture<OptionsProvider>
 {
     private readonly IAuthenticator _authenticator;
 
-    protected ControllerTests(OptionsProvider optionsProvider)
+    protected ControllerTests(OptionsProvider optionsProvider, IClock clock)
     {
         var app = new TaskoPhobiaTestApp(ConfigureServices);
         HttpClient = app.Client;
         var postgresOptions = optionsProvider.Get<PostgresOptions>("database");
         var authOptions = optionsProvider.Get<AuthOptions>("auth");
 
-        _authenticator = new Authenticator(new OptionsWrapper<AuthOptions>(authOptions));
+        _authenticator = new Authenticator(new OptionsWrapper<AuthOptions>(authOptions), clock);
     }
 
     protected HttpClient HttpClient { get; }

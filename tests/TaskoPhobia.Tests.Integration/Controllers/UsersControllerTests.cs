@@ -9,6 +9,8 @@ using TaskoPhobia.Core.Entities;
 using TaskoPhobia.Core.ValueObjects;
 using TaskoPhobia.Infrastructure.Security;
 using TaskoPhobia.Shared.Abstractions.Exceptions.Errors;
+using TaskoPhobia.Shared.Abstractions.Time;
+using TaskoPhobia.Shared.Time;
 using Xunit;
 
 namespace TaskoPhobia.Tests.Integration.Controllers;
@@ -86,13 +88,10 @@ public class UsersControllerTests : ControllerTests, IDisposable
 
     private const string Password = "secret";
     private readonly TestDatabase _testDatabase;
-
-    public UsersControllerTests(OptionsProvider optionsProvider) : base(optionsProvider)
+    public UsersControllerTests(OptionsProvider optionsProvider) : base(optionsProvider, new Clock())
     {
         _testDatabase = new TestDatabase();
     }
-
-
     public void Dispose()
     {
         _testDatabase.Dispose();

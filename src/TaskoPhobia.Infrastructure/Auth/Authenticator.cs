@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using TaskoPhobia.Application.DTO;
 using TaskoPhobia.Application.Security;
+using TaskoPhobia.Shared.Abstractions.Time;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
 namespace TaskoPhobia.Infrastructure.Auth;
@@ -17,10 +18,12 @@ public class Authenticator : IAuthenticator
     private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler = new();
     private readonly IOptions<AuthOptions> _options;
     private readonly SigningCredentials _signingCredentials;
+    private readonly IClock _clock;
 
-    public Authenticator(IOptions<AuthOptions> options)
+    public Authenticator(IOptions<AuthOptions> options, IClock clock)
     {
         _options = options;
+        _clock = clock;
         _issuer = options.Value.Issuer;
         _audience = options.Value.Audience;
         _expiry = options.Value.Expiry ?? TimeSpan.FromHours(1);
@@ -31,7 +34,7 @@ public class Authenticator : IAuthenticator
 
     public JwtDto CreateToken(Guid userId, string role)
     {
-        var now = DateTime.UtcNow;
+        var now = _clock.Now();
         var expires = now.Add(_expiry);
 
         var claims = new List<Claim>

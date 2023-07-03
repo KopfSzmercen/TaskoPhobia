@@ -26,8 +26,7 @@ public class CreateProjectTaskHandler : ICommandHandler<CreateProjectTask>
         var task = new ProjectTask(command.TaskId, command.TaskName, projectTimeSpan, command.ProjectId,
             ProgressStatus.InProgress());
         project.AddTask(task);
-
-
+        
         await _projectRepository.UpdateAsync(project);
     }
 }

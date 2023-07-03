@@ -25,7 +25,7 @@ public class Project
     public ProgressStatus Status { get; }
     public DateTime CreatedAt { get; private set; }
     public UserId OwnerId { get; private set; }
-    public User Owner { get; }
+    public User Owner { get; private set; }
     public IEnumerable<ProjectTask> Tasks => _tasks;
 
     public void AddTask(ProjectTask task)
