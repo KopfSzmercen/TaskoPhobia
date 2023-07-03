@@ -1,6 +1,6 @@
 ﻿namespace TaskoPhobia.Infrastructure.DAL.Configurations.Read.Model;
 
-public class UserReadModel 
+internal sealed class UserReadModel 
 {
     public Guid Id { get; set; }
     public string Username { get; set; }

@@ -4,7 +4,7 @@ using TaskoPhobia.Infrastructure.DAL.Configurations.Read.Model;
 
 namespace TaskoPhobia.Infrastructure.DAL.Handlers;
 
-public static class Extensions
+internal static class Extensions
 {
     public static UserDto AsDto(this UserReadModel user)
     {

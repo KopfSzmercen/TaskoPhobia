@@ -1,6 +1,6 @@
 ﻿namespace TaskoPhobia.Infrastructure.DAL.Configurations.Read.Model;
 
-public class ProjectTaskReadModel
+internal sealed class ProjectTaskReadModel
 {
     public Guid Id { get; set; }
     public string Name { get; set; }

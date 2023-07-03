@@ -4,7 +4,7 @@ using TaskoPhobia.Infrastructure.DAL.Configurations.Read.Model;
 
 namespace TaskoPhobia.Infrastructure.DAL.Configurations.Read;
 
-internal class ProjectTaskReadConfiguration : IEntityTypeConfiguration<ProjectTaskReadModel>
+internal sealed class ProjectTaskReadConfiguration : IEntityTypeConfiguration<ProjectTaskReadModel>
 {
     public void Configure(EntityTypeBuilder<ProjectTaskReadModel> builder)
     {

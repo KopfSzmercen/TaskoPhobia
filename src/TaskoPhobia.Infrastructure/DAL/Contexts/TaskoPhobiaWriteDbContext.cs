@@ -4,7 +4,7 @@ using TaskoPhobia.Infrastructure.DAL.Configurations.Write;
 
 namespace TaskoPhobia.Infrastructure.DAL.Contexts;
 
-public class TaskoPhobiaWriteDbContext : DbContext
+internal sealed class TaskoPhobiaWriteDbContext : DbContext
 {
     public DbSet<User> Users { get; set; }
     public DbSet<Project> Projects { get; set; }
