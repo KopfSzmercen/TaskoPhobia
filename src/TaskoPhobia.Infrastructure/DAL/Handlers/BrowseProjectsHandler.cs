@@ -18,7 +18,8 @@ internal sealed class BrowseProjectsHandler : IQueryHandler<BrowseProjects, IEnu
 
     public async Task<IEnumerable<ProjectDto>> HandleAsync(BrowseProjects query)
     {
-        var projects = await _projects.AsNoTracking().Where(x => x.OwnerId == query.UserId).ToListAsync();
-        return projects?.Select(x => x.AsDto());
+       return await _projects.AsNoTracking()
+           .Where(x => x.OwnerId == query.UserId)
+           .Select(x => x.AsDto()).ToListAsync();
     }
 }
