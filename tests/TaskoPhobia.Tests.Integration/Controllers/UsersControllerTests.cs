@@ -9,7 +9,6 @@ using TaskoPhobia.Core.Entities;
 using TaskoPhobia.Core.ValueObjects;
 using TaskoPhobia.Infrastructure.Security;
 using TaskoPhobia.Shared.Abstractions.Exceptions.Errors;
-using TaskoPhobia.Shared.Abstractions.Time;
 using TaskoPhobia.Shared.Time;
 using Xunit;
 
@@ -105,8 +104,8 @@ public class UsersControllerTests : ControllerTests, IDisposable
         var user = new User(Guid.NewGuid(), "test@t.pl",
             "test", securedPassword, Role.User(), DateTime.UtcNow, AccountType.Free());
 
-        await _testDatabase.DbContext.Users.AddAsync(user);
-        await _testDatabase.DbContext.SaveChangesAsync();
+        await _testDatabase.WriteDbContext.Users.AddAsync(user);
+        await _testDatabase.WriteDbContext.SaveChangesAsync();
 
         return user;
     }

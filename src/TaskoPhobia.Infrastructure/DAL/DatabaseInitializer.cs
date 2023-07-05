@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using TaskoPhobia.Infrastructure.DAL.Contexts;
 
 namespace TaskoPhobia.Infrastructure.DAL;
 
@@ -17,7 +18,7 @@ internal sealed class DatabaseInitializer : IHostedService
     {
         using (var scope = _serviceProvider.CreateScope())
         {
-            var dbContext = scope.ServiceProvider.GetRequiredService<TaskoPhobiaDbContext>();
+            var dbContext = scope.ServiceProvider.GetRequiredService<TaskoPhobiaWriteDbContext>();
             dbContext.Database.Migrate();
         }
 

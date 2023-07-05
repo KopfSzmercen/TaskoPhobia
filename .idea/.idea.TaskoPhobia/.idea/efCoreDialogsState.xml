@@ -4,7 +4,7 @@
     <option name="keyValueStorage">
       <map>
         <entry key="Common:buildConfiguration" value="Debug" />
-        <entry key="Common:cc98439b-5ecc-4f83-9c99-0e2b0086684c:dbContext" value="TaskoPhobia.Infrastructure.DAL.TaskoPhobiaDbContext" />
+        <entry key="Common:cc98439b-5ecc-4f83-9c99-0e2b0086684c:dbContext" value="TaskoPhobia.Infrastructure.DAL.TaskoPhobiaWriteDbContext" />
         <entry key="Common:noBuild" value="false" />
         <entry key="Common:outputFolder" value="DAL\Migrations" />
         <entry key="Common:useDefaultConnection" value="true" />

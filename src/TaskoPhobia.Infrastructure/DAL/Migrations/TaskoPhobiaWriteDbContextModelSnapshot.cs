@@ -5,18 +5,20 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TaskoPhobia.Infrastructure.DAL;
+using TaskoPhobia.Infrastructure.DAL.Contexts;
 
 #nullable disable
 
 namespace TaskoPhobia.Infrastructure.DAL.Migrations
 {
-    [DbContext(typeof(TaskoPhobiaDbContext))]
-    partial class TaskoPhobiaDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(TaskoPhobiaWriteDbContext))]
+    partial class TaskoPhobiaWriteDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("taskophobia")
                 .HasAnnotation("ProductVersion", "7.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
@@ -48,7 +50,7 @@ namespace TaskoPhobia.Infrastructure.DAL.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.ToTable("Projects");
+                    b.ToTable("Projects", "taskophobia");
                 });
 
             modelBuilder.Entity("TaskoPhobia.Core.Entities.ProjectTask", b =>
@@ -71,7 +73,7 @@ namespace TaskoPhobia.Infrastructure.DAL.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("ProjectTasks");
+                    b.ToTable("ProjectTasks", "taskophobia");
                 });
 
             modelBuilder.Entity("TaskoPhobia.Core.Entities.User", b =>
@@ -110,7 +112,7 @@ namespace TaskoPhobia.Infrastructure.DAL.Migrations
                     b.HasIndex("Username")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", "taskophobia");
                 });
 
             modelBuilder.Entity("TaskoPhobia.Core.Entities.Project", b =>
@@ -143,7 +145,7 @@ namespace TaskoPhobia.Infrastructure.DAL.Migrations
 
                             b1.HasKey("ProjectTaskId");
 
-                            b1.ToTable("ProjectTasks");
+                            b1.ToTable("ProjectTasks", "taskophobia");
 
                             b1.WithOwner()
                                 .HasForeignKey("ProjectTaskId");

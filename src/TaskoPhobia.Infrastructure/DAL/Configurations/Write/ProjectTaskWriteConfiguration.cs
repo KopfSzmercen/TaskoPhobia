@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using TaskoPhobia.Core.Entities;
 using TaskoPhobia.Core.ValueObjects;
 
-namespace TaskoPhobia.Infrastructure.DAL.Configurations;
+namespace TaskoPhobia.Infrastructure.DAL.Configurations.Write;
 
-internal sealed class ProjectTaskConfiguration : IEntityTypeConfiguration<ProjectTask>
+internal sealed class ProjectTaskWriteConfiguration : IEntityTypeConfiguration<ProjectTask>
 {
     public void Configure(EntityTypeBuilder<ProjectTask> builder)
     {
