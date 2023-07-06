@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TaskoPhobia.Application.DTO;
 using TaskoPhobia.Application.Queries;
-using TaskoPhobia.Core.Entities;
-using TaskoPhobia.Core.ValueObjects;
 using TaskoPhobia.Infrastructure.DAL.Configurations.Read.Model;
 using TaskoPhobia.Infrastructure.DAL.Contexts;
 using TaskoPhobia.Shared.Abstractions.Queries;
@@ -20,7 +18,7 @@ internal sealed class BrowseProjectTasksHandler : IQueryHandler<BrowseProjectTas
 
     public async Task<IEnumerable<ProjectTaskDto>> HandleAsync(BrowseProjectTasks query)
     {
-        return  await _projects.Include(x => x.Tasks)
+        return await _projects.Include(x => x.Tasks)
             .AsNoTracking()
             .Where(x => x.Id == query.ProjectId && x.OwnerId == query.UserId)
             .Include(x => x.Tasks)

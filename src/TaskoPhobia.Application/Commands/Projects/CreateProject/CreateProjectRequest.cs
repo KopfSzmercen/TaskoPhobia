@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace TaskoPhobia.Application.Commands.Projects.CreateProject;
+﻿namespace TaskoPhobia.Application.Commands.Projects.CreateProject;
 
 public class CreateProjectRequest
 {

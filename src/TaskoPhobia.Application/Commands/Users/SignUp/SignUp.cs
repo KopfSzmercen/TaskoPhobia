@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using TaskoPhobia.Shared.Abstractions.Commands;
+﻿using TaskoPhobia.Shared.Abstractions.Commands;
 
 namespace TaskoPhobia.Application.Commands.Users.SignUp;
 
