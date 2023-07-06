@@ -1,10 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace TaskoPhobia.Application.Commands.Users.SignUp;
+﻿namespace TaskoPhobia.Application.Commands.Users.SignUp;
 
 public class SignUpRequest
 {
-    
     public string Email { get; init; }
 
     public string Username { get; init; }

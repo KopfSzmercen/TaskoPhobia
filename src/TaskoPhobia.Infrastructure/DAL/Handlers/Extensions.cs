@@ -1,5 +1,4 @@
 ﻿using TaskoPhobia.Application.DTO;
-using TaskoPhobia.Core.Entities;
 using TaskoPhobia.Infrastructure.DAL.Configurations.Read.Model;
 
 namespace TaskoPhobia.Infrastructure.DAL.Handlers;

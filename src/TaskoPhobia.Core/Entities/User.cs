@@ -5,8 +5,8 @@ namespace TaskoPhobia.Core.Entities;
 
 public class User
 {
-    private const ushort MaxNumOfProjectsForFreeAccount = 3;
-    private const ushort MaxNumOfProjectsForBasicAccount = 6;
+    public static readonly ushort MaxNumOfProjectsForBasicAccount = 6;
+    public static readonly ushort MaxNumOfProjectsForFreeAccount = 3;
 
     public User(UserId id, Email email, Username username, Password password, Role role, DateTime createdAt,
         AccountType accountType)

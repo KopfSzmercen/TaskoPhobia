@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TaskoPhobia.Application.DTO;
 using TaskoPhobia.Application.Queries;
-using TaskoPhobia.Core.Entities;
-using TaskoPhobia.Core.ValueObjects;
 using TaskoPhobia.Infrastructure.DAL.Configurations.Read.Model;
 using TaskoPhobia.Infrastructure.DAL.Contexts;
 using TaskoPhobia.Shared.Abstractions.Queries;

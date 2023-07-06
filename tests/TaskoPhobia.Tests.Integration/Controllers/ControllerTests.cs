@@ -4,7 +4,6 @@ using Microsoft.Extensions.Options;
 using TaskoPhobia.Application.DTO;
 using TaskoPhobia.Application.Security;
 using TaskoPhobia.Infrastructure.Auth;
-using TaskoPhobia.Infrastructure.DAL;
 using TaskoPhobia.Shared.Abstractions.Time;
 using Xunit;
 
@@ -19,7 +18,6 @@ public abstract class ControllerTests : IClassFixture<OptionsProvider>
     {
         var app = new TaskoPhobiaTestApp(ConfigureServices);
         HttpClient = app.Client;
-        var postgresOptions = optionsProvider.Get<PostgresOptions>("database");
         var authOptions = optionsProvider.Get<AuthOptions>("auth");
 
         _authenticator = new Authenticator(new OptionsWrapper<AuthOptions>(authOptions), clock);

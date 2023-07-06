@@ -3,14 +3,12 @@
     <PropertyGroup>
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
-
-
         <IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>
+        <RootNamespace>TaskoPhobia.Tests.Unit</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.5" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
         <PackageReference Include="Shouldly" Version="4.2.1" />
         <PackageReference Include="xunit" Version="2.4.2" />
@@ -25,7 +23,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\TaskoPhobia.Api\TaskoPhobia.Api.csproj" />
+      <ProjectReference Include="..\..\src\TaskoPhobia.Core\TaskoPhobia.Core.csproj" />
     </ItemGroup>
 
 </Project>
