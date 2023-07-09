@@ -6,13 +6,15 @@ namespace TaskoPhobia.Infrastructure.DAL.Contexts;
 
 internal sealed class TaskoPhobiaWriteDbContext : DbContext
 {
-    public DbSet<User> Users { get; set; }
-    public DbSet<Project> Projects { get; set; }
-    public DbSet<ProjectTask> ProjectTasks { get; set; }
     public TaskoPhobiaWriteDbContext(DbContextOptions<TaskoPhobiaWriteDbContext> options) : base(options)
     {
     }
-    
+
+    public DbSet<User> Users { get; set; }
+    public DbSet<Project> Projects { get; set; }
+    public DbSet<ProjectTask> ProjectTasks { get; set; }
+    public DbSet<Invitation> Invitations { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -21,5 +23,6 @@ internal sealed class TaskoPhobiaWriteDbContext : DbContext
         modelBuilder.ApplyConfiguration(new UserWriteConfiguration());
         modelBuilder.ApplyConfiguration(new ProjectWriteConfiguration());
         modelBuilder.ApplyConfiguration(new ProjectTaskWriteConfiguration());
+        modelBuilder.ApplyConfiguration(new InvitationWriteConfiguration());
     }
 }

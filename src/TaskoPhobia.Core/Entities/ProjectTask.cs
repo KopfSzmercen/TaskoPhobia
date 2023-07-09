@@ -22,6 +22,6 @@ public class ProjectTask
     public ProjectTaskName Name { get; private set; }
     public TaskTimeSpan TimeSpan { get; private set; }
     public ProgressStatus Status { get; private set; }
-    public Project Project { get; }
+    public Project Project { get; init; }
     public ProjectId ProjectId { get; private set; }
 }

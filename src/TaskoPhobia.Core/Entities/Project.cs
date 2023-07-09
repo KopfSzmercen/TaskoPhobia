@@ -5,6 +5,7 @@ namespace TaskoPhobia.Core.Entities;
 
 public class Project
 {
+    private readonly ICollection<Invitation> _invitations = new List<Invitation>();
     private readonly ICollection<ProjectTask> _tasks = new List<ProjectTask>();
 
 
@@ -24,13 +25,24 @@ public class Project
     public ProjectDescription Description { get; private set; }
     public ProgressStatus Status { get; }
     public DateTime CreatedAt { get; private set; }
-    public UserId OwnerId { get; private set; }
-    public User Owner { get; private set; }
+    public UserId OwnerId { get; }
+    public User Owner { get; init; }
     public IEnumerable<ProjectTask> Tasks => _tasks;
+    public IEnumerable<Invitation> Invitations => _invitations;
 
     public void AddTask(ProjectTask task)
     {
         if (Status.Equals(ProgressStatus.Finished())) throw new NotAllowedToModifyFinishedProject();
         _tasks.Add(task);
+    }
+
+    public void AddInvitation(Invitation invitation)
+    {
+        if (_invitations.Any(i => i.ReceiverId == invitation.ReceiverId && i.Status == InvitationStatus.Pending()))
+            throw new InvitationAlreadySentException(invitation.ReceiverId);
+
+        if (OwnerId != invitation.SenderId) throw new NotAllowedToCreateInvitation();
+
+        _invitations.Add(invitation);
     }
 }

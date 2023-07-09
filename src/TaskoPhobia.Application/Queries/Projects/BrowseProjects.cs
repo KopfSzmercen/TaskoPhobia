@@ -1,7 +1,7 @@
 ﻿using TaskoPhobia.Application.DTO;
 using TaskoPhobia.Shared.Abstractions.Queries;
 
-namespace TaskoPhobia.Application.Queries;
+namespace TaskoPhobia.Application.Queries.Projects;
 
 public class BrowseProjects : IQuery<IEnumerable<ProjectDto>>
 {

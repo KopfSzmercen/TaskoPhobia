@@ -4,6 +4,7 @@ using Swashbuckle.AspNetCore.Annotations;
 using TaskoPhobia.Application.Commands.ProjectTasks.CreateProjectTask;
 using TaskoPhobia.Application.DTO;
 using TaskoPhobia.Application.Queries;
+using TaskoPhobia.Application.Queries.ProjectTasks;
 using TaskoPhobia.Shared.Abstractions.Commands;
 using TaskoPhobia.Shared.Abstractions.Exceptions.Errors;
 using TaskoPhobia.Shared.Abstractions.Queries;

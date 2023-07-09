@@ -4,12 +4,12 @@ using Swashbuckle.AspNetCore.Annotations;
 using TaskoPhobia.Application.Commands.Projects.CreateProject;
 using TaskoPhobia.Application.DTO;
 using TaskoPhobia.Application.Queries;
+using TaskoPhobia.Application.Queries.Projects;
 using TaskoPhobia.Shared.Abstractions.Commands;
 using TaskoPhobia.Shared.Abstractions.Exceptions.Errors;
 using TaskoPhobia.Shared.Abstractions.Queries;
 
 namespace TaskoPhobia.Api.Controllers;
-
 
 [Route("projects")]
 public class ProjectsController : BaseController
@@ -56,8 +56,6 @@ public class ProjectsController : BaseController
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<ProjectDto>> Get([FromRoute] Guid projectId)
     {
-       
-
         var query = new GetProject(GetUserId(), projectId);
         var project = await _queryDispatcher.QueryAsync(query);
 

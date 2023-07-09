@@ -29,6 +29,10 @@ public class User
     public AccountType AccountType { get; }
     public ICollection<Project> OwnedProjects { get; } = new List<Project>();
 
+    public IEnumerable<Invitation> SentInvitations { get; init; } = new List<Invitation>();
+
+    public IEnumerable<Invitation> ReceivedInvitations { get; init; } = new List<Invitation>();
+
     public void AddProject(Project project)
     {
         if (AccountType.Equals(AccountType.Free()) && OwnedProjects.Count + 1 > MaxNumOfProjectsForFreeAccount)

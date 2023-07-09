@@ -51,7 +51,7 @@ public class UsersControllerTests : ControllerTests, IDisposable
         var response = await HttpClient.GetAsync("users/me");
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-        var userDto = await response.Content.ReadFromJsonAsync<UserDto>();
+        var userDto = await response.Content.ReadFromJsonAsync<UserDetailsDto>();
 
         userDto.Id.ShouldBe(user.Id.Value);
         userDto.Email.ShouldBe(user.Email.Value);
@@ -87,10 +87,12 @@ public class UsersControllerTests : ControllerTests, IDisposable
 
     private const string Password = "secret";
     private readonly TestDatabase _testDatabase;
+
     public UsersControllerTests(OptionsProvider optionsProvider) : base(optionsProvider, new Clock())
     {
         _testDatabase = new TestDatabase();
     }
+
     public void Dispose()
     {
         _testDatabase.Dispose();

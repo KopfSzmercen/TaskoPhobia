@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TaskoPhobia.Infrastructure.DAL.Contexts;
@@ -11,9 +12,11 @@ using TaskoPhobia.Infrastructure.DAL.Contexts;
 namespace TaskoPhobia.Infrastructure.DAL.Migrations
 {
     [DbContext(typeof(TaskoPhobiaWriteDbContext))]
-    partial class TaskoPhobiaWriteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230707132813_Add-Invitations")]
+    partial class AddInvitations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,21 +34,19 @@ namespace TaskoPhobia.Infrastructure.DAL.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<Guid>("ProjectId")
+                    b.Property<Guid?>("ProjectId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("ReceiverId")
+                    b.Property<Guid?>("ReceiverId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("SenderId")
+                    b.Property<Guid?>("SenderId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Status")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Title")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -154,21 +155,15 @@ namespace TaskoPhobia.Infrastructure.DAL.Migrations
                 {
                     b.HasOne("TaskoPhobia.Core.Entities.Project", "Project")
                         .WithMany("Invitations")
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProjectId");
 
                     b.HasOne("TaskoPhobia.Core.Entities.User", "Receiver")
                         .WithMany("ReceivedInvitations")
-                        .HasForeignKey("ReceiverId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ReceiverId");
 
                     b.HasOne("TaskoPhobia.Core.Entities.User", "Sender")
                         .WithMany("SentInvitations")
-                        .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SenderId");
 
                     b.Navigation("Project");
 

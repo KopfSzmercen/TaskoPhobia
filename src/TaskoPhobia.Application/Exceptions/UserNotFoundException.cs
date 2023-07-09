@@ -1,10 +1,11 @@
-﻿using TaskoPhobia.Shared.Abstractions.Exceptions;
+﻿using TaskoPhobia.Core.ValueObjects;
+using TaskoPhobia.Shared.Abstractions.Exceptions;
 
 namespace TaskoPhobia.Application.Exceptions;
 
 public sealed class UserNotFoundException : CustomException
 {
-    public UserNotFoundException() : base("User not found")
+    public UserNotFoundException(UserId userId) : base($"User {userId} not found")
     {
     }
 }
