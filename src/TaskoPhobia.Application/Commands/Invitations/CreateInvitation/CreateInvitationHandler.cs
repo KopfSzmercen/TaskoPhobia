@@ -1,6 +1,7 @@
 ﻿using TaskoPhobia.Application.Exceptions;
 using TaskoPhobia.Core.Entities;
 using TaskoPhobia.Core.Repositories;
+using TaskoPhobia.Core.Services;
 using TaskoPhobia.Shared.Abstractions.Commands;
 using TaskoPhobia.Shared.Abstractions.Time;
 
@@ -10,22 +11,22 @@ internal sealed class CreateInvitationHandler : ICommandHandler<CreateInvitation
 {
     private readonly IClock _clock;
     private readonly IProjectRepository _projectRepository;
-    private readonly IUserRepository _userRepository;
+    private readonly IUserReadService _userReadService;
 
-    public CreateInvitationHandler(IUserRepository userRepository, IProjectRepository projectRepository, IClock clock)
+    public CreateInvitationHandler(IUserReadService userReadService, IProjectRepository projectRepository, IClock clock)
     {
-        _userRepository = userRepository;
+        _userReadService = userReadService;
         _projectRepository = projectRepository;
         _clock = clock;
     }
 
     public async Task HandleAsync(CreateInvitation command)
     {
-        var sender = await _userRepository.GetByIdAsync(command.SenderId);
-        if (sender is null) throw new UserNotFoundException(command.SenderId);
+        var senderExists = await _userReadService.ExistsByIdAsync(command.SenderId);
+        if (!senderExists) throw new UserNotFoundException(command.SenderId);
 
-        var receiver = await _userRepository.GetByIdAsync(command.ReceiverId);
-        if (receiver is null) throw new UserNotFoundException(command.ReceiverId);
+        var receiverExists = await _userReadService.ExistsByIdAsync(command.ReceiverId);
+        if (!receiverExists) throw new UserNotFoundException(command.ReceiverId);
 
         var project = await _projectRepository.FindByIdAsync(command.ProjectId);
         if (project is null) throw new ProjectNotFoundException();

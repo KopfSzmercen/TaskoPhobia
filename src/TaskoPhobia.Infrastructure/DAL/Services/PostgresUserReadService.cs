@@ -29,4 +29,9 @@ internal sealed class PostgresUserReadService : IUserReadService
     {
         return await _users.SingleOrDefaultAsync(x => x.Email == email);
     }
+
+    public async Task<bool> ExistsByIdAsync(UserId id)
+    {
+        return await _users.AnyAsync(x => x.Id == id);
+    }
 }
