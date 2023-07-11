@@ -13,7 +13,7 @@ public record ProgressStatus
         Value = value;
     }
 
-    public static IEnumerable<string> AvailableProgressStatuses { get; } = new[] { "in-progress", "finished" };
+    private static IEnumerable<string> AvailableProgressStatuses { get; } = new[] { "in-progress", "finished" };
 
     public string Value { get; }
 

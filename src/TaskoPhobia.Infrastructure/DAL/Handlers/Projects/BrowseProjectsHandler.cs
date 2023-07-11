@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TaskoPhobia.Application.DTO;
-using TaskoPhobia.Application.Queries;
+using TaskoPhobia.Application.Queries.Projects;
 using TaskoPhobia.Infrastructure.DAL.Configurations.Read.Model;
 using TaskoPhobia.Infrastructure.DAL.Contexts;
 using TaskoPhobia.Shared.Abstractions.Queries;
 
-namespace TaskoPhobia.Infrastructure.DAL.Handlers;
+namespace TaskoPhobia.Infrastructure.DAL.Handlers.Projects;
 
 internal sealed class BrowseProjectsHandler : IQueryHandler<BrowseProjects, IEnumerable<ProjectDto>>
 {

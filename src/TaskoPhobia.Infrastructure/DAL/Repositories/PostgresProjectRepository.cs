@@ -18,7 +18,9 @@ internal sealed class PostgresProjectRepository : IProjectRepository
 
     public async Task<Project> FindByIdAsync(ProjectId id)
     {
-        return await _projects.Include(x => x.Tasks).SingleOrDefaultAsync(x => x.Id == id);
+        return await _projects.Include(x => x.Tasks)
+            .Include(x => x.Invitations)
+            .SingleOrDefaultAsync(x => x.Id == id);
     }
 
     public Task UpdateAsync(Project project)

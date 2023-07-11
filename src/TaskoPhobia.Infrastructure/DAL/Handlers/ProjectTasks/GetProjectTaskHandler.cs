@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TaskoPhobia.Application.DTO;
-using TaskoPhobia.Application.Queries;
+using TaskoPhobia.Application.Queries.ProjectTasks;
 using TaskoPhobia.Infrastructure.DAL.Configurations.Read.Model;
 using TaskoPhobia.Infrastructure.DAL.Contexts;
 using TaskoPhobia.Shared.Abstractions.Queries;
 
-namespace TaskoPhobia.Infrastructure.DAL.Handlers;
+namespace TaskoPhobia.Infrastructure.DAL.Handlers.ProjectTasks;
 
 internal sealed class GetProjectTaskHandler : IQueryHandler<GetProjectTask, ProjectTaskDto>
 {

@@ -5,9 +5,9 @@ namespace TaskoPhobia.Infrastructure.DAL.Handlers;
 
 internal static class Extensions
 {
-    public static UserDto AsDto(this UserReadModel user)
+    public static UserDetailsDto AsDto(this UserReadModel user)
     {
-        return new UserDto
+        return new UserDetailsDto
         {
             Id = user.Id,
             Username = user.Username,
@@ -37,6 +37,38 @@ internal static class Extensions
             Status = projectTask.Status,
             EndDate = projectTask.EndDate,
             StartDate = projectTask.StartDate
+        };
+    }
+
+    public static ReceivedInvitationDto AsReceivedInvitationDto(this InvitationReadModel invitation)
+    {
+        return new ReceivedInvitationDto
+        {
+            Id = invitation.Id,
+            Status = invitation.Status,
+            CreatedAt = invitation.CreatedAt,
+            Title = invitation.Title,
+            Sender = new UserDto
+            {
+                Id = invitation.Sender.Id,
+                Username = invitation.Sender.Username
+            }
+        };
+    }
+
+    public static SentInvitationDto AsSentInvitationDto(this InvitationReadModel invitation)
+    {
+        return new SentInvitationDto
+        {
+            Id = invitation.Id,
+            Status = invitation.Status,
+            CreatedAt = invitation.CreatedAt,
+            Title = invitation.Title,
+            Receiver = new UserDto
+            {
+                Id = invitation.Receiver.Id,
+                Username = invitation.Receiver.Username
+            }
         };
     }
 }

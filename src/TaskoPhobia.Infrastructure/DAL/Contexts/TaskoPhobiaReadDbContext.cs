@@ -6,12 +6,14 @@ namespace TaskoPhobia.Infrastructure.DAL.Contexts;
 
 internal sealed class TaskoPhobiaReadDbContext : DbContext
 {
-    public DbSet<UserReadModel> Users { get; set; }
-    public DbSet<ProjectReadModel> Projects { get; set; }
-    public DbSet<ProjectTaskReadModel> ProjectTasks { get; set; }
     public TaskoPhobiaReadDbContext(DbContextOptions<TaskoPhobiaReadDbContext> options) : base(options)
     {
     }
+
+    public DbSet<UserReadModel> Users { get; set; }
+    public DbSet<ProjectReadModel> Projects { get; set; }
+    public DbSet<ProjectTaskReadModel> ProjectTasks { get; set; }
+    public DbSet<InvitationReadModel> Invitations { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -21,5 +23,6 @@ internal sealed class TaskoPhobiaReadDbContext : DbContext
         modelBuilder.ApplyConfiguration(new UserReadConfiguration());
         modelBuilder.ApplyConfiguration(new ProjectReadConfiguration());
         modelBuilder.ApplyConfiguration(new ProjectTaskReadConfiguration());
+        modelBuilder.ApplyConfiguration(new InvitationReadConfiguration());
     }
 }

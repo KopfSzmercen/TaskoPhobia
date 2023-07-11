@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using TaskoPhobia.Infrastructure.DAL;
 using TaskoPhobia.Infrastructure.DAL.Contexts;
 
 #nullable disable
@@ -23,6 +22,42 @@ namespace TaskoPhobia.Infrastructure.DAL.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("TaskoPhobia.Core.Entities.Invitation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ReceiverId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("SenderId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
+
+                    b.HasIndex("ReceiverId");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("Invitations", "taskophobia");
+                });
 
             modelBuilder.Entity("TaskoPhobia.Core.Entities.Project", b =>
                 {
@@ -115,6 +150,33 @@ namespace TaskoPhobia.Infrastructure.DAL.Migrations
                     b.ToTable("Users", "taskophobia");
                 });
 
+            modelBuilder.Entity("TaskoPhobia.Core.Entities.Invitation", b =>
+                {
+                    b.HasOne("TaskoPhobia.Core.Entities.Project", "Project")
+                        .WithMany("Invitations")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TaskoPhobia.Core.Entities.User", "Receiver")
+                        .WithMany("ReceivedInvitations")
+                        .HasForeignKey("ReceiverId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TaskoPhobia.Core.Entities.User", "Sender")
+                        .WithMany("SentInvitations")
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+
+                    b.Navigation("Receiver");
+
+                    b.Navigation("Sender");
+                });
+
             modelBuilder.Entity("TaskoPhobia.Core.Entities.Project", b =>
                 {
                     b.HasOne("TaskoPhobia.Core.Entities.User", "Owner")
@@ -158,12 +220,18 @@ namespace TaskoPhobia.Infrastructure.DAL.Migrations
 
             modelBuilder.Entity("TaskoPhobia.Core.Entities.Project", b =>
                 {
+                    b.Navigation("Invitations");
+
                     b.Navigation("Tasks");
                 });
 
             modelBuilder.Entity("TaskoPhobia.Core.Entities.User", b =>
                 {
                     b.Navigation("OwnedProjects");
+
+                    b.Navigation("ReceivedInvitations");
+
+                    b.Navigation("SentInvitations");
                 });
 #pragma warning restore 612, 618
         }
