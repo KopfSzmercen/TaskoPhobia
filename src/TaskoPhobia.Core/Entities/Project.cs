@@ -36,12 +36,10 @@ public class Project
         _tasks.Add(task);
     }
 
-    public void AddInvitation(Invitation invitation)
+    internal void AddInvitation(Invitation invitation)
     {
         if (_invitations.Any(i => i.ReceiverId == invitation.ReceiverId && i.Status == InvitationStatus.Pending()))
             throw new InvitationAlreadySentException(invitation.ReceiverId);
-
-        if (OwnerId != invitation.SenderId) throw new NotAllowedToCreateInvitation();
 
         _invitations.Add(invitation);
     }

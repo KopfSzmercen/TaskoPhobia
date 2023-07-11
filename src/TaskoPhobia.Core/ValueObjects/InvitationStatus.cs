@@ -8,6 +8,7 @@ public record InvitationStatus
     {
         if (string.IsNullOrWhiteSpace(value) || value.Length > 30) throw new InvalidInvitationStatus();
         if (!AvailableInvitationStatuses.Contains(value)) throw new InvalidInvitationStatus();
+
         Value = value;
     }
 
