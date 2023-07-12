@@ -7,4 +7,6 @@ public class ReceivedInvitationDto
     public string Status { get; set; }
     public DateTime CreatedAt { get; set; }
     public UserDto Sender { get; set; }
+
+    public ProjectDto Project { get; set; }
 }

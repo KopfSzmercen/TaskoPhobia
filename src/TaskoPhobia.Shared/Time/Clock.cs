@@ -4,5 +4,13 @@ namespace TaskoPhobia.Shared.Time;
 
 public class Clock : IClock
 {
-    public DateTime Now() => DateTime.UtcNow;
+    public DateTime Now()
+    {
+        return DateTime.UtcNow;
+    }
+
+    public DateTimeOffset DateTimeOffsetNow()
+    {
+        return DateTimeOffset.Now;
+    }
 }

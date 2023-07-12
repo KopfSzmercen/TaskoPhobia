@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TaskoPhobia.Infrastructure.DAL.Contexts;
@@ -11,9 +12,11 @@ using TaskoPhobia.Infrastructure.DAL.Contexts;
 namespace TaskoPhobia.Infrastructure.DAL.Migrations
 {
     [DbContext(typeof(TaskoPhobiaWriteDbContext))]
-    partial class TaskoPhobiaWriteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230712093802_Add-Project-Participation")]
+    partial class AddProjectParticipation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -90,21 +93,16 @@ namespace TaskoPhobia.Infrastructure.DAL.Migrations
 
             modelBuilder.Entity("TaskoPhobia.Core.Entities.ProjectParticipation", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("ParticipantId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ProjectId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTimeOffset>("JoinDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid?>("ParticipantId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("ProjectId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ParticipantId");
+                    b.HasKey("ParticipantId", "ProjectId");
 
                     b.HasIndex("ProjectId");
 
@@ -213,11 +211,15 @@ namespace TaskoPhobia.Infrastructure.DAL.Migrations
                 {
                     b.HasOne("TaskoPhobia.Core.Entities.User", "Participant")
                         .WithMany("ProjectParticipations")
-                        .HasForeignKey("ParticipantId");
+                        .HasForeignKey("ParticipantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("TaskoPhobia.Core.Entities.Project", "Project")
                         .WithMany("Participations")
-                        .HasForeignKey("ProjectId");
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Participant");
 

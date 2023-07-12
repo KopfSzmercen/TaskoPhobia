@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using TaskoPhobia.Application.Commands.Projects.CreateProject;
 using TaskoPhobia.Application.DTO;
-using TaskoPhobia.Application.Queries;
 using TaskoPhobia.Application.Queries.Projects;
 using TaskoPhobia.Shared.Abstractions.Commands;
 using TaskoPhobia.Shared.Abstractions.Exceptions.Errors;
@@ -38,12 +37,11 @@ public class ProjectsController : BaseController
 
     [Authorize]
     [HttpGet]
-    [SwaggerOperation("Get all owned projects")]
+    [SwaggerOperation("Get all owned or joined projects projects")]
     [ProducesResponseType(typeof(IEnumerable<ProjectDto>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<IEnumerable<ProjectDto>>> Get()
+    public async Task<ActionResult<IEnumerable<ProjectDto>>> Get([FromQuery] bool created = true)
     {
-        var query = new BrowseProjects(GetUserId());
+        var query = new BrowseProjects(GetUserId(), created);
         var results = await _queryDispatcher.QueryAsync(query);
 
         return Ok(results);
@@ -51,7 +49,7 @@ public class ProjectsController : BaseController
 
     [Authorize]
     [HttpGet("{projectId:guid}")]
-    [SwaggerOperation("Get single owned project")]
+    [SwaggerOperation("Get single owned or joined project")]
     [ProducesResponseType(typeof(ProjectDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<ProjectDto>> Get([FromRoute] Guid projectId)

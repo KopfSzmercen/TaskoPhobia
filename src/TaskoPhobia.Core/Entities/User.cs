@@ -20,6 +20,10 @@ public class User
         AccountType = accountType;
     }
 
+    public User()
+    {
+    }
+
     public UserId Id { get; private set; }
     public Email Email { get; private set; }
     public Username Username { get; private set; }
@@ -28,10 +32,10 @@ public class User
     public DateTime CreatedAt { get; private set; }
     public AccountType AccountType { get; }
     public ICollection<Project> OwnedProjects { get; } = new List<Project>();
-
     public IEnumerable<Invitation> SentInvitations { get; init; } = new List<Invitation>();
-
     public IEnumerable<Invitation> ReceivedInvitations { get; init; } = new List<Invitation>();
+
+    public IEnumerable<ProjectParticipation> ProjectParticipations { get; init; } = new List<ProjectParticipation>();
 
     public void AddProject(Project project)
     {

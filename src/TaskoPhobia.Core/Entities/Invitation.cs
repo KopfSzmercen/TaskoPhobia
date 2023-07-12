@@ -1,4 +1,5 @@
-﻿using TaskoPhobia.Core.ValueObjects;
+﻿using TaskoPhobia.Core.Exceptions;
+using TaskoPhobia.Core.ValueObjects;
 
 namespace TaskoPhobia.Core.Entities;
 
@@ -15,11 +16,15 @@ public class Invitation
         CreatedAt = createdAt;
     }
 
+    public Invitation()
+    {
+    }
+
     public InvitationId Id { get; }
     public InvitationTitle Title { get; }
     public UserId SenderId { get; }
     public UserId ReceiverId { get; }
-    public InvitationStatus Status { get; }
+    public InvitationStatus Status { get; private set; }
     public User Sender { get; init; }
     public User Receiver { get; init; }
     public ProjectId ProjectId { get; init; }
@@ -30,5 +35,11 @@ public class Invitation
         DateTime createdAt)
     {
         return new Invitation(id, title, senderId, receiverId, InvitationStatus.Pending(), createdAt);
+    }
+
+    internal void Accept()
+    {
+        if (Status != InvitationStatus.Pending()) throw new InvitationCanNotBeAcceptedException();
+        Status = InvitationStatus.Accepted();
     }
 }
