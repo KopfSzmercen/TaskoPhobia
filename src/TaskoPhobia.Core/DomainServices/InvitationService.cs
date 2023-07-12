@@ -14,7 +14,7 @@ public sealed class InvitationService : IInvitationService
         _policies = policies;
     }
 
-    public void CreateInvitationToProject(Project project, UserId senderId, UserId receiverId, Invitation invitation)
+    public void CreateInvitationToProject(Project project, UserId senderId, Invitation invitation)
     {
         var policy = _policies.FirstOrDefault(x => x.CanBeApplied());
 
@@ -23,5 +23,13 @@ public sealed class InvitationService : IInvitationService
         if (!policy.CanCreate(project, senderId)) throw new NotAllowedToCreateInvitation();
 
         project.AddInvitation(invitation);
+    }
+
+    public void AcceptInvitationAndJoinProject(Invitation invitation)
+    {
+        invitation.Accept();
+
+        var projectParticipation = ProjectParticipation.CreateNew(invitation.ProjectId, invitation.ReceiverId);
+        invitation.Project.AddParticipant(projectParticipation);
     }
 }

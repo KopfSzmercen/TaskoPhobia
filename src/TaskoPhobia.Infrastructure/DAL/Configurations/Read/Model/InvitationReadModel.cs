@@ -11,4 +11,5 @@ internal sealed class InvitationReadModel
     public Guid ProjectId { get; set; }
     public Guid SenderId { get; set; }
     public Guid ReceiverId { get; set; }
+    public ProjectReadModel Project { get; set; }
 }

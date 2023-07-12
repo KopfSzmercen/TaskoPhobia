@@ -4,10 +4,6 @@ namespace TaskoPhobia.Core.Entities;
 
 public class ProjectTask
 {
-    public ProjectTask()
-    {
-    }
-
     public ProjectTask(ProjectTaskId id, ProjectTaskName name, TaskTimeSpan timeSpan, ProjectId projectId,
         ProgressStatus status)
     {
@@ -16,6 +12,10 @@ public class ProjectTask
         TimeSpan = timeSpan;
         ProjectId = projectId;
         Status = status;
+    }
+
+    public ProjectTask()
+    {
     }
 
     public ProjectTaskId Id { get; private set; }

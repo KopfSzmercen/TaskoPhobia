@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using TaskoPhobia.Application.Commands.Invitations.AcceptInvitation;
 using TaskoPhobia.Application.Commands.Users.SignIn;
 using TaskoPhobia.Application.Commands.Users.SignUp;
 using TaskoPhobia.Application.DTO;
-using TaskoPhobia.Application.Queries;
 using TaskoPhobia.Application.Queries.Invitations;
 using TaskoPhobia.Application.Queries.Users;
 using TaskoPhobia.Application.Security;
@@ -84,5 +84,18 @@ public class UsersController : BaseController
     {
         var invitations = await _queryDispatcher.QueryAsync(new BrowseReceivedInvitations(GetUserId()));
         return Ok(invitations);
+    }
+
+    [Authorize]
+    [HttpPost("me/invitations/{invitationId:guid}/status/accepted")]
+    [SwaggerOperation("Accept invitation and join to the project.")]
+    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ErrorsResponse), StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult> Post([FromRoute] Guid invitationId)
+    {
+        var command = new AcceptInvitation(invitationId, GetUserId());
+        await _commandDispatcher.DispatchAsync(command);
+        return Ok();
     }
 }

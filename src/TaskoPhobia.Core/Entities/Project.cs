@@ -6,6 +6,7 @@ namespace TaskoPhobia.Core.Entities;
 public class Project
 {
     private readonly ICollection<Invitation> _invitations = new List<Invitation>();
+    private readonly HashSet<ProjectParticipation> _participations = new();
     private readonly ICollection<ProjectTask> _tasks = new List<ProjectTask>();
 
 
@@ -20,6 +21,10 @@ public class Project
         OwnerId = ownerId;
     }
 
+    public Project()
+    {
+    }
+
     public ProjectId Id { get; private set; }
     public ProjectName Name { get; private set; }
     public ProjectDescription Description { get; private set; }
@@ -29,6 +34,7 @@ public class Project
     public User Owner { get; init; }
     public IEnumerable<ProjectTask> Tasks => _tasks;
     public IEnumerable<Invitation> Invitations => _invitations;
+    public IEnumerable<ProjectParticipation> Participations => _participations;
 
     public void AddTask(ProjectTask task)
     {
@@ -42,5 +48,10 @@ public class Project
             throw new InvitationAlreadySentException(invitation.ReceiverId);
 
         _invitations.Add(invitation);
+    }
+
+    internal void AddParticipant(ProjectParticipation participation)
+    {
+        _participations.Add(participation);
     }
 }

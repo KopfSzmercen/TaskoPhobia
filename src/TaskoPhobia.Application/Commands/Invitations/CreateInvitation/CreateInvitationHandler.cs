@@ -38,7 +38,7 @@ internal sealed class CreateInvitationHandler : ICommandHandler<CreateInvitation
         var invitation = Invitation.CreateNew(command.InvitationId, $"Invitation for project: {project.Name}",
             command.SenderId, command.ReceiverId, _clock.Now());
 
-        _invitationService.CreateInvitationToProject(project, command.SenderId, command.ReceiverId, invitation);
+        _invitationService.CreateInvitationToProject(project, command.SenderId, invitation);
 
         await _projectRepository.UpdateAsync(project);
     }

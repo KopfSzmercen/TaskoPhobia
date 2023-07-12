@@ -52,6 +52,14 @@ internal static class Extensions
             {
                 Id = invitation.Sender.Id,
                 Username = invitation.Sender.Username
+            },
+            Project = new ProjectDto
+            {
+                Id = invitation.ProjectId,
+                Description = invitation.Project.Description,
+                Name = invitation.Project.Name,
+                Status = invitation.Project.Status,
+                CreatedAt = invitation.Project.CreatedAt
             }
         };
     }

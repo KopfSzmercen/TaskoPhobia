@@ -20,7 +20,8 @@ internal sealed class BrowseProjectTasksHandler : IQueryHandler<BrowseProjectTas
     {
         return await _projects.Include(x => x.Tasks)
             .AsNoTracking()
-            .Where(x => x.Id == query.ProjectId && x.OwnerId == query.UserId)
+            .Where(x => x.Id == query.ProjectId &&
+                        (x.OwnerId == query.UserId || x.Participations.Any(p => p.ParticipantId == query.UserId)))
             .Include(x => x.Tasks)
             .Select(x => x.Tasks.Select(t => t.AsDto()))
             .SingleOrDefaultAsync();

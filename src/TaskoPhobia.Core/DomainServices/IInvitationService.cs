@@ -5,5 +5,6 @@ namespace TaskoPhobia.Core.DomainServices;
 
 public interface IInvitationService
 {
-    void CreateInvitationToProject(Project project, UserId senderId, UserId receiverId, Invitation invitation);
+    void CreateInvitationToProject(Project project, UserId senderId, Invitation invitation);
+    void AcceptInvitationAndJoinProject(Invitation invitation);
 }

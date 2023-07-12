@@ -22,6 +22,7 @@ internal sealed class
         return await _invitations.AsNoTracking()
             .Where(x => x.ReceiverId == query.UserId)
             .Include(x => x.Sender)
+            .Include(x => x.Project)
             .Select(x => x.AsReceivedInvitationDto())
             .ToListAsync();
     }

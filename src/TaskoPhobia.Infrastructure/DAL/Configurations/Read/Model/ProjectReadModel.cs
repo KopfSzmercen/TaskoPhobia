@@ -9,4 +9,5 @@ internal sealed class ProjectReadModel
     public DateTime CreatedAt { get; set; }
     public Guid OwnerId { get; set; }
     public IReadOnlyCollection<ProjectTaskReadModel> Tasks { get; set; }
+    public IReadOnlyCollection<ProjectParticipationReadModel> Participations { get; set; }
 }

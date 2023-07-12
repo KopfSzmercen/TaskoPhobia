@@ -19,10 +19,11 @@ internal sealed class GetProjectHandler : IQueryHandler<GetProject, ProjectDto>
 
     public async Task<ProjectDto> HandleAsync(GetProject query)
     {
-        
         var project = await _projects
             .AsNoTracking()
-            .Where(x => x.OwnerId == query.UserId && x.Id == query.ProjectId)
+            .Where(x =>
+                x.Id == query.ProjectId &&
+                (x.OwnerId == query.UserId || x.Participations.Any(p => p.ParticipantId == query.UserId)))
             .SingleOrDefaultAsync();
 
         return project?.AsDto();
