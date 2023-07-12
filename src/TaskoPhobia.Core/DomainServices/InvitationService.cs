@@ -19,11 +19,9 @@ public sealed class InvitationService : IInvitationService
 
     public void CreateInvitationToProject(Project project, UserId senderId, Invitation invitation)
     {
-        var policy = _policies.FirstOrDefault(x => x.CanBeApplied());
+        var canCreate = _policies.Any(x => x.CanCreate(project, senderId));
 
-        if (policy is null) throw new NoInvitationPolicyFoundException();
-
-        if (!policy.CanCreate(project, senderId)) throw new NotAllowedToCreateInvitation();
+        if (!canCreate) throw new NotAllowedToCreateInvitation();
 
         project.AddInvitation(invitation);
     }

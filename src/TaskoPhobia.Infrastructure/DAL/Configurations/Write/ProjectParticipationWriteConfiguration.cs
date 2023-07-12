@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using TaskoPhobia.Core.Entities;
+using TaskoPhobia.Core.ValueObjects;
 
 namespace TaskoPhobia.Infrastructure.DAL.Configurations.Write;
 
@@ -8,7 +9,17 @@ internal sealed class ProjectParticipationWriteConfiguration : IEntityTypeConfig
 {
     public void Configure(EntityTypeBuilder<ProjectParticipation> builder)
     {
-        builder.HasKey(x => new { x.ParticipantId, x.ProjectId });
+        builder.HasKey(x => x.Id);
+
+        builder.Property(x => x.Id)
+            .HasConversion(x => x.Value,
+                x => new ProjectParticipationId(x));
+
+        builder.Property(x => x.ProjectId)
+            .HasConversion(x => x.Value, x => new ProjectId(x));
+
+        builder.Property(x => x.ParticipantId)
+            .HasConversion(x => x.Value, x => new UserId(x));
 
         builder.Property(x => x.JoinDate)
             .IsRequired();

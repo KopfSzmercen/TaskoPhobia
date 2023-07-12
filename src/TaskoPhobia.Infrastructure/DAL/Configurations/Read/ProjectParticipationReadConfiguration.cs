@@ -8,8 +8,7 @@ internal sealed class ProjectParticipationReadConfiguration : IEntityTypeConfigu
 {
     public void Configure(EntityTypeBuilder<ProjectParticipationReadModel> builder)
     {
-        builder.HasKey(x => new { x.ParticipantId, x.ProjectId });
-
+        builder.HasKey(x => x.Id);
         builder.ToTable("ProjectParticipations");
     }
 }

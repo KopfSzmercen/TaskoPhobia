@@ -39,9 +39,9 @@ public class ProjectsController : BaseController
     [HttpGet]
     [SwaggerOperation("Get all owned or joined projects projects")]
     [ProducesResponseType(typeof(IEnumerable<ProjectDto>), StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<ProjectDto>>> Get([FromQuery] bool takeJoined = false)
+    public async Task<ActionResult<IEnumerable<ProjectDto>>> Get([FromQuery] bool created = true)
     {
-        var query = new BrowseProjects(GetUserId(), takeJoined);
+        var query = new BrowseProjects(GetUserId(), created);
         var results = await _queryDispatcher.QueryAsync(query);
 
         return Ok(results);

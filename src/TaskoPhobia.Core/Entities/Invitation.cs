@@ -39,9 +39,7 @@ public class Invitation
 
     internal void Accept()
     {
-        if (Status == InvitationStatus.Accepted() || Status == InvitationStatus.Declined())
-            throw new InvitationCanNotBeAcceptedException();
-
+        if (Status != InvitationStatus.Pending()) throw new InvitationCanNotBeAcceptedException();
         Status = InvitationStatus.Accepted();
     }
 }

@@ -5,12 +5,12 @@ namespace TaskoPhobia.Application.Queries.Projects;
 
 public class BrowseProjects : IQuery<IEnumerable<ProjectDto>>
 {
-    public BrowseProjects(Guid userId, bool takeJoined)
+    public BrowseProjects(Guid userId, bool created)
     {
         UserId = userId;
-        TakeJoined = takeJoined;
+        Created = created;
     }
 
     public Guid UserId { get; set; }
-    public bool TakeJoined { get; set; }
+    public bool Created { get; set; }
 }

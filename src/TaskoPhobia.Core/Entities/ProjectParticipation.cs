@@ -5,8 +5,10 @@ namespace TaskoPhobia.Core.Entities;
 
 public class ProjectParticipation
 {
-    private ProjectParticipation(ProjectId projectId, UserId participantId, DateTimeOffset joinDate)
+    private ProjectParticipation(ProjectParticipationId id, ProjectId projectId, UserId participantId,
+        DateTimeOffset joinDate)
     {
+        Id = id;
         ProjectId = projectId;
         ParticipantId = participantId;
         JoinDate = joinDate;
@@ -16,6 +18,7 @@ public class ProjectParticipation
     {
     }
 
+    public ProjectParticipationId Id { get; }
     public ProjectId ProjectId { get; }
     public UserId ParticipantId { get; }
     public DateTimeOffset JoinDate { get; }
@@ -24,6 +27,7 @@ public class ProjectParticipation
 
     public static ProjectParticipation CreateNew(ProjectId projectId, UserId participantId, IClock clock)
     {
-        return new ProjectParticipation(projectId, participantId, clock.DateTimeOffsetNow());
+        return new ProjectParticipation(new ProjectParticipationId(Guid.NewGuid()), projectId, participantId,
+            clock.DateTimeOffsetNow());
     }
 }
