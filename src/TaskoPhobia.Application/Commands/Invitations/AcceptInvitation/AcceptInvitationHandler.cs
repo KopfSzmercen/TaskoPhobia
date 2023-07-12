@@ -19,10 +19,9 @@ internal sealed class AcceptInvitationHandler : ICommandHandler<AcceptInvitation
     public async Task HandleAsync(AcceptInvitation command)
     {
         var invitation = await _invitationRepository.FindByIdAsync(command.InvitationId);
-        if (invitation is null || invitation.ReceiverId != command.UserId)
-            throw new InvitationNotFoundException(command.InvitationId);
+        if (invitation is null) throw new InvitationNotFoundException(command.InvitationId);
 
-        _invitationService.AcceptInvitationAndJoinProject(invitation);
+        _invitationService.AcceptInvitationAndJoinProject(invitation, command.UserId);
 
         await _invitationRepository.UpdateAsync(invitation);
     }

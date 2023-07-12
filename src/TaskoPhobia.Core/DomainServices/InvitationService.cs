@@ -28,11 +28,13 @@ public sealed class InvitationService : IInvitationService
         project.AddInvitation(invitation);
     }
 
-    public void AcceptInvitationAndJoinProject(Invitation invitation)
+    public void AcceptInvitationAndJoinProject(Invitation invitation, UserId receiverId)
     {
+        if (invitation.ReceiverId != receiverId) throw new InvitationCanNotBeAcceptedException();
+
         invitation.Accept();
 
         var projectParticipation = ProjectParticipation.CreateNew(invitation.ProjectId, invitation.ReceiverId, _clock);
-        invitation.Project.AddParticipant(projectParticipation);
+        invitation.Project.AddParticipation(projectParticipation);
     }
 }

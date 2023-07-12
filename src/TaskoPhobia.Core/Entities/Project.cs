@@ -50,7 +50,7 @@ public class Project
         _invitations.Add(invitation);
     }
 
-    internal void AddParticipant(ProjectParticipation participation)
+    internal void AddParticipation(ProjectParticipation participation)
     {
         _participations.Add(participation);
     }
