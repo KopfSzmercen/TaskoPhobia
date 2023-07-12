@@ -3,4 +3,5 @@
 public interface IClock
 {
     DateTime Now();
+    DateTimeOffset DateTimeOffsetNow();
 }

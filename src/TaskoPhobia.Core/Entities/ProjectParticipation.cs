@@ -1,4 +1,5 @@
 ﻿using TaskoPhobia.Core.ValueObjects;
+using TaskoPhobia.Shared.Abstractions.Time;
 
 namespace TaskoPhobia.Core.Entities;
 
@@ -21,8 +22,8 @@ public class ProjectParticipation
     public Project Project { get; init; }
     public User Participant { get; init; }
 
-    public static ProjectParticipation CreateNew(ProjectId projectId, UserId participantId)
+    public static ProjectParticipation CreateNew(ProjectId projectId, UserId participantId, IClock clock)
     {
-        return new ProjectParticipation(projectId, participantId, DateTimeOffset.Now);
+        return new ProjectParticipation(projectId, participantId, clock.DateTimeOffsetNow());
     }
 }
