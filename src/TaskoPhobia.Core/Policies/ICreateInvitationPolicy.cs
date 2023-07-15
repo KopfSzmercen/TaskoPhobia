@@ -3,7 +3,7 @@ using TaskoPhobia.Core.ValueObjects;
 
 namespace TaskoPhobia.Core.Policies;
 
-public interface IInvitationPolicy
+public interface ICreateInvitationPolicy
 {
-    bool CanCreate(Project project, UserId userId);
+    bool CanCreate(Project project, UserId senderId);
 }

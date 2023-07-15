@@ -20,6 +20,7 @@ internal sealed class PostgresProjectRepository : IProjectRepository
     {
         return await _projects.Include(x => x.Tasks)
             .Include(x => x.Invitations)
+            .Include(x => x.Participations)
             .SingleOrDefaultAsync(x => x.Id == id);
     }
 

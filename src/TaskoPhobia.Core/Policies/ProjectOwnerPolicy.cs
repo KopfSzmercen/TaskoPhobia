@@ -3,10 +3,10 @@ using TaskoPhobia.Core.ValueObjects;
 
 namespace TaskoPhobia.Core.Policies;
 
-internal sealed class ProjectOwnerPolicy : IInvitationPolicy
+internal sealed class ProjectOwnerPolicy : ICreateInvitationPolicy
 {
-    public bool CanCreate(Project project, UserId userId)
+    public bool CanCreate(Project project, UserId senderId)
     {
-        return project.OwnerId == userId;
+        return project.OwnerId == senderId;
     }
 }

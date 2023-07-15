@@ -14,4 +14,8 @@
         <ProjectReference Include="..\TaskoPhobia.Shared.Abstractions\TaskoPhobia.Shared.Abstractions.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Policies\Exceptions\" />
+    </ItemGroup>
+
 </Project>

@@ -50,7 +50,7 @@ public class ProjectsController : BaseController
     [Authorize]
     [HttpGet("{projectId:guid}")]
     [SwaggerOperation("Get single owned or joined project")]
-    [ProducesResponseType(typeof(ProjectDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProjectDetailsDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<ProjectDto>> Get([FromRoute] Guid projectId)
     {

@@ -42,4 +42,10 @@ public class Invitation
         if (Status != InvitationStatus.Pending()) throw new InvitationCanNotBeAcceptedException();
         Status = InvitationStatus.Accepted();
     }
+
+    public void Reject()
+    {
+        if (Status != InvitationStatus.Pending()) throw new InvitationCanNotBeRejectedException();
+        Status = InvitationStatus.Rejected();
+    }
 }

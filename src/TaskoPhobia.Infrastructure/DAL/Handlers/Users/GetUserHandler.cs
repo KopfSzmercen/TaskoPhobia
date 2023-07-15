@@ -19,6 +19,6 @@ internal sealed class GetUserHandler : IQueryHandler<GetUser, UserDetailsDto>
     public async Task<UserDetailsDto> HandleAsync(GetUser query)
     {
         var user = await _users.AsNoTracking().SingleOrDefaultAsync(x => x.Id == query.UserId);
-        return user?.AsDto();
+        return user?.AsUserDetailsDto();
     }
 }

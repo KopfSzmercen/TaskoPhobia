@@ -3,16 +3,19 @@ using TaskoPhobia.Core.Entities;
 using TaskoPhobia.Core.Repositories;
 using TaskoPhobia.Core.ValueObjects;
 using TaskoPhobia.Shared.Abstractions.Commands;
+using TaskoPhobia.Shared.Abstractions.Time;
 
 namespace TaskoPhobia.Application.Commands.Projects.CreateProject;
 
 internal sealed class CreateProjectHandler : ICommandHandler<CreateProject>
 {
+    private readonly IClock _clock;
     private readonly IUserRepository _userRepository;
 
-    public CreateProjectHandler(IUserRepository userRepository)
+    public CreateProjectHandler(IUserRepository userRepository, IClock clock)
     {
         _userRepository = userRepository;
+        _clock = clock;
     }
 
     public async Task HandleAsync(CreateProject command)
@@ -25,7 +28,7 @@ internal sealed class CreateProjectHandler : ICommandHandler<CreateProject>
         var projectProgressStatus = ProgressStatus.InProgress();
 
         var project = new Project(command.ProjectId, command.ProjectName, command.ProjectDescription,
-            projectProgressStatus, DateTime.UtcNow, ownerId);
+            projectProgressStatus, _clock.Now(), ownerId);
 
         user.AddProject(project);
 

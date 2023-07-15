@@ -9,7 +9,7 @@ public static class Extensions
     public static IServiceCollection AddCore(this IServiceCollection services)
     {
         services.AddDomainServices();
-        services.AddSingleton<IInvitationPolicy, ProjectOwnerPolicy>();
+        services.AddSingleton<ICreateInvitationPolicy, ProjectOwnerPolicy>();
         return services;
     }
 }
