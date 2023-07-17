@@ -1,6 +1,6 @@
 ﻿using TaskoPhobia.Shared.Abstractions.Exceptions;
 
-namespace TaskoPhobia.Core.Exceptions;
+namespace TaskoPhobia.Core.Policies.Invitations.Exceptions;
 
 public class InvitationAlreadySentException : CustomException
 {

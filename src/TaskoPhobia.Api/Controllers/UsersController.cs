@@ -106,9 +106,9 @@ public class UsersController : BaseController
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorsResponse), StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult> Patch([FromRoute] Guid invitationId)
+    public async Task<ActionResult> Patch([FromRoute] Guid invitationId, [FromBody] RejectInvitationRequest request)
     {
-        var command = new RejectInvitation(invitationId, GetUserId());
+        var command = request.ToCommand(invitationId, GetUserId());
         await _commandDispatcher.DispatchAsync(command);
         return Ok();
     }

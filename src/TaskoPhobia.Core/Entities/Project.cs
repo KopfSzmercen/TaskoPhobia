@@ -1,5 +1,5 @@
 ﻿using TaskoPhobia.Core.Exceptions;
-using TaskoPhobia.Core.Policies;
+using TaskoPhobia.Core.Policies.Invitations;
 using TaskoPhobia.Core.ValueObjects;
 
 namespace TaskoPhobia.Core.Entities;
@@ -43,18 +43,11 @@ public class Project
         _tasks.Add(task);
     }
 
-    internal void AddInvitation(Invitation invitation)
+    public void AddInvitation(Invitation invitation, IEnumerable<ICreateInvitationPolicy> policies)
     {
         if (Status.Equals(ProgressStatus.Finished())) throw new NotAllowedToModifyFinishedProject();
 
-        if (_invitations.Any(i => i.ReceiverId == invitation.ReceiverId && i.Status == InvitationStatus.Pending()))
-            throw new InvitationAlreadySentException(invitation.ReceiverId);
-
-        if (_participations.Any(p => p.ParticipantId == invitation.ReceiverId))
-            throw new UserAlreadyParticipatesProjectException();
-
-        var policy = new RejectedInvitationsLimitPolicy(Invitations, invitation);
-        policy.Validate();
+        foreach (var policy in policies) policy.Validate(this, invitation);
 
         _invitations.Add(invitation);
     }

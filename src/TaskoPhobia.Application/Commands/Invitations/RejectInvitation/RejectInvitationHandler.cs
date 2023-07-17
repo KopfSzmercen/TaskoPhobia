@@ -20,7 +20,7 @@ public class RejectInvitationHandler : ICommandHandler<RejectInvitation>
 
         if (invitation.ReceiverId != command.ReceiverId) throw new NotAllowedToRejectInvitationException();
 
-        invitation.Reject();
+        invitation.Reject(command.blockSendingMoreInvitations);
 
         await _invitationRepository.UpdateAsync(invitation);
     }

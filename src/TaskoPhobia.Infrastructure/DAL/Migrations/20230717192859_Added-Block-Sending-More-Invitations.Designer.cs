@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TaskoPhobia.Infrastructure.DAL.Contexts;
@@ -11,9 +12,11 @@ using TaskoPhobia.Infrastructure.DAL.Contexts;
 namespace TaskoPhobia.Infrastructure.DAL.Migrations
 {
     [DbContext(typeof(TaskoPhobiaWriteDbContext))]
-    partial class TaskoPhobiaWriteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230717192859_Added-Block-Sending-More-Invitations")]
+    partial class AddedBlockSendingMoreInvitations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
