@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using TaskoPhobia.Application.Commands.Invitations.AcceptInvitation;
+using TaskoPhobia.Application.Commands.Invitations.RejectInvitation;
 using TaskoPhobia.Application.Commands.Users.SignIn;
 using TaskoPhobia.Application.Commands.Users.SignUp;
 using TaskoPhobia.Application.DTO;
@@ -95,6 +96,19 @@ public class UsersController : BaseController
     public async Task<ActionResult> Post([FromRoute] Guid invitationId)
     {
         var command = new AcceptInvitation(invitationId, GetUserId());
+        await _commandDispatcher.DispatchAsync(command);
+        return Ok();
+    }
+
+    [Authorize]
+    [HttpPatch("me/invitations/{invitationId:guid}/status/rejected")]
+    [SwaggerOperation("Reject invitation to project.")]
+    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorsResponse), StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult> Patch([FromRoute] Guid invitationId, [FromBody] RejectInvitationRequest request)
+    {
+        var command = request.ToCommand(invitationId, GetUserId());
         await _commandDispatcher.DispatchAsync(command);
         return Ok();
     }

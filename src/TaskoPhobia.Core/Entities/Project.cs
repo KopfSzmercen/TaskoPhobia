@@ -1,14 +1,14 @@
-﻿using TaskoPhobia.Core.Exceptions;
+﻿using TaskoPhobia.Core.Entities.Rules;
 using TaskoPhobia.Core.ValueObjects;
+using TaskoPhobia.Shared.Abstractions.Domain;
 
 namespace TaskoPhobia.Core.Entities;
 
-public class Project
+public class Project : Entity
 {
     private readonly ICollection<Invitation> _invitations = new List<Invitation>();
     private readonly HashSet<ProjectParticipation> _participations = new();
     private readonly ICollection<ProjectTask> _tasks = new List<ProjectTask>();
-
 
     public Project(ProjectId id, ProjectName name, ProjectDescription description,
         ProgressStatus status, DateTime createdAt, UserId ownerId)
@@ -38,20 +38,26 @@ public class Project
 
     public void AddTask(ProjectTask task)
     {
-        if (Status.Equals(ProgressStatus.Finished())) throw new NotAllowedToModifyFinishedProject();
+        CheckRule(new FinishedProjectCanNotBeModifiedRule(this));
         _tasks.Add(task);
     }
 
-    internal void AddInvitation(Invitation invitation)
+    public void AddInvitation(Invitation invitation)
     {
-        if (_invitations.Any(i => i.ReceiverId == invitation.ReceiverId && i.Status == InvitationStatus.Pending()))
-            throw new InvitationAlreadySentException(invitation.ReceiverId);
+        CheckRule(new FinishedProjectCanNotBeModifiedRule(this));
+
+        CheckRule(new BlockedSendingMoreInvitationsRule(this, invitation));
+        CheckRule(new InvitationIsAlreadySentToUserRule(this, invitation));
+        CheckRule(new InvitationSenderMustBeProjectOwnerRule(this, invitation));
+        CheckRule(new ReceiverMustNotParticipateProjectRule(this, invitation));
+        CheckRule(new RejectedInvitationsLimitIsNotExceededRule(this, invitation));
 
         _invitations.Add(invitation);
     }
 
     internal void AddParticipation(ProjectParticipation participation)
     {
+        CheckRule(new FinishedProjectCanNotBeModifiedRule(this));
         _participations.Add(participation);
     }
 }

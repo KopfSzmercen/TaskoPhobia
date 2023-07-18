@@ -15,7 +15,7 @@ public record InvitationStatus
     public string Value { get; }
 
     private static IEnumerable<string> AvailableInvitationStatuses { get; } =
-        new[] { "pending", "accepted", "declined" };
+        new[] { "pending", "accepted", "rejected" };
 
 
     public static InvitationStatus Pending()
@@ -28,8 +28,8 @@ public record InvitationStatus
         return new InvitationStatus("accepted");
     }
 
-    public static InvitationStatus Declined()
+    public static InvitationStatus Rejected()
     {
-        return new InvitationStatus("declined");
+        return new InvitationStatus("rejected");
     }
 }

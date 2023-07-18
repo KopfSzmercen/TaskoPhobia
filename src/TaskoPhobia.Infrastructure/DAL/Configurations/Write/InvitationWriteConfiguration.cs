@@ -55,5 +55,9 @@ internal sealed class InvitationWriteConfiguration : IEntityTypeConfiguration<In
         builder.HasOne(invitation => invitation.Receiver)
             .WithMany(receiver => receiver.ReceivedInvitations)
             .HasForeignKey(invitation => invitation.ReceiverId);
+
+        builder.Property(x => x.BlockSendingMoreInvitations)
+            .IsRequired()
+            .HasDefaultValue(false);
     }
 }

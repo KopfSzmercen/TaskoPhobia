@@ -7,4 +7,5 @@ internal sealed class ProjectParticipationReadModel
     public Guid ParticipantId { get; set; }
     public DateTimeOffset JoinDate { get; set; }
     public ProjectReadModel Project { get; set; }
+    public UserReadModel User { get; set; }
 }

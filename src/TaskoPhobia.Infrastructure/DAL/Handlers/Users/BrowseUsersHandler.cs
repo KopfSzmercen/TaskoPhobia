@@ -18,6 +18,6 @@ internal sealed class BrowseUsersHandler : IQueryHandler<BrowseUsers, IEnumerabl
 
     public async Task<IEnumerable<UserDetailsDto>> HandleAsync(BrowseUsers query)
     {
-        return await _users.AsNoTracking().Select(x => x.AsDto()).ToListAsync();
+        return await _users.AsNoTracking().Select(x => x.AsUserDetailsDto()).ToListAsync();
     }
 }
