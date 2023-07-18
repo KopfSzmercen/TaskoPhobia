@@ -1,5 +1,4 @@
 ﻿using TaskoPhobia.Core.Entities.Rules;
-using TaskoPhobia.Core.Exceptions;
 using TaskoPhobia.Core.ValueObjects;
 using TaskoPhobia.Shared.Abstractions.Domain;
 
@@ -10,7 +9,6 @@ public class Project : Entity
     private readonly ICollection<Invitation> _invitations = new List<Invitation>();
     private readonly HashSet<ProjectParticipation> _participations = new();
     private readonly ICollection<ProjectTask> _tasks = new List<ProjectTask>();
-
 
     public Project(ProjectId id, ProjectName name, ProjectDescription description,
         ProgressStatus status, DateTime createdAt, UserId ownerId)
@@ -40,13 +38,13 @@ public class Project : Entity
 
     public void AddTask(ProjectTask task)
     {
-        if (Status.Equals(ProgressStatus.Finished())) throw new NotAllowedToModifyFinishedProject();
+        CheckRule(new FinishedProjectCanNotBeModifiedRule(this));
         _tasks.Add(task);
     }
 
     public void AddInvitation(Invitation invitation)
     {
-        if (Status.Equals(ProgressStatus.Finished())) throw new NotAllowedToModifyFinishedProject();
+        CheckRule(new FinishedProjectCanNotBeModifiedRule(this));
 
         CheckRule(new BlockedSendingMoreInvitationsRule(this, invitation));
         CheckRule(new InvitationIsAlreadySentToUserRule(this, invitation));
@@ -59,7 +57,7 @@ public class Project : Entity
 
     internal void AddParticipation(ProjectParticipation participation)
     {
-        if (Status.Equals(ProgressStatus.Finished())) throw new NotAllowedToModifyFinishedProject();
+        CheckRule(new FinishedProjectCanNotBeModifiedRule(this));
         _participations.Add(participation);
     }
 }
