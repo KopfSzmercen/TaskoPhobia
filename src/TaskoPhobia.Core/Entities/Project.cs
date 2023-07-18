@@ -1,10 +1,11 @@
-﻿using TaskoPhobia.Core.Exceptions;
-using TaskoPhobia.Core.Policies.Invitations;
+﻿using TaskoPhobia.Core.Entities.Rules;
+using TaskoPhobia.Core.Exceptions;
 using TaskoPhobia.Core.ValueObjects;
+using TaskoPhobia.Shared.Abstractions.Domain;
 
 namespace TaskoPhobia.Core.Entities;
 
-public class Project
+public class Project : Entity
 {
     private readonly ICollection<Invitation> _invitations = new List<Invitation>();
     private readonly HashSet<ProjectParticipation> _participations = new();
@@ -43,11 +44,15 @@ public class Project
         _tasks.Add(task);
     }
 
-    public void AddInvitation(Invitation invitation, IEnumerable<ICreateInvitationPolicy> policies)
+    public void AddInvitation(Invitation invitation)
     {
         if (Status.Equals(ProgressStatus.Finished())) throw new NotAllowedToModifyFinishedProject();
 
-        foreach (var policy in policies) policy.Validate(this, invitation);
+        CheckRule(new BlockedSendingMoreInvitationsRule(this, invitation));
+        CheckRule(new InvitationIsAlreadySentToUserRule(this, invitation));
+        CheckRule(new InvitationSenderMustBeProjectOwnerRule(this, invitation));
+        CheckRule(new ReceiverMustNotParticipateProjectRule(this, invitation));
+        CheckRule(new RejectedInvitationsLimitIsNotExceededRule(this, invitation));
 
         _invitations.Add(invitation);
     }

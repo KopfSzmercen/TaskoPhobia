@@ -1,6 +1,5 @@
 ﻿using TaskoPhobia.Application.Exceptions;
 using TaskoPhobia.Core.Entities;
-using TaskoPhobia.Core.Policies.Invitations;
 using TaskoPhobia.Core.Repositories;
 using TaskoPhobia.Core.Services;
 using TaskoPhobia.Shared.Abstractions.Commands;
@@ -11,17 +10,14 @@ namespace TaskoPhobia.Application.Commands.Invitations.CreateInvitation;
 internal sealed class CreateInvitationHandler : ICommandHandler<CreateInvitation>
 {
     private readonly IClock _clock;
-    private readonly IEnumerable<ICreateInvitationPolicy> _createInvitationPolicies;
     private readonly IProjectRepository _projectRepository;
     private readonly IUserReadService _userReadService;
 
-    public CreateInvitationHandler(IUserReadService userReadService, IProjectRepository projectRepository, IClock clock,
-        IEnumerable<ICreateInvitationPolicy> createInvitationPolicies)
+    public CreateInvitationHandler(IUserReadService userReadService, IProjectRepository projectRepository, IClock clock)
     {
         _userReadService = userReadService;
         _projectRepository = projectRepository;
         _clock = clock;
-        _createInvitationPolicies = createInvitationPolicies;
     }
 
     public async Task HandleAsync(CreateInvitation command)
@@ -38,7 +34,7 @@ internal sealed class CreateInvitationHandler : ICommandHandler<CreateInvitation
         var invitation = Invitation.CreateNew(command.InvitationId, $"Invitation for project: {project.Name}",
             command.SenderId, command.ReceiverId, _clock);
 
-        project.AddInvitation(invitation, _createInvitationPolicies);
+        project.AddInvitation(invitation);
 
         await _projectRepository.UpdateAsync(project);
     }
