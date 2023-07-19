@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TaskoPhobia.Core.Entities;
+using TaskoPhobia.Core.Entities.Projects;
 using TaskoPhobia.Core.ValueObjects;
 
 namespace TaskoPhobia.Infrastructure.DAL.Configurations.Write;
@@ -13,12 +13,12 @@ internal sealed class ProjectWriteConfiguration : IEntityTypeConfiguration<Proje
         builder.Property(x => x.Id)
             .HasConversion(x => x.Value,
                 x => new ProjectId(x));
-        
+
         builder.Property(x => x.Name)
             .IsRequired()
             .HasConversion(x => x.Value,
                 x => new ProjectName(x));
-        
+
         builder.Property(x => x.Description)
             .HasConversion(x => x.Value,
                 x => new ProjectDescription(x));

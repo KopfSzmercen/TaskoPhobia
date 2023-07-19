@@ -1,4 +1,4 @@
-﻿using TaskoPhobia.Core.Entities;
+﻿using TaskoPhobia.Core.Entities.Users;
 using TaskoPhobia.Core.Repositories;
 using TaskoPhobia.Core.ValueObjects;
 

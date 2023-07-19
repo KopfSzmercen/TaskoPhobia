@@ -1,18 +1,19 @@
 ﻿using Shouldly;
 using TaskoPhobia.Core.Entities;
-using TaskoPhobia.Core.Exceptions;
+using TaskoPhobia.Core.Entities.Projects;
+using TaskoPhobia.Core.Entities.Projects.Rules;
 using TaskoPhobia.Core.ValueObjects;
 using Xunit;
 
 namespace TaskoPhobia.Tests.Unit.Entities;
 
-public class ProjectTests
+public class ProjectTests : TestBase
 {
     [Fact]
     public void add_task_when_project_is_finished_should_throw_NotAllowedToModifyFinishedProject_exception()
     {
         var project = CreateProjectWithGivenStatus(ProgressStatus.Finished());
-        Assert.Throws<NotAllowedToModifyFinishedProject>(() => project.AddTask(CreateTaskForProject(project.Id)));
+        AssertBrokenRule<FinishedProjectCanNotBeModifiedRule>(() => project.AddTask(CreateTaskForProject(project.Id)));
     }
 
     [Fact]

@@ -1,6 +1,6 @@
 ﻿using TaskoPhobia.Application.Exceptions;
 using TaskoPhobia.Application.Security;
-using TaskoPhobia.Core.Entities;
+using TaskoPhobia.Core.Entities.Users;
 using TaskoPhobia.Core.Repositories;
 using TaskoPhobia.Core.Services;
 using TaskoPhobia.Core.ValueObjects;
@@ -32,7 +32,8 @@ internal sealed class SignUpHandler : ICommandHandler<SignUp>
         if (await _userReadService.ExistsByEmailAsync(email)) throw new EmailExistsException();
         if (await _userReadService.ExistsByUsernameAsync(username)) throw new UsernameExistsException();
 
-        var user = new User(command.UserId, email, username, password, Role.User(), DateTime.UtcNow, AccountType.Free());
+        var user = new User(command.UserId, email, username, password, Role.User(), DateTime.UtcNow,
+            AccountType.Free());
         await _userRepository.AddAsync(user);
     }
 }

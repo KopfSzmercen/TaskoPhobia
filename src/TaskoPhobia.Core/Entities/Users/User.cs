@@ -1,13 +1,13 @@
-﻿using TaskoPhobia.Core.Exceptions;
+﻿using TaskoPhobia.Core.Entities.Invitations;
+using TaskoPhobia.Core.Entities.Projects;
+using TaskoPhobia.Core.Entities.Users.Rules;
 using TaskoPhobia.Core.ValueObjects;
+using TaskoPhobia.Shared.Abstractions.Domain;
 
-namespace TaskoPhobia.Core.Entities;
+namespace TaskoPhobia.Core.Entities.Users;
 
-public class User
+public class User : Entity
 {
-    public static readonly ushort MaxNumOfProjectsForBasicAccount = 6;
-    public static readonly ushort MaxNumOfProjectsForFreeAccount = 3;
-
     public User(UserId id, Email email, Username username, Password password, Role role, DateTime createdAt,
         AccountType accountType)
     {
@@ -39,11 +39,8 @@ public class User
 
     public void AddProject(Project project)
     {
-        if (AccountType.Equals(AccountType.Free()) && OwnedProjects.Count + 1 > MaxNumOfProjectsForFreeAccount)
-            throw new NotAllowedToCreateMoreProjectsException();
-
-        if (AccountType.Equals(AccountType.Basic()) && OwnedProjects.Count + 1 > MaxNumOfProjectsForBasicAccount)
-            throw new NotAllowedToCreateMoreProjectsException();
+        CheckRule(new LimitOfOwnedProjectsForFreeAccountIsNotExceededRule(this));
+        CheckRule(new LimitOfOwnedProjectsForBasicAccountIsNotExceededRule(this));
 
         OwnedProjects.Add(project);
     }

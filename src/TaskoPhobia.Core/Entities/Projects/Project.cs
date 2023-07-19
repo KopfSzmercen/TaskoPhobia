@@ -1,8 +1,10 @@
-﻿using TaskoPhobia.Core.Entities.Rules;
+﻿using TaskoPhobia.Core.Entities.Invitations;
+using TaskoPhobia.Core.Entities.Projects.Rules;
+using TaskoPhobia.Core.Entities.Users;
 using TaskoPhobia.Core.ValueObjects;
 using TaskoPhobia.Shared.Abstractions.Domain;
 
-namespace TaskoPhobia.Core.Entities;
+namespace TaskoPhobia.Core.Entities.Projects;
 
 public class Project : Entity
 {

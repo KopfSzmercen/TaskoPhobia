@@ -1,4 +1,5 @@
-﻿using TaskoPhobia.Core.ValueObjects;
+﻿using TaskoPhobia.Core.Entities.Projects;
+using TaskoPhobia.Core.ValueObjects;
 
 namespace TaskoPhobia.Core.Entities;
 
