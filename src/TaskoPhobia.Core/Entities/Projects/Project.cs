@@ -57,7 +57,7 @@ public class Project : Entity
         _invitations.Add(invitation);
     }
 
-    internal void AddParticipation(ProjectParticipation participation)
+    public void AddParticipation(ProjectParticipation participation)
     {
         CheckRule(new FinishedProjectCanNotBeModifiedRule(this));
         _participations.Add(participation);

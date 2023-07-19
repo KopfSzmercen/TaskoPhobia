@@ -24,6 +24,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\TaskoPhobia.Core\TaskoPhobia.Core.csproj" />
+      <ProjectReference Include="..\..\src\TaskoPhobia.Shared\TaskoPhobia.Shared.csproj" />
     </ItemGroup>
 
 </Project>
