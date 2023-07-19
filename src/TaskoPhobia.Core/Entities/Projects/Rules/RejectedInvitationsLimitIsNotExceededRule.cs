@@ -6,7 +6,7 @@ namespace TaskoPhobia.Core.Entities.Projects.Rules;
 
 public class RejectedInvitationsLimitIsNotExceededRule : IBusinessRule
 {
-    private const ushort RejectedInvitationsLimit = 3;
+    public const ushort RejectedInvitationsLimit = 3;
     private readonly Invitation _invitation;
     private readonly Project _project;
 

@@ -5,6 +5,8 @@ using Shouldly;
 using TaskoPhobia.Application.Commands.Users.SignIn;
 using TaskoPhobia.Application.Commands.Users.SignUp;
 using TaskoPhobia.Application.DTO;
+using TaskoPhobia.Core.Entities.Invitations;
+using TaskoPhobia.Core.Entities.Projects;
 using TaskoPhobia.Core.Entities.Users;
 using TaskoPhobia.Core.ValueObjects;
 using TaskoPhobia.Infrastructure.Security;
@@ -83,6 +85,56 @@ public class UsersControllerTests : ControllerTests, IDisposable
         errorResult.ShouldBeOfType<Error>();
     }
 
+    [Fact]
+    public async Task given_valid_credentials_get_me_invitations_should_return_received_invitations()
+    {
+        var projectOwner = await CreateUserAsync();
+        var invitationReceiver = await CreateUserAsync("secondUser@u.pl", "secondUserUsername");
+
+        var project = await CreateProjectAsync(projectOwner.Id);
+        var invitation = await CreateAndAddInvitationToProjectAsync(project, invitationReceiver.Id);
+
+        Authorize(invitationReceiver.Id, invitationReceiver.Role);
+
+        var response = await HttpClient.GetAsync("users/me/invitations");
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+        var receivedInvitationDtos =
+            response.Content.ReadFromJsonAsync<IEnumerable<ReceivedInvitationDto>>().Result.ToList();
+
+        receivedInvitationDtos.ShouldNotBeNull();
+        receivedInvitationDtos.Count().ShouldBe(1);
+        receivedInvitationDtos[0].Id.ShouldBe(invitation.Id.Value);
+    }
+
+    [Fact]
+    private async Task given_valid_credentials_and_invitation_id_post_invitations_status_accepted_should_succeed()
+    {
+        var projectOwner = await CreateUserAsync();
+        var invitationReceiver = await CreateUserAsync("secondUser@u.pl", "secondUserUsername");
+
+        var project = await CreateProjectAsync(projectOwner.Id);
+        var invitation = await CreateAndAddInvitationToProjectAsync(project, invitationReceiver.Id);
+
+        Authorize(invitationReceiver.Id, invitationReceiver.Role);
+        var response = await HttpClient.PostAsJsonAsync($"users/me/invitations/{invitation.Id.Value}/status/accepted",
+            new object());
+
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+    }
+
+    [Fact]
+    private async Task
+        given_valid_credentials_and_invalid_invitation_id_post_invitations_status_accepted_should_return_400_bad_request()
+    {
+        var invitationReceiver = await CreateUserAsync("secondUser@u.pl", "secondUserUsername");
+        Authorize(invitationReceiver.Id, invitationReceiver.Role);
+        var response = await HttpClient.PostAsJsonAsync($"users/me/invitations/{Guid.NewGuid()}/status/accepted",
+            new object());
+
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+    }
+
     #region setup
 
     private const string Password = "secret";
@@ -98,18 +150,39 @@ public class UsersControllerTests : ControllerTests, IDisposable
         _testDatabase.Dispose();
     }
 
-    private async Task<User> CreateUserAsync()
+    private async Task<User> CreateUserAsync(string email = "test@t.pl", string username = "username")
     {
         var passwordManager = new PasswordManager(new PasswordHasher<object>());
         var securedPassword = passwordManager.Secure(Password);
 
-        var user = new User(Guid.NewGuid(), "test@t.pl",
-            "test", securedPassword, Role.User(), DateTime.UtcNow, AccountType.Free());
+        var user = new User(Guid.NewGuid(), email,
+            username, securedPassword, Role.User(), DateTime.UtcNow, AccountType.Free());
 
         await _testDatabase.WriteDbContext.Users.AddAsync(user);
         await _testDatabase.WriteDbContext.SaveChangesAsync();
 
         return user;
+    }
+
+    private async Task<Project> CreateProjectAsync(Guid ownerId)
+    {
+        var project = new Project(Guid.NewGuid(), "name", "description", ProgressStatus.InProgress(), DateTime.UtcNow,
+            ownerId);
+        await _testDatabase.WriteDbContext.Projects.AddAsync(project);
+        await _testDatabase.WriteDbContext.SaveChangesAsync();
+        return project;
+    }
+
+    private async Task<Invitation> CreateAndAddInvitationToProjectAsync(Project project, Guid receiverId)
+    {
+        var invitation = Invitation.CreateNew(Guid.NewGuid(), "title", project.OwnerId, receiverId, new Clock());
+
+        project.AddInvitation(invitation);
+
+        _testDatabase.WriteDbContext.Projects.Update(project);
+
+        await _testDatabase.WriteDbContext.SaveChangesAsync();
+        return invitation;
     }
 
     #endregion
