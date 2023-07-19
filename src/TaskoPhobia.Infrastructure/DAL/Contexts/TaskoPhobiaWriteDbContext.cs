@@ -1,5 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TaskoPhobia.Core.Entities;
+using TaskoPhobia.Core.Entities.Invitations;
+using TaskoPhobia.Core.Entities.Projects;
+using TaskoPhobia.Core.Entities.Users;
 using TaskoPhobia.Infrastructure.DAL.Configurations.Write;
 
 namespace TaskoPhobia.Infrastructure.DAL.Contexts;

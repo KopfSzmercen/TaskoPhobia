@@ -1,10 +1,13 @@
-﻿using TaskoPhobia.Core.Exceptions;
+﻿using TaskoPhobia.Core.Entities.Invitations.Rules;
+using TaskoPhobia.Core.Entities.Projects;
+using TaskoPhobia.Core.Entities.Users;
 using TaskoPhobia.Core.ValueObjects;
+using TaskoPhobia.Shared.Abstractions.Domain;
 using TaskoPhobia.Shared.Abstractions.Time;
 
-namespace TaskoPhobia.Core.Entities;
+namespace TaskoPhobia.Core.Entities.Invitations;
 
-public class Invitation
+public class Invitation : Entity
 {
     private Invitation(InvitationId id, InvitationTitle title, UserId senderId, UserId receiverId,
         InvitationStatus status, DateTime createdAt)
@@ -41,13 +44,15 @@ public class Invitation
 
     internal void Accept()
     {
-        if (Status != InvitationStatus.Pending()) throw new InvitationCanNotBeAcceptedException();
+        CheckRule(new OnlyPendingInvitationStatusCanBeChangedRule(this));
+
         Status = InvitationStatus.Accepted();
     }
 
     public void Reject(bool blockSendingMoreInvitations)
     {
-        if (Status != InvitationStatus.Pending()) throw new InvitationCanNotBeRejectedException();
+        CheckRule(new OnlyPendingInvitationStatusCanBeChangedRule(this));
+
         Status = InvitationStatus.Rejected();
         BlockSendingMoreInvitations = blockSendingMoreInvitations;
     }

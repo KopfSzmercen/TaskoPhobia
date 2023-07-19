@@ -1,4 +1,6 @@
-﻿using TaskoPhobia.Core.ValueObjects;
+﻿using TaskoPhobia.Core.Entities.Projects;
+using TaskoPhobia.Core.Entities.Users;
+using TaskoPhobia.Core.ValueObjects;
 using TaskoPhobia.Shared.Abstractions.Time;
 
 namespace TaskoPhobia.Core.Entities;

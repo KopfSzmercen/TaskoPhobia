@@ -5,6 +5,8 @@ using Shouldly;
 using TaskoPhobia.Application.Commands.ProjectTasks.CreateProjectTask;
 using TaskoPhobia.Application.DTO;
 using TaskoPhobia.Core.Entities;
+using TaskoPhobia.Core.Entities.Projects;
+using TaskoPhobia.Core.Entities.Users;
 using TaskoPhobia.Core.ValueObjects;
 using TaskoPhobia.Infrastructure.Security;
 using TaskoPhobia.Shared.Abstractions.Time;

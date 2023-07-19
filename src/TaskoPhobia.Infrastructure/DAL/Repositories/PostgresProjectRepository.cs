@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TaskoPhobia.Core.Entities;
+using TaskoPhobia.Core.Entities.Projects;
 using TaskoPhobia.Core.Repositories;
 using TaskoPhobia.Core.ValueObjects;
 using TaskoPhobia.Infrastructure.DAL.Contexts;

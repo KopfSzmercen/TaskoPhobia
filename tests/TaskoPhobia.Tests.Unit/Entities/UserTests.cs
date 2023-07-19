@@ -1,21 +1,26 @@
 ﻿using Shouldly;
-using TaskoPhobia.Core.Entities;
-using TaskoPhobia.Core.Exceptions;
+using TaskoPhobia.Core.Entities.Projects;
+using TaskoPhobia.Core.Entities.Users;
+using TaskoPhobia.Core.Entities.Users.Rules;
 using TaskoPhobia.Core.ValueObjects;
 using Xunit;
 
 namespace TaskoPhobia.Tests.Unit.Entities;
 
-public class UserTests
+public class UserTests : TestBase
 {
     [Fact]
     public void
         add_project_when_basic_account_exceeded_max_number_of_project_throws_NotAllowedToCreateMoreProjectsException()
     {
         var user = CreateUserWithGivenAccountType(AccountType.Basic());
+        const ushort limitOfProjectsForBasicAccount = LimitOfOwnedProjectsForBasicAccountIsNotExceededRule
+            .MaxNumberOfOwnedProjectsForBasicAccount;
 
-        for (var i = 0; i < User.MaxNumOfProjectsForBasicAccount; i++) user.AddProject(CreateProjectForUser(user.Id));
-        Assert.Throws<NotAllowedToCreateMoreProjectsException>(() => user.AddProject(CreateProjectForUser(user.Id)));
+        for (var i = 0; i < limitOfProjectsForBasicAccount; i++) user.AddProject(CreateProjectForUser(user.Id));
+
+        AssertBrokenRule<LimitOfOwnedProjectsForBasicAccountIsNotExceededRule>(() =>
+            user.AddProject(CreateProjectForUser(user.Id)));
     }
 
     [Fact]
@@ -23,9 +28,13 @@ public class UserTests
         add_project_when_free_account_exceeded_max_number_of_project_throws_NotAllowedToCreateMoreProjectsException()
     {
         var user = CreateUserWithGivenAccountType(AccountType.Free());
+        const ushort limitOfProjectsForFreeAccount =
+            LimitOfOwnedProjectsForFreeAccountIsNotExceededRule.MaxNumberOfOwnedProjectsForFreeAccount;
 
-        for (var i = 0; i < User.MaxNumOfProjectsForFreeAccount; i++) user.AddProject(CreateProjectForUser(user.Id));
-        Assert.Throws<NotAllowedToCreateMoreProjectsException>(() => user.AddProject(CreateProjectForUser(user.Id)));
+        for (var i = 0; i < limitOfProjectsForFreeAccount; i++) user.AddProject(CreateProjectForUser(user.Id));
+
+        AssertBrokenRule<LimitOfOwnedProjectsForFreeAccountIsNotExceededRule>(() =>
+            user.AddProject(CreateProjectForUser(user.Id)));
     }
 
     [Fact]

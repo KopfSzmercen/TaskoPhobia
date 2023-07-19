@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TaskoPhobia.Core.Entities;
+using TaskoPhobia.Core.Entities.Users;
 using TaskoPhobia.Core.ValueObjects;
 
 namespace TaskoPhobia.Infrastructure.DAL.Configurations.Write;

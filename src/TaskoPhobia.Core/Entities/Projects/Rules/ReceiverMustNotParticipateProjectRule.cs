@@ -1,6 +1,7 @@
-﻿using TaskoPhobia.Shared.Abstractions.Domain;
+﻿using TaskoPhobia.Core.Entities.Invitations;
+using TaskoPhobia.Shared.Abstractions.Domain;
 
-namespace TaskoPhobia.Core.Entities.Rules;
+namespace TaskoPhobia.Core.Entities.Projects.Rules;
 
 public class ReceiverMustNotParticipateProjectRule : IBusinessRule
 {

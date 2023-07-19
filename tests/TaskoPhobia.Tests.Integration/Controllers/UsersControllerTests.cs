@@ -5,7 +5,7 @@ using Shouldly;
 using TaskoPhobia.Application.Commands.Users.SignIn;
 using TaskoPhobia.Application.Commands.Users.SignUp;
 using TaskoPhobia.Application.DTO;
-using TaskoPhobia.Core.Entities;
+using TaskoPhobia.Core.Entities.Users;
 using TaskoPhobia.Core.ValueObjects;
 using TaskoPhobia.Infrastructure.Security;
 using TaskoPhobia.Shared.Abstractions.Exceptions.Errors;
