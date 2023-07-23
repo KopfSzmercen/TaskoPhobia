@@ -9,6 +9,7 @@ using TaskoPhobia.Core.Entities.Projects;
 using TaskoPhobia.Core.Entities.Users;
 using TaskoPhobia.Core.ValueObjects;
 using TaskoPhobia.Infrastructure.Security;
+using TaskoPhobia.Shared.Abstractions.Queries;
 using TaskoPhobia.Shared.Abstractions.Time;
 using TaskoPhobia.Shared.Time;
 using Xunit;
@@ -56,8 +57,8 @@ public class ProjectTasksControllerTests : ControllerTests, IDisposable
         var response = await HttpClient.GetAsync($"projects/{project.Id.Value}/tasks");
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-        var taskDtos = await response.Content.ReadFromJsonAsync<IEnumerable<ProjectTaskDto>>();
-        taskDtos.Count().ShouldBeGreaterThan(0);
+        var taskDtos = await response.Content.ReadFromJsonAsync<Paged<ProjectTaskDto>>();
+        taskDtos.Items.Count().ShouldBeGreaterThan(0);
     }
 
     [Fact]
@@ -99,8 +100,8 @@ public class ProjectTasksControllerTests : ControllerTests, IDisposable
 
         Authorize(user.Id, user.Role);
 
-        var project = new Project(Guid.NewGuid(), "Project name", "Project description", ProgressStatus.InProgress(),
-            _clock.Now(), user.Id);
+        var project = Project.CreateNew(Guid.NewGuid(), "Project name", "Project description",
+            _clock, user.Id);
 
         await _testDatabase.WriteDbContext.Projects.AddAsync(project);
         await _testDatabase.WriteDbContext.SaveChangesAsync();
@@ -110,8 +111,9 @@ public class ProjectTasksControllerTests : ControllerTests, IDisposable
 
     private async Task<ProjectTask> CreateTaskForProject(ProjectId projectId)
     {
-        var task = new ProjectTask(Guid.NewGuid(), "Task", new TaskTimeSpan(_clock.Now(), _clock.Now().AddDays(5)),
-            projectId, ProgressStatus.InProgress());
+        var task = ProjectTask.CreateNew(Guid.NewGuid(), "Task",
+            new TaskTimeSpan(_clock.Now(), _clock.Now().AddDays(5)),
+            projectId);
 
         await _testDatabase.WriteDbContext.ProjectTasks.AddAsync(task);
         await _testDatabase.WriteDbContext.SaveChangesAsync();

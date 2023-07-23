@@ -2,4 +2,4 @@
 
 namespace TaskoPhobia.Application.Commands.Invitations.AcceptInvitation;
 
-public record AcceptInvitation(Guid InvitationId, Guid UserId) : ICommand;
+public record AcceptInvitation(Guid InvitationId) : ICommand;

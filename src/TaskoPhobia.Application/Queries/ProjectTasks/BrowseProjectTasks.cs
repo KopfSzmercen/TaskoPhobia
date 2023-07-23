@@ -3,14 +3,12 @@ using TaskoPhobia.Shared.Abstractions.Queries;
 
 namespace TaskoPhobia.Application.Queries.ProjectTasks;
 
-public class BrowseProjectTasks : IQuery<IEnumerable<ProjectTaskDto>>
+public class BrowseProjectTasks : PagedQuery<ProjectTaskDto>
 {
-    public BrowseProjectTasks(Guid userId, Guid projectId)
+    public BrowseProjectTasks(Guid projectId)
     {
-        UserId = userId;
         ProjectId = projectId;
     }
 
-    public Guid UserId { get; set; }
-    public Guid ProjectId { get; set; }
+    public Guid ProjectId { get; }
 }

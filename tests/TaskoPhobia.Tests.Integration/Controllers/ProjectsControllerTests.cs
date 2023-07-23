@@ -8,6 +8,7 @@ using TaskoPhobia.Core.Entities.Projects;
 using TaskoPhobia.Core.Entities.Users;
 using TaskoPhobia.Core.ValueObjects;
 using TaskoPhobia.Infrastructure.Security;
+using TaskoPhobia.Shared.Abstractions.Queries;
 using TaskoPhobia.Shared.Abstractions.Time;
 using TaskoPhobia.Shared.Time;
 using Xunit;
@@ -38,11 +39,11 @@ public class ProjectsControllerTests : ControllerTests, IDisposable
         var user = await CreateUserAndAuthorizeAsync();
         await CreateProjectForUserAsync(user.Id);
 
-        var response = await HttpClient.GetAsync("/projects");
+        var response = await HttpClient.GetAsync("/projects?Created=true");
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-        var projectDtos = await response.Content.ReadFromJsonAsync<IEnumerable<ProjectDto>>();
-        projectDtos.Count().ShouldBeGreaterThan(0);
+        var projectDtos = await response.Content.ReadFromJsonAsync<Paged<ProjectDto>>();
+        projectDtos.Items.Count.ShouldBeGreaterThan(0);
     }
 
     [Fact]
@@ -101,8 +102,8 @@ public class ProjectsControllerTests : ControllerTests, IDisposable
 
     private async Task<Project> CreateProjectForUserAsync(UserId userId)
     {
-        var project = new Project(Guid.NewGuid(), "Project name", "Project description", ProgressStatus.InProgress(),
-            _clock.Now(), userId);
+        var project = Project.CreateNew(Guid.NewGuid(), "Project name", "Project description",
+            _clock, userId);
 
         await _testDatabase.WriteDbContext.Projects.AddAsync(project);
         await _testDatabase.WriteDbContext.SaveChangesAsync();

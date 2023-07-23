@@ -3,6 +3,7 @@ using TaskoPhobia.Shared.Abstractions.Queries;
 
 namespace TaskoPhobia.Application.Queries.Users;
 
-public class BrowseUsers : IQuery<IEnumerable<UserDetailsDto>>
+public class BrowseUsers : PagedQuery<UserDetailsDto>
 {
+    public string Username { get; set; }
 }

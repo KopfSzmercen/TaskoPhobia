@@ -8,10 +8,10 @@ using TaskoPhobia.Shared.Abstractions.Commands;
 using TaskoPhobia.Shared.Abstractions.Exceptions.Errors;
 using TaskoPhobia.Shared.Abstractions.Queries;
 
-namespace TaskoPhobia.Api.Controllers;
+namespace TaskoPhobia.Api.Controllers.Projects;
 
 [Route("projects")]
-public class ProjectsController : BaseController
+public class ProjectsController : ControllerBase
 {
     private readonly ICommandDispatcher _commandDispatcher;
     private readonly IQueryDispatcher _queryDispatcher;
@@ -29,7 +29,7 @@ public class ProjectsController : BaseController
     [ProducesResponseType(typeof(ErrorsResponse), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> Post([FromBody] CreateProjectRequest request)
     {
-        var command = request.ToCommand(GetUserId());
+        var command = request.ToCommand();
         await _commandDispatcher.DispatchAsync(command);
 
         return CreatedAtAction(nameof(Get), new { command.ProjectId }, null);
@@ -38,10 +38,9 @@ public class ProjectsController : BaseController
     [Authorize]
     [HttpGet]
     [SwaggerOperation("Get all owned or joined projects projects")]
-    [ProducesResponseType(typeof(IEnumerable<ProjectDto>), StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<ProjectDto>>> Get([FromQuery] bool created = true)
+    [ProducesResponseType(typeof(Paged<ProjectDto>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<Paged<ProjectDto>>> Get([FromQuery] BrowseProjects query)
     {
-        var query = new BrowseProjects(GetUserId(), created);
         var results = await _queryDispatcher.QueryAsync(query);
 
         return Ok(results);
@@ -54,7 +53,7 @@ public class ProjectsController : BaseController
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<ProjectDto>> Get([FromRoute] Guid projectId)
     {
-        var query = new GetProject(GetUserId(), projectId);
+        var query = new GetProject(projectId);
         var project = await _queryDispatcher.QueryAsync(query);
 
         if (project is null) return NotFound();

@@ -13,10 +13,10 @@ using TaskoPhobia.Shared.Abstractions.Commands;
 using TaskoPhobia.Shared.Abstractions.Exceptions.Errors;
 using TaskoPhobia.Shared.Abstractions.Queries;
 
-namespace TaskoPhobia.Api.Controllers;
+namespace TaskoPhobia.Api.Controllers.Users;
 
 [Route("users")]
-public class UsersController : BaseController
+public class UsersController : ControllerBase
 {
     private readonly ICommandDispatcher _commandDispatcher;
     private readonly IQueryDispatcher _queryDispatcher;
@@ -32,11 +32,10 @@ public class UsersController : BaseController
 
     [HttpGet]
     [SwaggerOperation("Browse users")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<UserDetailsDto>> Browse()
+    [ProducesResponseType(typeof(Paged<UserDetailsDto>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<Paged<UserDetailsDto>>> Browse([FromQuery] BrowseUsers request)
     {
-        var query = new BrowseUsers();
-        var result = await _queryDispatcher.QueryAsync(query);
+        var result = await _queryDispatcher.QueryAsync(request);
         return Ok(result);
     }
 
@@ -56,7 +55,7 @@ public class UsersController : BaseController
     [SwaggerOperation("Sign in")]
     [ProducesResponseType(typeof(JwtDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorsResponse), StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<JwtDto>> Post(SignInRequest request)
+    public async Task<ActionResult<JwtDto>> Post([FromBody] SignInRequest request)
     {
         await _commandDispatcher.DispatchAsync(request.ToCommand());
         var jwt = _tokenStorage.Get();
@@ -70,7 +69,7 @@ public class UsersController : BaseController
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<UserDetailsDto>> Get()
     {
-        var user = await _queryDispatcher.QueryAsync(new GetUser { UserId = GetUserId() });
+        var user = await _queryDispatcher.QueryAsync(new GetUser());
         if (user is null) return NotFound();
 
         return Ok(user);
@@ -80,10 +79,11 @@ public class UsersController : BaseController
     [HttpGet("me/invitations")]
     [SwaggerOperation("Browse received invitations")]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(typeof(IEnumerable<ReceivedInvitationDto>), StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<ReceivedInvitationDto>>> BrowseReceivedInvitations()
+    [ProducesResponseType(typeof(Paged<ReceivedInvitationDto>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<Paged<ReceivedInvitationDto>>> BrowseReceivedInvitations(
+        [FromQuery] BrowseReceivedInvitations query)
     {
-        var invitations = await _queryDispatcher.QueryAsync(new BrowseReceivedInvitations(GetUserId()));
+        var invitations = await _queryDispatcher.QueryAsync(query);
         return Ok(invitations);
     }
 
@@ -95,7 +95,7 @@ public class UsersController : BaseController
     [ProducesResponseType(typeof(ErrorsResponse), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> Post([FromRoute] Guid invitationId)
     {
-        var command = new AcceptInvitation(invitationId, GetUserId());
+        var command = new AcceptInvitation(invitationId);
         await _commandDispatcher.DispatchAsync(command);
         return Ok();
     }
@@ -108,7 +108,7 @@ public class UsersController : BaseController
     [ProducesResponseType(typeof(ErrorsResponse), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> Patch([FromRoute] Guid invitationId, [FromBody] RejectInvitationRequest request)
     {
-        var command = request.ToCommand(invitationId, GetUserId());
+        var command = request.ToCommand(invitationId);
         await _commandDispatcher.DispatchAsync(command);
         return Ok();
     }

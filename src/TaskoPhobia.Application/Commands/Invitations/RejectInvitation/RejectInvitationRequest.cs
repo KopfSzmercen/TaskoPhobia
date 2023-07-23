@@ -4,8 +4,8 @@ public class RejectInvitationRequest
 {
     public bool BlockSendingMoreInvitations { get; init; }
 
-    public RejectInvitation ToCommand(Guid invitationId, Guid receiverId)
+    public RejectInvitation ToCommand(Guid invitationId)
     {
-        return new RejectInvitation(invitationId, receiverId, BlockSendingMoreInvitations);
+        return new RejectInvitation(invitationId, BlockSendingMoreInvitations);
     }
 }

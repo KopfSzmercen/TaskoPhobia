@@ -5,5 +5,4 @@ namespace TaskoPhobia.Application.Queries.Users;
 
 public class GetUser : IQuery<UserDetailsDto>
 {
-    public Guid UserId { get; set; }
 }

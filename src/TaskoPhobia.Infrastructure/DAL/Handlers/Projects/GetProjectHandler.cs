@@ -3,16 +3,19 @@ using TaskoPhobia.Application.DTO;
 using TaskoPhobia.Application.Queries.Projects;
 using TaskoPhobia.Infrastructure.DAL.Configurations.Read.Model;
 using TaskoPhobia.Infrastructure.DAL.Contexts;
+using TaskoPhobia.Shared.Abstractions.Contexts;
 using TaskoPhobia.Shared.Abstractions.Queries;
 
 namespace TaskoPhobia.Infrastructure.DAL.Handlers.Projects;
 
 internal sealed class GetProjectHandler : IQueryHandler<GetProject, ProjectDetailsDto>
 {
+    private readonly IContext _context;
     private readonly DbSet<ProjectReadModel> _projects;
 
-    public GetProjectHandler(TaskoPhobiaReadDbContext dbContext)
+    public GetProjectHandler(TaskoPhobiaReadDbContext dbContext, IContext context)
     {
+        _context = context;
         _projects = dbContext.Projects;
     }
 
@@ -23,7 +26,8 @@ internal sealed class GetProjectHandler : IQueryHandler<GetProject, ProjectDetai
             .AsNoTracking()
             .Where(x =>
                 x.Id == query.ProjectId &&
-                (x.OwnerId == query.UserId || x.Participations.Any(p => p.ParticipantId == query.UserId)))
+                (x.OwnerId == _context.Identity.Id ||
+                 x.Participations.Any(p => p.ParticipantId == _context.Identity.Id)))
             .Include(x => x.Participations)
             .ThenInclude(p => p.User)
             .SingleOrDefaultAsync();
