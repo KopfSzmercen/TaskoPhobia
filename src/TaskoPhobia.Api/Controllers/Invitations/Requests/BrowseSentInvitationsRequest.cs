@@ -3,7 +3,7 @@ using TaskoPhobia.Shared.Abstractions.Queries;
 
 namespace TaskoPhobia.Api.Controllers.Invitations.Requests;
 
-internal sealed class BrowseSentInvitationsRequest
+public sealed class BrowseSentInvitationsRequest
 {
     [FromRoute(Name = "projectId")] public Guid ProjectId { get; init; }
     [FromQuery] public string Search { get; init; }

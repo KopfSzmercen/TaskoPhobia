@@ -35,7 +35,7 @@ internal sealed class BrowseProjectTasksHandler : IQueryHandler<BrowseProjectTas
     private static IQueryable<ProjectTaskReadModel> Sort(BrowseProjectTasks query,
         IQueryable<ProjectTaskReadModel> projectTasks)
     {
-        return query.OrderBy.ToLower() switch
+        return query.OrderBy?.ToLower() switch
         {
             _ => projectTasks.OrderBy(x => x.Id)
         };

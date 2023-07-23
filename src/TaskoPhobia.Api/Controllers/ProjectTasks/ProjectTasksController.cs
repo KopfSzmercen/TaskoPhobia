@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using TaskoPhobia.Api.Attributes;
+using TaskoPhobia.Api.Controllers.ProjectTasks.Requests;
 using TaskoPhobia.Application.Commands.ProjectTasks.CreateProjectTask;
 using TaskoPhobia.Application.DTO;
 using TaskoPhobia.Application.Queries.ProjectTasks;
@@ -39,9 +41,17 @@ public class ProjectTasksController : ControllerBase
     [SwaggerOperation("Get list of project tasks")]
     [ProducesResponseType(typeof(Paged<ProjectTaskDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<Paged<ProjectTaskDto>>> Get([FromRoute] Guid projectId)
+    public async Task<ActionResult<Paged<ProjectTaskDto>>> Get([FromMultiSource] BrowseProjectTasksRequest request)
     {
-        var query = new BrowseProjectTasks(projectId);
+        var query = new BrowseProjectTasks
+        {
+            Page = request.Page,
+            Results = request.Results,
+            OrderBy = request.OrderBy,
+            SortOrder = request.SortOrder,
+            ProjectId = request.ProjectId
+        };
+
         var result = await _queryDispatcher.QueryAsync(query);
 
         return Ok(result);

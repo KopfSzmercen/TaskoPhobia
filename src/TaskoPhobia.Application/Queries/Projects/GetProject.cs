@@ -9,6 +9,5 @@ public class GetProject : IQuery<ProjectDetailsDto>
     {
         ProjectId = projectId;
     }
-
     public Guid ProjectId { get; set; }
 }

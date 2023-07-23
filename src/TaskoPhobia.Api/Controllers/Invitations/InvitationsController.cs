@@ -14,7 +14,7 @@ namespace TaskoPhobia.Api.Controllers.Invitations;
 
 [Route("projects/{projectId:guid}/invitations")]
 [Authorize]
-internal class InvitationsController : ControllerBase
+public class InvitationsController : ControllerBase
 {
     private readonly ICommandDispatcher _commandDispatcher;
     private readonly IQueryDispatcher _queryDispatcher;

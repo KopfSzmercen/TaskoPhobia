@@ -5,10 +5,5 @@ namespace TaskoPhobia.Application.Queries.ProjectTasks;
 
 public class BrowseProjectTasks : PagedQuery<ProjectTaskDto>
 {
-    public BrowseProjectTasks(Guid projectId)
-    {
-        ProjectId = projectId;
-    }
-
-    public Guid ProjectId { get; }
+    public Guid ProjectId { get; set; }
 }
