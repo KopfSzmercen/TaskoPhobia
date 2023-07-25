@@ -2,4 +2,4 @@
 
 namespace TaskoPhobia.Application.Commands.Invitations.CreateInvitation;
 
-public record CreateInvitation(Guid InvitationId, Guid SenderId, Guid ReceiverId, Guid ProjectId) : ICommand;
+public record CreateInvitation(Guid InvitationId, Guid ReceiverId, Guid ProjectId) : ICommand;

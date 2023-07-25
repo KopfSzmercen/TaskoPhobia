@@ -3,27 +3,41 @@ using TaskoPhobia.Application.DTO;
 using TaskoPhobia.Application.Queries.ProjectTasks;
 using TaskoPhobia.Infrastructure.DAL.Configurations.Read.Model;
 using TaskoPhobia.Infrastructure.DAL.Contexts;
+using TaskoPhobia.Shared.Abstractions.Contexts;
 using TaskoPhobia.Shared.Abstractions.Queries;
 
 namespace TaskoPhobia.Infrastructure.DAL.Handlers.ProjectTasks;
 
-internal sealed class BrowseProjectTasksHandler : IQueryHandler<BrowseProjectTasks, IEnumerable<ProjectTaskDto>>
+internal sealed class BrowseProjectTasksHandler : IQueryHandler<BrowseProjectTasks, Paged<ProjectTaskDto>>
 {
-    private readonly DbSet<ProjectReadModel> _projects;
+    private readonly IContext _context;
+    private readonly DbSet<ProjectTaskReadModel> _projectTasks;
 
-    public BrowseProjectTasksHandler(TaskoPhobiaReadDbContext dbContext)
+    public BrowseProjectTasksHandler(TaskoPhobiaReadDbContext dbContext, IContext context)
     {
-        _projects = dbContext.Projects;
+        _context = context;
+        _projectTasks = dbContext.ProjectTasks;
     }
 
-    public async Task<IEnumerable<ProjectTaskDto>> HandleAsync(BrowseProjectTasks query)
+    public async Task<Paged<ProjectTaskDto>> HandleAsync(BrowseProjectTasks query)
     {
-        return await _projects.Include(x => x.Tasks)
-            .AsNoTracking()
-            .Where(x => x.Id == query.ProjectId &&
-                        (x.OwnerId == query.UserId || x.Participations.Any(p => p.ParticipantId == query.UserId)))
-            .Include(x => x.Tasks)
-            .Select(x => x.Tasks.Select(t => t.AsDto()))
-            .SingleOrDefaultAsync();
+        var projectTasks = _projectTasks.AsNoTracking().Where(x =>
+            x.Project.Id == query.ProjectId &&
+            (x.Project.OwnerId == _context.Identity.Id ||
+             x.Project.Participations.Any(p =>
+                 p.ParticipantId == _context.Identity.Id)));
+
+        projectTasks = Sort(query, projectTasks);
+
+        return await projectTasks.Select(x => x.AsDto()).PaginateAsync(query);
+    }
+
+    private static IQueryable<ProjectTaskReadModel> Sort(BrowseProjectTasks query,
+        IQueryable<ProjectTaskReadModel> projectTasks)
+    {
+        return query.OrderBy?.ToLower() switch
+        {
+            _ => projectTasks.OrderBy(x => x.Id)
+        };
     }
 }

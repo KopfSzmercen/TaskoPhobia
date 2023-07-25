@@ -94,16 +94,17 @@ public class ProjectTests : TestBase
 
     private static Project CreateProjectWithGivenStatus(ProgressStatus progressStatus)
     {
-        var project = new Project(Guid.NewGuid(), "Project", "description", progressStatus, DateTime.Now,
+        var project = Project.CreateNew(Guid.NewGuid(), "Project", "description", new Clock(),
             Guid.NewGuid());
+
+        if (progressStatus == ProgressStatus.Finished()) project.SetStatusToFinished();
         return project;
     }
 
     private static ProjectTask CreateTaskForProject(ProjectId projectId)
     {
-        var task = new ProjectTask(Guid.NewGuid(), "Project",
-            new TaskTimeSpan(DateTime.UtcNow, DateTime.UtcNow.AddDays(5)), projectId,
-            ProgressStatus.InProgress());
+        var task = ProjectTask.CreateNew(Guid.NewGuid(), "Project",
+            new TaskTimeSpan(DateTime.UtcNow, DateTime.UtcNow.AddDays(5)), projectId);
 
         return task;
     }

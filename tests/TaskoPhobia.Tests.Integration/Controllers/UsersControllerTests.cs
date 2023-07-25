@@ -11,6 +11,7 @@ using TaskoPhobia.Core.Entities.Users;
 using TaskoPhobia.Core.ValueObjects;
 using TaskoPhobia.Infrastructure.Security;
 using TaskoPhobia.Shared.Abstractions.Exceptions.Errors;
+using TaskoPhobia.Shared.Abstractions.Queries;
 using TaskoPhobia.Shared.Time;
 using Xunit;
 
@@ -100,7 +101,7 @@ public class UsersControllerTests : ControllerTests, IDisposable
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
         var receivedInvitationDtos =
-            response.Content.ReadFromJsonAsync<IEnumerable<ReceivedInvitationDto>>().Result.ToList();
+            response.Content.ReadFromJsonAsync<Paged<ReceivedInvitationDto>>().Result.Items;
 
         receivedInvitationDtos.ShouldNotBeNull();
         receivedInvitationDtos.Count().ShouldBe(1);
@@ -166,8 +167,9 @@ public class UsersControllerTests : ControllerTests, IDisposable
 
     private async Task<Project> CreateProjectAsync(Guid ownerId)
     {
-        var project = new Project(Guid.NewGuid(), "name", "description", ProgressStatus.InProgress(), DateTime.UtcNow,
+        var project = Project.CreateNew(Guid.NewGuid(), "name", "description", new Clock(),
             ownerId);
+
         await _testDatabase.WriteDbContext.Projects.AddAsync(project);
         await _testDatabase.WriteDbContext.SaveChangesAsync();
         return project;

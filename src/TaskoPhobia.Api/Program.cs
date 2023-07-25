@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using TaskoPhobia.Application;
 using TaskoPhobia.Core;
 using TaskoPhobia.Infrastructure;
@@ -10,7 +11,10 @@ builder.Services
     .AddApplication()
     .AddCore()
     .AddInfrastructure(builder.Configuration)
-    .AddControllers();
+    .AddControllers().AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 
 var app = builder.Build();
 

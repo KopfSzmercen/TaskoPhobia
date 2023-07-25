@@ -5,7 +5,7 @@ namespace TaskoPhobia.Core.Entities;
 
 public class ProjectTask
 {
-    public ProjectTask(ProjectTaskId id, ProjectTaskName name, TaskTimeSpan timeSpan, ProjectId projectId,
+    private ProjectTask(ProjectTaskId id, ProjectTaskName name, TaskTimeSpan timeSpan, ProjectId projectId,
         ProgressStatus status)
     {
         Id = id;
@@ -25,4 +25,10 @@ public class ProjectTask
     public ProgressStatus Status { get; private set; }
     public Project Project { get; init; }
     public ProjectId ProjectId { get; private set; }
+
+    public static ProjectTask CreateNew(ProjectTaskId id, ProjectTaskName name, TaskTimeSpan timeSpan,
+        ProjectId projectId)
+    {
+        return new ProjectTask(id, name, timeSpan, projectId, ProgressStatus.InProgress());
+    }
 }

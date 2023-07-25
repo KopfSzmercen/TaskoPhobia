@@ -3,6 +3,7 @@ using TaskoPhobia.Core.Entities.Projects.Rules;
 using TaskoPhobia.Core.Entities.Users;
 using TaskoPhobia.Core.ValueObjects;
 using TaskoPhobia.Shared.Abstractions.Domain;
+using TaskoPhobia.Shared.Abstractions.Time;
 
 namespace TaskoPhobia.Core.Entities.Projects;
 
@@ -12,7 +13,7 @@ public class Project : Entity
     private readonly HashSet<ProjectParticipation> _participations = new();
     private readonly ICollection<ProjectTask> _tasks = new List<ProjectTask>();
 
-    public Project(ProjectId id, ProjectName name, ProjectDescription description,
+    private Project(ProjectId id, ProjectName name, ProjectDescription description,
         ProgressStatus status, DateTime createdAt, UserId ownerId)
     {
         Id = id;
@@ -30,13 +31,19 @@ public class Project : Entity
     public ProjectId Id { get; private set; }
     public ProjectName Name { get; private set; }
     public ProjectDescription Description { get; private set; }
-    public ProgressStatus Status { get; }
+    public ProgressStatus Status { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public UserId OwnerId { get; }
     public User Owner { get; init; }
     public IEnumerable<ProjectTask> Tasks => _tasks;
     public IEnumerable<Invitation> Invitations => _invitations;
     public IEnumerable<ProjectParticipation> Participations => _participations;
+
+    public static Project CreateNew(ProjectId id, ProjectName name, ProjectDescription description,
+        IClock clock, UserId ownerId)
+    {
+        return new Project(id, name, description, ProgressStatus.InProgress(), clock.Now(), ownerId);
+    }
 
     public void AddTask(ProjectTask task)
     {
@@ -55,6 +62,11 @@ public class Project : Entity
         CheckRule(new RejectedInvitationsLimitIsNotExceededRule(this, invitation));
 
         _invitations.Add(invitation);
+    }
+
+    public void SetStatusToFinished()
+    {
+        Status = ProgressStatus.Finished();
     }
 
     public void AddParticipation(ProjectParticipation participation)

@@ -6,8 +6,8 @@ public class CreateProjectRequest
 
     public string ProjectDescription { get; init; }
 
-    public CreateProject ToCommand(Guid userId)
+    public CreateProject ToCommand()
     {
-        return new CreateProject(Guid.NewGuid(), ProjectName, ProjectDescription, userId);
+        return new CreateProject(Guid.NewGuid(), ProjectName, ProjectDescription);
     }
 }

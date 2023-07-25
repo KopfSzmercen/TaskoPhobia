@@ -4,8 +4,8 @@ public class CreateInvitationRequest
 {
     public Guid ReceiverId { get; init; }
 
-    public CreateInvitation ToCommand(Guid projectId, Guid senderId)
+    public CreateInvitation ToCommand(Guid projectId)
     {
-        return new CreateInvitation(Guid.NewGuid(), senderId, ReceiverId, projectId);
+        return new CreateInvitation(Guid.NewGuid(), ReceiverId, projectId);
     }
 }

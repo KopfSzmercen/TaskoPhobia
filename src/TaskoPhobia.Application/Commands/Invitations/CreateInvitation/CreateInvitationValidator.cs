@@ -9,9 +9,6 @@ internal sealed class CreateInvitationValidator : AbstractValidator<CreateInvita
         RuleFor(x => x.ProjectId)
             .NotEmpty();
 
-        RuleFor(x => x.SenderId)
-            .NotEmpty();
-
         RuleFor(x => x.InvitationId)
             .NotEmpty();
 

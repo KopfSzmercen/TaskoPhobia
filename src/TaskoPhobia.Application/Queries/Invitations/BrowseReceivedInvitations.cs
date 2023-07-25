@@ -3,6 +3,6 @@ using TaskoPhobia.Shared.Abstractions.Queries;
 
 namespace TaskoPhobia.Application.Queries.Invitations;
 
-public record BrowseReceivedInvitations(Guid UserId) : IQuery<IEnumerable<ReceivedInvitationDto>>
+public class BrowseReceivedInvitations : PagedQuery<ReceivedInvitationDto>
 {
 }

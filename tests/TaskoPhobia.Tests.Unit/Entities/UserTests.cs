@@ -3,6 +3,7 @@ using TaskoPhobia.Core.Entities.Projects;
 using TaskoPhobia.Core.Entities.Users;
 using TaskoPhobia.Core.Entities.Users.Rules;
 using TaskoPhobia.Core.ValueObjects;
+using TaskoPhobia.Shared.Time;
 using Xunit;
 
 namespace TaskoPhobia.Tests.Unit.Entities;
@@ -62,7 +63,7 @@ public class UserTests : TestBase
 
     private static Project CreateProjectForUser(UserId ownerId)
     {
-        var project = new Project(Guid.NewGuid(), "Project", "description", ProgressStatus.Finished(), DateTime.Now,
+        var project = Project.CreateNew(Guid.NewGuid(), "Project", "description", new Clock(),
             ownerId);
         return project;
     }

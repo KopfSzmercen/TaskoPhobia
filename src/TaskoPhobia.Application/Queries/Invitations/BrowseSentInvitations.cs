@@ -3,14 +3,7 @@ using TaskoPhobia.Shared.Abstractions.Queries;
 
 namespace TaskoPhobia.Application.Queries.Invitations;
 
-public class BrowseSentInvitations : IQuery<IEnumerable<SentInvitationDto>>
+public class BrowseSentInvitations : PagedQuery<SentInvitationDto>
 {
-    public BrowseSentInvitations(Guid projectId, Guid userId)
-    {
-        ProjectId = projectId;
-        UserId = userId;
-    }
-
-    public Guid ProjectId { get; set; }
-    public Guid UserId { get; set; }
+    public Guid ProjectId { get; init; }
 }

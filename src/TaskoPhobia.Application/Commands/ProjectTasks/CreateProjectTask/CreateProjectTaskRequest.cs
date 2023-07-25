@@ -8,8 +8,8 @@ public class CreateProjectTaskRequest
 
     public DateTime End { get; init; }
 
-    public CreateProjectTask ToCommand(Guid userId, Guid projectId)
+    public CreateProjectTask ToCommand(Guid projectId)
     {
-        return new CreateProjectTask(Guid.NewGuid(), projectId, userId, TaskName, Start, End);
+        return new CreateProjectTask(Guid.NewGuid(), projectId, TaskName, Start, End);
     }
 }

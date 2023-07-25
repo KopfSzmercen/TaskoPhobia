@@ -5,14 +5,12 @@ namespace TaskoPhobia.Application.Queries.ProjectTasks;
 
 public class GetProjectTask : IQuery<ProjectTaskDto>
 {
-    public GetProjectTask(Guid projectTaskId, Guid projectId, Guid userId)
+    public GetProjectTask(Guid projectTaskId, Guid projectId)
     {
         ProjectTaskId = projectTaskId;
         ProjectId = projectId;
-        UserId = userId;
     }
 
     public Guid ProjectTaskId { get; set; }
     public Guid ProjectId { get; set; }
-    public Guid UserId { get; set; }
 }
