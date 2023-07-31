@@ -27,4 +27,9 @@ internal sealed class PostgresInvitationRepository : IInvitationRepository
         _invitations.Update(invitation);
         return Task.CompletedTask;
     }
+
+    public async Task AddAsync(Invitation invitation)
+    {
+        await _invitations.AddAsync(invitation);
+    }
 }

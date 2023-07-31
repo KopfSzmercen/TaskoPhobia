@@ -235,7 +235,7 @@ namespace TaskoPhobia.Infrastructure.DAL.Migrations
                         .WithMany("Tasks")
                         .HasForeignKey("ProjectId");
 
-                    b.OwnsOne("TaskoPhobia.Core.ValueObjects.TaskTimeSpan", "TimeSpan", b1 =>
+                    b.OwnsOne("TaskoPhobia.Core.Entities.ProjectTask.TimeSpan#TaskoPhobia.Core.ValueObjects.TaskTimeSpan", "TimeSpan", b1 =>
                         {
                             b1.Property<Guid>("ProjectTaskId")
                                 .HasColumnType("uuid");

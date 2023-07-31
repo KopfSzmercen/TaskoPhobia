@@ -45,16 +45,19 @@ internal sealed class InvitationWriteConfiguration : IEntityTypeConfiguration<In
             .IsRequired();
 
         builder.HasOne(invitation => invitation.Project)
-            .WithMany(project => project.Invitations)
-            .HasForeignKey(invitation => invitation.ProjectId);
+            .WithMany()
+            .HasForeignKey(invitation => invitation.ProjectId)
+            .IsRequired();
 
         builder.HasOne(invitation => invitation.Sender)
-            .WithMany(sender => sender.SentInvitations)
-            .HasForeignKey(invitation => invitation.SenderId);
+            .WithMany()
+            .HasForeignKey(invitation => invitation.SenderId)
+            .IsRequired();
 
         builder.HasOne(invitation => invitation.Receiver)
-            .WithMany(receiver => receiver.ReceivedInvitations)
-            .HasForeignKey(invitation => invitation.ReceiverId);
+            .WithMany()
+            .HasForeignKey(invitation => invitation.ReceiverId)
+            .IsRequired();
 
         builder.Property(x => x.BlockSendingMoreInvitations)
             .IsRequired()

@@ -1,5 +1,5 @@
 ﻿using TaskoPhobia.Application.Exceptions;
-using TaskoPhobia.Core.DomainServices;
+using TaskoPhobia.Core.DomainServices.Invitations;
 using TaskoPhobia.Core.Repositories;
 using TaskoPhobia.Shared.Abstractions.Commands;
 using TaskoPhobia.Shared.Abstractions.Contexts;

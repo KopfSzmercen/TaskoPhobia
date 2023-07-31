@@ -31,8 +31,9 @@ internal sealed class ProjectWriteConfiguration : IEntityTypeConfiguration<Proje
         builder.Property(x => x.CreatedAt).IsRequired();
 
         builder.HasOne(project => project.Owner)
-            .WithMany(user => user.OwnedProjects)
-            .HasForeignKey(project => project.OwnerId);
+            .WithMany()
+            .HasForeignKey(project => project.OwnerId)
+            .IsRequired();
 
         builder.Property(x => x.OwnerId)
             .HasConversion(x => x.Value,

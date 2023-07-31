@@ -1,27 +1,28 @@
 ﻿using TaskoPhobia.Application.Exceptions;
-using TaskoPhobia.Core.Entities.Invitations;
+using TaskoPhobia.Core.DomainServices.Invitations;
 using TaskoPhobia.Core.Repositories;
 using TaskoPhobia.Core.Services;
 using TaskoPhobia.Shared.Abstractions.Commands;
 using TaskoPhobia.Shared.Abstractions.Contexts;
-using TaskoPhobia.Shared.Abstractions.Time;
 
 namespace TaskoPhobia.Application.Commands.Invitations.CreateInvitation;
 
 internal sealed class CreateInvitationHandler : ICommandHandler<CreateInvitation>
 {
-    private readonly IClock _clock;
     private readonly IContext _context;
+    private readonly IInvitationRepository _invitationRepository;
+    private readonly IInvitationService _invitationService;
     private readonly IProjectRepository _projectRepository;
     private readonly IUserReadService _userReadService;
 
-    public CreateInvitationHandler(IUserReadService userReadService, IProjectRepository projectRepository, IClock clock,
-        IContext context)
+    public CreateInvitationHandler(IUserReadService userReadService, IProjectRepository projectRepository,
+        IContext context, IInvitationService invitationService, IInvitationRepository invitationRepository)
     {
         _userReadService = userReadService;
         _projectRepository = projectRepository;
-        _clock = clock;
         _context = context;
+        _invitationService = invitationService;
+        _invitationRepository = invitationRepository;
     }
 
     public async Task HandleAsync(CreateInvitation command)
@@ -37,11 +38,9 @@ internal sealed class CreateInvitationHandler : ICommandHandler<CreateInvitation
         var project = await _projectRepository.FindByIdAsync(command.ProjectId);
         if (project is null) throw new ProjectNotFoundException();
 
-        var invitation = Invitation.CreateNew(command.InvitationId, $"Invitation for project: {project.Name}",
-            senderId, command.ReceiverId, _clock);
+        var invitation = await _invitationService.CreateInvitation(command.InvitationId, project,
+            senderId, command.ReceiverId);
 
-        project.AddInvitation(invitation);
-
-        await _projectRepository.UpdateAsync(project);
+        await _invitationRepository.AddAsync(invitation);
     }
 }
