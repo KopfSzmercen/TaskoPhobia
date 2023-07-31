@@ -7,4 +7,5 @@ public interface IProjectRepository
 {
     Task<Project> FindByIdAsync(ProjectId id);
     Task UpdateAsync(Project project);
+    Task AddAsync(Project project);
 }

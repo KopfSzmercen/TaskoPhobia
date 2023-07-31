@@ -22,7 +22,8 @@ public class InvitationTests : TestBase
 
     private static Invitation CreateInvitation()
     {
-        var invitation = Invitation.CreateNew(Guid.NewGuid(), "Title", Guid.NewGuid(), Guid.NewGuid(), Clock);
+        var invitation = Invitation.CreateNew(Guid.NewGuid(), Guid.NewGuid(), "Title", Guid.NewGuid(), Guid.NewGuid(),
+            Clock);
         return invitation;
     }
 

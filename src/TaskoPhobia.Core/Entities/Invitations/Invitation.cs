@@ -9,7 +9,7 @@ namespace TaskoPhobia.Core.Entities.Invitations;
 
 public class Invitation : Entity
 {
-    private Invitation(InvitationId id, InvitationTitle title, UserId senderId, UserId receiverId,
+    private Invitation(InvitationId id, ProjectId projectId, InvitationTitle title, UserId senderId, UserId receiverId,
         InvitationStatus status, DateTime createdAt)
     {
         Id = id;
@@ -18,6 +18,7 @@ public class Invitation : Entity
         ReceiverId = receiverId;
         Status = status;
         CreatedAt = createdAt;
+        ProjectId = projectId;
     }
 
     public Invitation()
@@ -36,10 +37,11 @@ public class Invitation : Entity
     public DateTime CreatedAt { get; }
     public bool BlockSendingMoreInvitations { get; private set; }
 
-    public static Invitation CreateNew(InvitationId id, InvitationTitle title, UserId senderId, UserId receiverId,
+    internal static Invitation CreateNew(InvitationId id, ProjectId projectId, InvitationTitle title, UserId senderId,
+        UserId receiverId,
         IClock clock)
     {
-        return new Invitation(id, title, senderId, receiverId, InvitationStatus.Pending(), clock.Now());
+        return new Invitation(id, projectId, title, senderId, receiverId, InvitationStatus.Pending(), clock.Now());
     }
 
     internal void Accept()

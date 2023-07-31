@@ -28,6 +28,9 @@ internal static class Extensions
 
         services.AddRepositories();
         services.AddScoped<IUserReadService, PostgresUserReadService>();
+        services.AddScoped<IProjectReadService, PostgresProjectReadService>();
+        services.AddScoped<IInvitationReadService, PostgresInvitationReadService>();
+        services.AddScoped<IProjectParticipationReadService, PostgresProjectParticipationReadService>();
 
         services.AddHostedService<DatabaseInitializer>();
         services.AddScoped<IUnitOfWork, PostgresUnitOfWork>();

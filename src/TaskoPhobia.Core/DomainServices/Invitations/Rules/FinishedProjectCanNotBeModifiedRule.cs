@@ -1,7 +1,8 @@
-﻿using TaskoPhobia.Core.ValueObjects;
+﻿using TaskoPhobia.Core.Entities.Projects;
+using TaskoPhobia.Core.ValueObjects;
 using TaskoPhobia.Shared.Abstractions.Domain;
 
-namespace TaskoPhobia.Core.Entities.Projects.Rules;
+namespace TaskoPhobia.Core.DomainServices.Invitations.Rules;
 
 public class FinishedProjectCanNotBeModifiedRule : IBusinessRule
 {

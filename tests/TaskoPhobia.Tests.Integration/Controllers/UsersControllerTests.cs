@@ -177,12 +177,9 @@ public class UsersControllerTests : ControllerTests, IDisposable
 
     private async Task<Invitation> CreateAndAddInvitationToProjectAsync(Project project, Guid receiverId)
     {
-        var invitation = Invitation.CreateNew(Guid.NewGuid(), "title", project.OwnerId, receiverId, new Clock());
-
-        project.AddInvitation(invitation);
-
-        _testDatabase.WriteDbContext.Projects.Update(project);
-
+        var invitation =
+            Invitation.CreateNew(Guid.NewGuid(), project.Id, "title", project.OwnerId, receiverId, new Clock());
+        await _testDatabase.WriteDbContext.Invitations.AddAsync(invitation);
         await _testDatabase.WriteDbContext.SaveChangesAsync();
         return invitation;
     }

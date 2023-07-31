@@ -1,5 +1,5 @@
 ﻿using TaskoPhobia.Application.Exceptions;
-using TaskoPhobia.Core.Entities.Projects;
+using TaskoPhobia.Core.DomainServices.Projects;
 using TaskoPhobia.Core.Repositories;
 using TaskoPhobia.Shared.Abstractions.Commands;
 using TaskoPhobia.Shared.Abstractions.Contexts;
@@ -11,13 +11,18 @@ internal sealed class CreateProjectHandler : ICommandHandler<CreateProject>
 {
     private readonly IClock _clock;
     private readonly IContext _context;
+    private readonly IProjectRepository _projectRepository;
+    private readonly IProjectService _projectService;
     private readonly IUserRepository _userRepository;
 
-    public CreateProjectHandler(IUserRepository userRepository, IClock clock, IContext context)
+    public CreateProjectHandler(IUserRepository userRepository, IClock clock, IContext context,
+        IProjectService projectService, IProjectRepository projectRepository)
     {
         _userRepository = userRepository;
         _clock = clock;
         _context = context;
+        _projectService = projectService;
+        _projectRepository = projectRepository;
     }
 
     public async Task HandleAsync(CreateProject command)
@@ -28,11 +33,10 @@ internal sealed class CreateProjectHandler : ICommandHandler<CreateProject>
 
         if (user is null) throw new UserNotFoundException(ownerId);
 
-        var project = Project.CreateNew(command.ProjectId, command.ProjectName, command.ProjectDescription, _clock,
-            ownerId);
+        var project =
+            await _projectService.CreateProject(command.ProjectId, command.ProjectName, command.ProjectDescription,
+                user);
 
-        user.AddProject(project);
-
-        await _userRepository.UpdateAsync(user);
+        await _projectRepository.AddAsync(project);
     }
 }

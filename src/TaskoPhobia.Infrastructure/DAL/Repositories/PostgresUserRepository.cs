@@ -18,7 +18,6 @@ internal sealed class PostgresUserRepository : IUserRepository
     public Task<User> GetByIdAsync(UserId id)
     {
         return _users
-            .Include(x => x.OwnedProjects)
             .SingleOrDefaultAsync(x => x.Id == id);
     }
 
@@ -36,14 +35,12 @@ internal sealed class PostgresUserRepository : IUserRepository
     public Task<User> GetByEmailAsync(Email email)
     {
         return _users
-            .Include(x => x.OwnedProjects)
             .SingleOrDefaultAsync(x => x.Email == email);
     }
 
     public Task<User> GetByUsernameAsync(Username username)
     {
         return _users
-            .Include(x => x.OwnedProjects)
             .SingleOrDefaultAsync(x => x.Username == username);
     }
 }

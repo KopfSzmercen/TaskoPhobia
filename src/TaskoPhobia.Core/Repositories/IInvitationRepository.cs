@@ -7,4 +7,5 @@ public interface IInvitationRepository
 {
     Task<Invitation> FindByIdAsync(InvitationId id);
     Task UpdateAsync(Invitation invitation);
+    Task AddAsync(Invitation invitation);
 }

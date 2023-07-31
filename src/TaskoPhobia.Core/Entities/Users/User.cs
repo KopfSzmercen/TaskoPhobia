@@ -1,7 +1,4 @@
-﻿using TaskoPhobia.Core.Entities.Invitations;
-using TaskoPhobia.Core.Entities.Projects;
-using TaskoPhobia.Core.Entities.Users.Rules;
-using TaskoPhobia.Core.ValueObjects;
+﻿using TaskoPhobia.Core.ValueObjects;
 using TaskoPhobia.Shared.Abstractions.Domain;
 
 namespace TaskoPhobia.Core.Entities.Users;
@@ -31,17 +28,5 @@ public class User : Entity
     public Role Role { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public AccountType AccountType { get; }
-    public ICollection<Project> OwnedProjects { get; } = new List<Project>();
-    public IEnumerable<Invitation> SentInvitations { get; init; } = new List<Invitation>();
-    public IEnumerable<Invitation> ReceivedInvitations { get; init; } = new List<Invitation>();
-
     public IEnumerable<ProjectParticipation> ProjectParticipations { get; init; } = new List<ProjectParticipation>();
-
-    public void AddProject(Project project)
-    {
-        CheckRule(new LimitOfOwnedProjectsForFreeAccountIsNotExceededRule(this));
-        CheckRule(new LimitOfOwnedProjectsForBasicAccountIsNotExceededRule(this));
-
-        OwnedProjects.Add(project);
-    }
 }
