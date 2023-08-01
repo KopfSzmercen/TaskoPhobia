@@ -27,7 +27,7 @@ public class ProjectParticipation
     public Project Project { get; init; }
     public User Participant { get; init; }
 
-    public static ProjectParticipation CreateNew(ProjectId projectId, UserId participantId, IClock clock)
+    internal static ProjectParticipation CreateNew(ProjectId projectId, UserId participantId, IClock clock)
     {
         return new ProjectParticipation(new ProjectParticipationId(Guid.NewGuid()), projectId, participantId,
             clock.DateTimeOffsetNow());

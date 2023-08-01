@@ -2,7 +2,7 @@
 
 namespace TaskoPhobia.Shared.Abstractions.Exceptions;
 
-public class BusinessRuleValidationException : CustomException
+public class BusinessRuleValidationException : Exception
 {
     public BusinessRuleValidationException(IBusinessRule rule) : base(rule.Message)
     {

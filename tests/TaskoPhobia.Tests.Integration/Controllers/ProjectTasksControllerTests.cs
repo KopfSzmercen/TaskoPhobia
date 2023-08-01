@@ -4,11 +4,12 @@ using Microsoft.AspNetCore.Identity;
 using Shouldly;
 using TaskoPhobia.Application.Commands.ProjectTasks.CreateProjectTask;
 using TaskoPhobia.Application.DTO;
-using TaskoPhobia.Core.Entities;
 using TaskoPhobia.Core.Entities.Projects;
+using TaskoPhobia.Core.Entities.ProjectTasks;
 using TaskoPhobia.Core.Entities.Users;
 using TaskoPhobia.Core.ValueObjects;
 using TaskoPhobia.Infrastructure.Security;
+using TaskoPhobia.Shared.Abstractions.Exceptions.Errors;
 using TaskoPhobia.Shared.Abstractions.Queries;
 using TaskoPhobia.Shared.Abstractions.Time;
 using TaskoPhobia.Shared.Time;
@@ -38,7 +39,7 @@ public class ProjectTasksControllerTests : ControllerTests, IDisposable
     public async Task given_existing_task_id_get_task_should_return_status_200_ok()
     {
         var project = await CreateUserWithProjectAndAuthorizeAsync();
-        var task = await CreateTaskForProject(project.Id);
+        var task = await CreateTaskForProject(project);
 
         var response = await HttpClient.GetAsync($"projects/{project.Id.Value}/tasks/{task.Id.Value}");
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -52,13 +53,34 @@ public class ProjectTasksControllerTests : ControllerTests, IDisposable
     public async Task having_project_with_tasks_get_task_should_return_tasks_and_status_200_ok()
     {
         var project = await CreateUserWithProjectAndAuthorizeAsync();
-        await CreateTaskForProject(project.Id);
+        await CreateTaskForProject(project);
 
         var response = await HttpClient.GetAsync($"projects/{project.Id.Value}/tasks");
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
         var taskDtos = await response.Content.ReadFromJsonAsync<Paged<ProjectTaskDto>>();
         taskDtos.Items.Count().ShouldBeGreaterThan(0);
+    }
+
+    [Fact]
+    public async Task having_finished_project_post_task_should_return_400_bad_request()
+    {
+        var project = await CreateUserWithProjectAndAuthorizeAsync();
+        project.SetStatusToFinished();
+        await _testDatabase.WriteDbContext.SaveChangesAsync();
+
+        var request = new CreateProjectTaskRequest
+        {
+            End = _clock.Now().AddDays(5),
+            Start = _clock.Now(),
+            TaskName = "Task name"
+        };
+
+        var response = await HttpClient.PostAsJsonAsync($"/projects/{project.Id.Value}/tasks", request);
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+
+        var errorResult = response.Content.ReadFromJsonAsync<Error>().Result;
+        errorResult.ShouldBeOfType<Error>();
     }
 
     [Fact]
@@ -109,11 +131,11 @@ public class ProjectTasksControllerTests : ControllerTests, IDisposable
         return project;
     }
 
-    private async Task<ProjectTask> CreateTaskForProject(ProjectId projectId)
+    private async Task<ProjectTask> CreateTaskForProject(Project project)
     {
         var task = ProjectTask.CreateNew(Guid.NewGuid(), "Task",
             new TaskTimeSpan(_clock.Now(), _clock.Now().AddDays(5)),
-            projectId);
+            project);
 
         await _testDatabase.WriteDbContext.ProjectTasks.AddAsync(task);
         await _testDatabase.WriteDbContext.SaveChangesAsync();

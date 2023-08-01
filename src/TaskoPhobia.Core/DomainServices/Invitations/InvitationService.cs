@@ -24,14 +24,13 @@ internal sealed class InvitationService : DomainService, IInvitationService
         _projectParticipationReadService = projectParticipationReadService;
     }
 
-    public void AcceptInvitationAndJoinProject(Invitation invitation, UserId receiverId)
+    public ProjectParticipation AcceptInvitationAndCreateProjectParticipation(Invitation invitation, UserId receiverId)
     {
         if (invitation.ReceiverId != receiverId) throw new InvitationCanNotBeAcceptedException();
 
         invitation.Accept();
 
-        var projectParticipation = ProjectParticipation.CreateNew(invitation.ProjectId, invitation.ReceiverId, _clock);
-        invitation.Project.AddParticipation(projectParticipation);
+        return ProjectParticipation.CreateNew(invitation.ProjectId, invitation.ReceiverId, _clock);
     }
 
     public async Task<Invitation> CreateInvitation(InvitationId invitationId, Project project, UserId senderId,
