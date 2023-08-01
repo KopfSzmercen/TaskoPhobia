@@ -11,13 +11,15 @@ internal sealed class AcceptInvitationHandler : ICommandHandler<AcceptInvitation
     private readonly IContext _context;
     private readonly IInvitationRepository _invitationRepository;
     private readonly IInvitationService _invitationService;
+    private readonly IProjectParticipationRepository _projectParticipationRepository;
 
     public AcceptInvitationHandler(IInvitationService invitationService, IInvitationRepository invitationRepository,
-        IContext context)
+        IContext context, IProjectParticipationRepository projectParticipationRepository)
     {
         _invitationService = invitationService;
         _invitationRepository = invitationRepository;
         _context = context;
+        _projectParticipationRepository = projectParticipationRepository;
     }
 
     public async Task HandleAsync(AcceptInvitation command)
@@ -25,8 +27,10 @@ internal sealed class AcceptInvitationHandler : ICommandHandler<AcceptInvitation
         var invitation = await _invitationRepository.FindByIdAsync(command.InvitationId);
         if (invitation is null) throw new InvitationNotFoundException(command.InvitationId);
 
-        _invitationService.AcceptInvitationAndJoinProject(invitation, _context.Identity.Id);
+        var projectParticipation =
+            _invitationService.AcceptInvitationAndCreateProjectParticipation(invitation, _context.Identity.Id);
 
         await _invitationRepository.UpdateAsync(invitation);
+        await _projectParticipationRepository.AddAsync(projectParticipation);
     }
 }

@@ -41,7 +41,8 @@ public class Invitation : Entity
         UserId receiverId,
         IClock clock)
     {
-        return new Invitation(id, projectId, title, senderId, receiverId, InvitationStatus.Pending(), clock.Now());
+        return new Invitation(id, projectId, title, senderId, receiverId,
+            InvitationStatus.Pending(), clock.Now());
     }
 
     internal void Accept()

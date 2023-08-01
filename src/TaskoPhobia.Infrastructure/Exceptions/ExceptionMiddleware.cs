@@ -25,14 +25,20 @@ internal sealed class ExceptionMiddleware : IMiddleware
         var (statusCode, error) = exception switch
         {
             CustomException => (StatusCodes.Status400BadRequest,
-               new ErrorsResponse( new Error(exception.GetType().Name.Replace("Exception", string.Empty), exception.Message))),
-            
-            ValidationException validationException => (StatusCodes.Status400BadRequest, 
+                new ErrorsResponse(new Error(exception.GetType().Name.Replace("Exception", string.Empty),
+                    exception.Message))),
+
+            BusinessRuleValidationException => (StatusCodes.Status400BadRequest,
+                new ErrorsResponse(new Error(exception.GetType().Name.Replace("Exception", string.Empty),
+                    exception.Message))),
+
+            ValidationException validationException => (StatusCodes.Status400BadRequest,
                 new ErrorsResponse(validationException.Errors.Select(
-                    e => new Error(e.ErrorCode, e.ErrorMessage, e.PropertyName)).ToArray()
+                        e => new Error(e.ErrorCode, e.ErrorMessage, e.PropertyName)).ToArray()
                 )),
-            
-            _ => (StatusCodes.Status500InternalServerError, new ErrorsResponse( new Error("error", "Something went wrong")))
+
+            _ => (StatusCodes.Status500InternalServerError,
+                new ErrorsResponse(new Error("error", "Something went wrong")))
         };
 
         context.Response.StatusCode = statusCode;

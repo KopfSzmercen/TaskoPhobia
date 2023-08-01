@@ -25,11 +25,13 @@ internal sealed class ProjectParticipationWriteConfiguration : IEntityTypeConfig
             .IsRequired();
 
         builder.HasOne(x => x.Project)
-            .WithMany(p => p.Participations)
-            .HasForeignKey(x => x.ProjectId);
+            .WithMany()
+            .HasForeignKey(x => x.ProjectId)
+            .IsRequired();
 
         builder.HasOne(x => x.Participant)
-            .WithMany(u => u.ProjectParticipations)
-            .HasForeignKey(x => x.ParticipantId);
+            .WithMany()
+            .HasForeignKey(x => x.ParticipantId)
+            .IsRequired();
     }
 }

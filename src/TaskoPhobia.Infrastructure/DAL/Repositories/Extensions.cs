@@ -10,6 +10,8 @@ internal static class Extensions
         services.AddScoped<IUserRepository, PostgresUserRepository>();
         services.AddScoped<IProjectRepository, PostgresProjectRepository>();
         services.AddScoped<IInvitationRepository, PostgresInvitationRepository>();
+        services.AddScoped<IProjectParticipationRepository, PostgresProjectParticipationRepository>();
+        services.AddScoped<IProjectTaskRepository, PostgresProjectTaskRepository>();
         return services;
     }
 }

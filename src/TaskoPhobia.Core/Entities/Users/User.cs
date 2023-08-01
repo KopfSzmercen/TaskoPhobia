@@ -28,5 +28,4 @@ public class User : Entity
     public Role Role { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public AccountType AccountType { get; }
-    public IEnumerable<ProjectParticipation> ProjectParticipations { get; init; } = new List<ProjectParticipation>();
 }

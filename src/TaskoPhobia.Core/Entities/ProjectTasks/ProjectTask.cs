@@ -1,9 +1,11 @@
 ﻿using TaskoPhobia.Core.Entities.Projects;
+using TaskoPhobia.Core.Entities.ProjectTasks.Rules;
 using TaskoPhobia.Core.ValueObjects;
+using TaskoPhobia.Shared.Abstractions.Domain;
 
-namespace TaskoPhobia.Core.Entities;
+namespace TaskoPhobia.Core.Entities.ProjectTasks;
 
-public class ProjectTask
+public class ProjectTask : Entity
 {
     private ProjectTask(ProjectTaskId id, ProjectTaskName name, TaskTimeSpan timeSpan, ProjectId projectId,
         ProgressStatus status)
@@ -27,8 +29,9 @@ public class ProjectTask
     public ProjectId ProjectId { get; private set; }
 
     public static ProjectTask CreateNew(ProjectTaskId id, ProjectTaskName name, TaskTimeSpan timeSpan,
-        ProjectId projectId)
+        Project project)
     {
-        return new ProjectTask(id, name, timeSpan, projectId, ProgressStatus.InProgress());
+        CheckRule(new CanCreateTaskIfProjectIsNotFinished(project));
+        return new ProjectTask(id, name, timeSpan, project.Id, ProgressStatus.InProgress());
     }
 }
