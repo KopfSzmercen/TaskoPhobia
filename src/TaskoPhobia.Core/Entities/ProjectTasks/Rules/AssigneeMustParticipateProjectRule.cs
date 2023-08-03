@@ -1,6 +1,6 @@
 ﻿using TaskoPhobia.Shared.Abstractions.Domain;
 
-namespace TaskoPhobia.Core.DomainServices.ProjectTasks.Rules;
+namespace TaskoPhobia.Core.Entities.ProjectTasks.Rules;
 
 internal class AssigneeMustParticipateProjectRule : IBusinessRule
 {

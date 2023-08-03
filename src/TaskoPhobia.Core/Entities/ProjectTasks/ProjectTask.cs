@@ -1,4 +1,4 @@
-﻿using TaskoPhobia.Core.DomainServices.ProjectTasks.Rules;
+﻿using TaskoPhobia.Core.Common.Rules;
 using TaskoPhobia.Core.Entities.Projects;
 using TaskoPhobia.Core.Entities.ProjectTasks.Rules;
 using TaskoPhobia.Core.ValueObjects;
@@ -38,14 +38,14 @@ public class ProjectTask : Entity
         TaskAssignmentsLimit assignmentsLimit,
         Project project)
     {
-        CheckRule(new CanCreateTaskIfProjectIsNotFinishedRule(project));
+        CheckRule(new FinishedProjectCanNotBeModifiedRule(project));
         return new ProjectTask(id, name, timeSpan, project.Id, ProgressStatus.InProgress(), assignmentsLimit);
     }
 
     public void AddAssignee(TaskAssignmentId id, UserId assigneeId, bool assigneeParticipatesProject)
     {
         CheckRule(new FinishedTaskMustNotBeModifiedRule(Status));
-        CheckRule(new FinishedProjectMustNotBeModifiedRule(Project));
+        CheckRule(new FinishedProjectCanNotBeModifiedRule(Project));
         CheckRule(new TaskAssigneeMustBeUniqueRule(assigneeId, _assignments));
         CheckRule(new TaskAssignmentsLimitMustNotBeExceededRule(_assignments, AssignmentsLimit));
         CheckRule(new AssigneeMustParticipateProjectRule(assigneeParticipatesProject));
