@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using TaskoPhobia.Core.Entities.Projects;
+using TaskoPhobia.Core.Entities.ProjectTasks;
 using TaskoPhobia.Core.ValueObjects;
 
 namespace TaskoPhobia.Infrastructure.DAL.Configurations.Write;
@@ -9,6 +10,8 @@ internal sealed class ProjectWriteConfiguration : IEntityTypeConfiguration<Proje
 {
     public void Configure(EntityTypeBuilder<Project> builder)
     {
+        builder.ToTable("Projects");
+
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id)
             .HasConversion(x => x.Value,
@@ -24,6 +27,7 @@ internal sealed class ProjectWriteConfiguration : IEntityTypeConfiguration<Proje
                 x => new ProjectDescription(x));
 
         builder.Property(x => x.Status)
+            .HasColumnName("Status")
             .IsRequired()
             .HasConversion(x => x.Value,
                 x => new ProgressStatus(x));
@@ -35,7 +39,14 @@ internal sealed class ProjectWriteConfiguration : IEntityTypeConfiguration<Proje
             .HasForeignKey(project => project.OwnerId)
             .IsRequired();
 
+        builder.HasOne<ProjectSummary>("ProjectSummary")
+            .WithOne()
+            .HasForeignKey<ProjectSummary>(x => x.Id);
+
+        builder.Navigation("ProjectSummary").IsRequired();
+
         builder.Property(x => x.OwnerId)
+            .HasColumnName("OwnerId")
             .HasConversion(x => x.Value,
                 x => new UserId(x));
     }

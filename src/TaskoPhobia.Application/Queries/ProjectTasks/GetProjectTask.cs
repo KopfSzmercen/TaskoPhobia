@@ -3,7 +3,7 @@ using TaskoPhobia.Shared.Abstractions.Queries;
 
 namespace TaskoPhobia.Application.Queries.ProjectTasks;
 
-public class GetProjectTask : IQuery<ProjectTaskDto>
+public class GetProjectTask : IQuery<ProjectTaskDetailsDto>
 {
     public GetProjectTask(Guid projectTaskId, Guid projectId)
     {

@@ -4,11 +4,11 @@ using TaskoPhobia.Shared.Abstractions.Domain;
 
 namespace TaskoPhobia.Core.Entities.ProjectTasks.Rules;
 
-internal sealed class CanCreateTaskIfProjectIsNotFinished : IBusinessRule
+internal sealed class CanCreateTaskIfProjectIsNotFinishedRule : IBusinessRule
 {
     private readonly Project _project;
 
-    public CanCreateTaskIfProjectIsNotFinished(Project project)
+    public CanCreateTaskIfProjectIsNotFinishedRule(Project project)
     {
         _project = project;
     }

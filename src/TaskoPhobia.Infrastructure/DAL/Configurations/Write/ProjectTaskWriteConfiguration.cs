@@ -38,5 +38,15 @@ internal sealed class ProjectTaskWriteConfiguration : IEntityTypeConfiguration<P
         builder.Property(x => x.ProjectId)
             .HasConversion(x => x.Value,
                 x => new ProjectId(x));
+
+        builder.Property(x => x.AssignmentsLimit)
+            .HasConversion(x => x.Value, x => new TaskAssignmentsLimit(x))
+            .HasDefaultValue(new TaskAssignmentsLimit(1))
+            .IsRequired();
+
+        builder.HasMany(x => x.Assignments)
+            .WithOne()
+            .HasForeignKey(x => x.TaskId)
+            .IsRequired();
     }
 }
