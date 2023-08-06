@@ -19,6 +19,7 @@ internal sealed class TaskoPhobiaWriteDbContext : DbContext
     public DbSet<ProjectTask> ProjectTasks { get; set; }
     public DbSet<Invitation> Invitations { get; set; }
     public DbSet<ProjectParticipation> ProjectParticipations { get; set; }
+    public DbSet<TaskAssignment> TaskAssignments { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -30,5 +31,7 @@ internal sealed class TaskoPhobiaWriteDbContext : DbContext
         modelBuilder.ApplyConfiguration(new ProjectTaskWriteConfiguration());
         modelBuilder.ApplyConfiguration(new InvitationWriteConfiguration());
         modelBuilder.ApplyConfiguration(new ProjectParticipationWriteConfiguration());
+        modelBuilder.ApplyConfiguration(new ProjectSummaryWriteConfiguration());
+        modelBuilder.ApplyConfiguration(new TaskAssignmentWriteConfiguration());
     }
 }

@@ -27,10 +27,12 @@ public class ProjectTasksControllerTests : ControllerTests, IDisposable
         {
             End = _clock.Now().AddDays(5),
             Start = _clock.Now(),
-            TaskName = "Task name"
+            TaskName = "Task name",
+            AssignmentsLimit = 3
         };
 
         var response = await HttpClient.PostAsJsonAsync($"/projects/{project.Id.Value}/tasks", request);
+
         response.StatusCode.ShouldBe(HttpStatusCode.Created);
         response.Headers.Location.ShouldNotBeNull();
     }
@@ -135,7 +137,7 @@ public class ProjectTasksControllerTests : ControllerTests, IDisposable
     {
         var task = ProjectTask.CreateNew(Guid.NewGuid(), "Task",
             new TaskTimeSpan(_clock.Now(), _clock.Now().AddDays(5)),
-            project);
+            3, project);
 
         await _testDatabase.WriteDbContext.ProjectTasks.AddAsync(task);
         await _testDatabase.WriteDbContext.SaveChangesAsync();

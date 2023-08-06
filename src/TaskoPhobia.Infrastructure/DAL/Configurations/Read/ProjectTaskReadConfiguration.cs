@@ -9,6 +9,11 @@ internal sealed class ProjectTaskReadConfiguration : IEntityTypeConfiguration<Pr
     public void Configure(EntityTypeBuilder<ProjectTaskReadModel> builder)
     {
         builder.HasKey(x => x.Id);
+
+        builder.HasMany(x => x.Assignments)
+            .WithOne()
+            .HasForeignKey(x => x.TaskId);
+
         builder.ToTable("ProjectTasks");
     }
 }

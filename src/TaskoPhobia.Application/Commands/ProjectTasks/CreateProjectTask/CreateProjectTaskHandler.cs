@@ -29,7 +29,8 @@ public class CreateProjectTaskHandler : ICommandHandler<CreateProjectTask>
 
         var projectTimeSpan = new TaskTimeSpan(command.Start, command.End);
 
-        var task = ProjectTask.CreateNew(command.TaskId, command.TaskName, projectTimeSpan, project);
+        var task = ProjectTask.CreateNew(command.TaskId, command.TaskName, projectTimeSpan, command.AssignmentsLimit,
+            project);
 
         await _projectTaskRepository.AddAsync(task);
     }

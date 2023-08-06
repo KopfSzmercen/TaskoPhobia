@@ -63,6 +63,19 @@ internal static class Extensions
         };
     }
 
+    public static ProjectTaskDetailsDto AsTaskDetailsDto(this ProjectTaskReadModel projectTask)
+    {
+        return new ProjectTaskDetailsDto
+        {
+            Id = projectTask.Id,
+            Name = projectTask.Name,
+            Status = projectTask.Status,
+            EndDate = projectTask.EndDate,
+            StartDate = projectTask.StartDate,
+            Assignees = projectTask.Assignments.Select(assignment => assignment.User.AsDto())
+        };
+    }
+
     public static ReceivedInvitationDto AsReceivedInvitationDto(this InvitationReadModel invitation)
     {
         return new ReceivedInvitationDto
@@ -100,6 +113,15 @@ internal static class Extensions
                 Id = invitation.Receiver.Id,
                 Username = invitation.Receiver.Username
             }
+        };
+    }
+
+    public static ProjectTaskAssignmentDto AsDto(this ProjectTaskAssignmentReadModel projectTaskAssignment)
+    {
+        return new ProjectTaskAssignmentDto
+        {
+            Id = projectTaskAssignment.Id,
+            CreatedAt = projectTaskAssignment.CreatedAt
         };
     }
 }

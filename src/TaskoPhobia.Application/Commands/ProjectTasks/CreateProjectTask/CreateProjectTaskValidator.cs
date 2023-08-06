@@ -22,5 +22,8 @@ internal sealed class CreateProjectTaskValidator : AbstractValidator<CreateProje
 
         RuleFor(x => x.TaskId)
             .NotEmpty();
+
+        RuleFor(x => x.AssignmentsLimit)
+            .NotEmpty();
     }
 }

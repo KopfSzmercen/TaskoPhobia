@@ -1,4 +1,5 @@
-﻿using TaskoPhobia.Core.Entities.Users;
+﻿using TaskoPhobia.Core.Entities.ProjectTasks;
+using TaskoPhobia.Core.Entities.Users;
 using TaskoPhobia.Core.ValueObjects;
 using TaskoPhobia.Shared.Abstractions.Domain;
 using TaskoPhobia.Shared.Abstractions.Time;
@@ -7,6 +8,8 @@ namespace TaskoPhobia.Core.Entities.Projects;
 
 public class Project : Entity
 {
+    private ProjectSummary ProjectSummary;
+
     private Project(ProjectId id, ProjectName name, ProjectDescription description,
         ProgressStatus status, DateTime createdAt, UserId ownerId)
     {

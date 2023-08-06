@@ -1,22 +1,28 @@
 ﻿using TaskoPhobia.Core.Entities.Projects;
+using TaskoPhobia.Core.Entities.ProjectTasks;
 using TaskoPhobia.Core.ValueObjects;
 using TaskoPhobia.Shared.Abstractions.Domain;
 
-namespace TaskoPhobia.Core.DomainServices.Invitations.Rules;
+namespace TaskoPhobia.Core.Common.Rules;
 
 public class FinishedProjectCanNotBeModifiedRule : IBusinessRule
 {
-    private readonly Project _project;
+    private readonly ProgressStatus _progressStatus;
 
     public FinishedProjectCanNotBeModifiedRule(Project project)
     {
-        _project = project;
+        _progressStatus = project.Status;
+    }
+
+    public FinishedProjectCanNotBeModifiedRule(ProjectSummary project)
+    {
+        _progressStatus = project.Status;
     }
 
     public string Message => "Finished project can not be modified";
 
     public bool IsBroken()
     {
-        return _project.Status.Equals(ProgressStatus.Finished());
+        return _progressStatus.Equals(ProgressStatus.Finished());
     }
 }
