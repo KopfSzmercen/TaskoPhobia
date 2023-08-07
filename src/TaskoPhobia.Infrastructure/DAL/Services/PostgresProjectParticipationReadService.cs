@@ -15,8 +15,10 @@ internal sealed class PostgresProjectParticipationReadService : IProjectParticip
         _projectParticipations = dbContext.ProjectParticipations;
     }
 
-    public Task<bool> IsUserProjectParticipantAsync(ProjectId projectId, UserId userId)
+    public async Task<bool> IsUserProjectParticipantAsync(ProjectId projectId, UserId userId)
     {
-        return _projectParticipations.AnyAsync(x => x.ProjectId == projectId && x.ParticipantId == userId);
+        return await _projectParticipations
+            .AsNoTracking()
+            .AnyAsync(x => x.ProjectId == projectId && x.ParticipantId == userId);
     }
 }

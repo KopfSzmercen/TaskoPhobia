@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using TaskoPhobia.Application.Commands.Projects.CreateProject;
+using TaskoPhobia.Application.Commands.Projects.FinishProject;
 using TaskoPhobia.Application.DTO;
 using TaskoPhobia.Application.Queries.Projects;
 using TaskoPhobia.Shared.Abstractions.Commands;
@@ -10,6 +11,7 @@ using TaskoPhobia.Shared.Abstractions.Queries;
 
 namespace TaskoPhobia.Api.Controllers.Projects;
 
+[Authorize]
 [Route("projects")]
 public class ProjectsController : ControllerBase
 {
@@ -22,7 +24,6 @@ public class ProjectsController : ControllerBase
         _commandDispatcher = commandDispatcher;
     }
 
-    [Authorize]
     [HttpPost]
     [SwaggerOperation("Create a project")]
     [ProducesResponseType(typeof(void), StatusCodes.Status201Created)]
@@ -35,7 +36,6 @@ public class ProjectsController : ControllerBase
         return CreatedAtAction(nameof(Get), new { command.ProjectId }, null);
     }
 
-    [Authorize]
     [HttpGet]
     [SwaggerOperation("Get all owned or joined projects projects")]
     [ProducesResponseType(typeof(Paged<ProjectDto>), StatusCodes.Status200OK)]
@@ -46,7 +46,6 @@ public class ProjectsController : ControllerBase
         return Ok(results);
     }
 
-    [Authorize]
     [HttpGet("{projectId:guid}")]
     [SwaggerOperation("Get single owned or joined project")]
     [ProducesResponseType(typeof(ProjectDetailsDto), StatusCodes.Status200OK)]
@@ -59,5 +58,18 @@ public class ProjectsController : ControllerBase
         if (project is null) return NotFound();
 
         return Ok(project);
+    }
+
+    [HttpPatch("{projectId:guid}/status/finished")]
+    [SwaggerOperation("Finish project")]
+    [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorsResponse), StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult> Patch([FromRoute] Guid projectId)
+    {
+        var command = new FinishProject(projectId);
+
+        await _commandDispatcher.DispatchAsync(command);
+
+        return Ok();
     }
 }

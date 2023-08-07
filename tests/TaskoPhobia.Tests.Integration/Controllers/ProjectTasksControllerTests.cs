@@ -68,7 +68,7 @@ public class ProjectTasksControllerTests : ControllerTests, IDisposable
     public async Task having_finished_project_post_task_should_return_400_bad_request()
     {
         var project = await CreateUserWithProjectAndAuthorizeAsync();
-        project.SetStatusToFinished();
+        project.Finish(project.OwnerId, true);
         await _testDatabase.WriteDbContext.SaveChangesAsync();
 
         var request = new CreateProjectTaskRequest

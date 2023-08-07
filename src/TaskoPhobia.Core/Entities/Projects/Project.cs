@@ -1,4 +1,6 @@
-﻿using TaskoPhobia.Core.Entities.ProjectTasks;
+﻿using TaskoPhobia.Core.Common.Rules;
+using TaskoPhobia.Core.Entities.Projects.Rules;
+using TaskoPhobia.Core.Entities.ProjectTasks;
 using TaskoPhobia.Core.Entities.Users;
 using TaskoPhobia.Core.ValueObjects;
 using TaskoPhobia.Shared.Abstractions.Domain;
@@ -39,8 +41,11 @@ public class Project : Entity
         return new Project(id, name, description, ProgressStatus.InProgress(), clock.Now(), ownerId);
     }
 
-    public void SetStatusToFinished()
+    public void Finish(UserId idOfUserWhoWantsToFinishProject, bool allProjectTasksAreFinished)
     {
+        CheckRule(new FinishedProjectCanNotBeModifiedRule(this));
+        CheckRule(new ProjectCanBeFinishedByItsOwnerRule(idOfUserWhoWantsToFinishProject, OwnerId));
+        CheckRule(new ProjectCanBeFinishedIfAllTasksAreFinished(allProjectTasksAreFinished));
         Status = ProgressStatus.Finished();
     }
 }
