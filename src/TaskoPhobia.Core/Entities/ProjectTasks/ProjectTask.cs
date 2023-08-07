@@ -28,7 +28,7 @@ public class ProjectTask : Entity
     public ProjectTaskId Id { get; }
     public ProjectTaskName Name { get; private set; }
     public TaskTimeSpan TimeSpan { get; private set; }
-    public ProgressStatus Status { get; }
+    public ProgressStatus Status { get; private set; }
     public ProjectSummary Project { get; init; }
     public ProjectId ProjectId { get; private set; }
     public IEnumerable<TaskAssignment> Assignments => _assignments;
@@ -52,5 +52,12 @@ public class ProjectTask : Entity
 
         var newAssignment = TaskAssignment.New(id, assigneeId, Id);
         _assignments.Add(newAssignment);
+    }
+
+    public void Finish(UserId idOfUserWhoSetsTaskStatusToFinished)
+    {
+        CheckRule(new FinishedTaskMustNotBeModifiedRule(Status));
+        CheckRule(new TaskCanBeSetToFinishedOnlyByItsAssigneeRule(_assignments, idOfUserWhoSetsTaskStatusToFinished));
+        Status = ProgressStatus.Finished();
     }
 }

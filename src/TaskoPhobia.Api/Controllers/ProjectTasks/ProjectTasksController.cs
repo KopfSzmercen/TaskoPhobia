@@ -70,4 +70,17 @@ public class ProjectTasksController : ControllerBase
 
         return Ok(result);
     }
+
+    [HttpPatch("{taskId:guid}/status/finished")]
+    [SwaggerOperation("Finish project task")]
+    [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorsResponse), StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult> Patch([FromMultiSource] FinishProjectTaskRequest request)
+    {
+        var command = request.ToCommand();
+
+        await _commandDispatcher.DispatchAsync(command);
+
+        return Ok();
+    }
 }

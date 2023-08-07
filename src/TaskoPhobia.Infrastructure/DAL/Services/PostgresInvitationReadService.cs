@@ -18,7 +18,8 @@ internal sealed class PostgresInvitationReadService : IInvitationReadService
     public async Task<IEnumerable<Invitation>> GetInvitationsToProjectForReceiver(ProjectId projectId,
         UserId receiverId)
     {
-        return await _invitations.Where(x => x.ProjectId == projectId && x.ReceiverId == receiverId)
+        return await _invitations
+            .Where(x => x.ProjectId == projectId && x.ReceiverId == receiverId)
             .ToListAsync();
     }
 }
