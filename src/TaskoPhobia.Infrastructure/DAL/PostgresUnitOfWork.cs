@@ -1,14 +1,17 @@
 ﻿using TaskoPhobia.Infrastructure.DAL.Contexts;
+using TaskoPhobia.Shared.Processing;
 
 namespace TaskoPhobia.Infrastructure.DAL;
 
 internal sealed class PostgresUnitOfWork : IUnitOfWork
 {
     private readonly TaskoPhobiaWriteDbContext _dbContext;
+    private readonly IDomainEventsDispatcher _domainEventsDispatcher;
 
-    public PostgresUnitOfWork(TaskoPhobiaWriteDbContext dbContext)
+    public PostgresUnitOfWork(TaskoPhobiaWriteDbContext dbContext, IDomainEventsDispatcher domainEventsDispatcher)
     {
         _dbContext = dbContext;
+        _domainEventsDispatcher = domainEventsDispatcher;
     }
 
     public async Task ExecuteAsync(Func<Task> action)
@@ -18,6 +21,9 @@ internal sealed class PostgresUnitOfWork : IUnitOfWork
         try
         {
             await action();
+
+            await _domainEventsDispatcher.DispatchEventsAsync();
+
             await _dbContext.SaveChangesAsync();
             await transaction.CommitAsync();
         }

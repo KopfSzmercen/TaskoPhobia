@@ -3,7 +3,7 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace TaskoPhobia.Infrastructure;
+namespace TaskoPhobia.Infrastructure.Swagger;
 
 public class EnumSchemaFilter : ISchemaFilter
 {

@@ -22,7 +22,6 @@ public static class Extensions
             .AsSelfWithInterfaces()
             .WithScopedLifetime());
 
-
         return services;
     }
 }
