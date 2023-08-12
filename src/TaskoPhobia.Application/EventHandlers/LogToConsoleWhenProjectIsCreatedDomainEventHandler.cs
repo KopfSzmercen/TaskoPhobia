@@ -1,5 +1,5 @@
 ﻿using TaskoPhobia.Core.Entities.Projects.Events;
-using TaskoPhobia.Shared.Processing;
+using TaskoPhobia.Shared.Events;
 
 namespace TaskoPhobia.Application.EventHandlers;
 

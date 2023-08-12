@@ -8,7 +8,6 @@ using TaskoPhobia.Application.DTO;
 using TaskoPhobia.Core.Entities.Invitations;
 using TaskoPhobia.Core.Entities.Projects;
 using TaskoPhobia.Core.Entities.Users;
-using TaskoPhobia.Core.ValueObjects;
 using TaskoPhobia.Infrastructure.Security;
 using TaskoPhobia.Shared.Abstractions.Exceptions.Errors;
 using TaskoPhobia.Shared.Abstractions.Queries;
@@ -156,8 +155,8 @@ public class UsersControllerTests : ControllerTests, IDisposable
         var passwordManager = new PasswordManager(new PasswordHasher<object>());
         var securedPassword = passwordManager.Secure(Password);
 
-        var user = new User(Guid.NewGuid(), email,
-            username, securedPassword, Role.User(), DateTime.UtcNow, AccountType.Free());
+        var user = User.New(Guid.NewGuid(), email,
+            username, securedPassword, DateTime.UtcNow);
 
         await _testDatabase.WriteDbContext.Users.AddAsync(user);
         await _testDatabase.WriteDbContext.SaveChangesAsync();

@@ -1,7 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Quartz;
 using TaskoPhobia.Infrastructure.DAL.Contexts;
+using TaskoPhobia.Shared.Abstractions.Domain;
 using TaskoPhobia.Shared.Abstractions.Outbox;
 using TaskoPhobia.Shared.Events;
 
@@ -12,13 +15,16 @@ internal sealed class ProcessOutboxMessagesJob : IJob
 {
     private readonly TaskoPhobiaWriteDbContext _dbContext;
     private readonly DbSet<OutboxMessage> _outboxMessages;
+    private readonly IServiceProvider _serviceProvider;
 
-    public ProcessOutboxMessagesJob(TaskoPhobiaWriteDbContext dbContext)
+    public ProcessOutboxMessagesJob(TaskoPhobiaWriteDbContext dbContext, IServiceProvider serviceProvider)
     {
         _outboxMessages = dbContext.OutboxMessages;
         _dbContext = dbContext;
+        _serviceProvider = serviceProvider;
     }
 
+    [SuppressMessage("ReSharper.DPA", "DPA0006: Large number of DB commands", MessageId = "count: 75")]
     public async Task Execute(IJobExecutionContext context)
     {
         var messages = await _outboxMessages
@@ -27,10 +33,12 @@ internal sealed class ProcessOutboxMessagesJob : IJob
             .Take(10)
             .ToListAsync();
 
+
+        using var scope = _serviceProvider.CreateScope();
         foreach (var outboxMessage in messages)
         {
             var domainNotification = JsonConvert
-                .DeserializeObject<IDomainEventNotification>(outboxMessage.Data,
+                .DeserializeObject<IDomainEventNotification<IDomainEvent>>(outboxMessage.Data,
                     new JsonSerializerSettings
                     {
                         TypeNameHandling = TypeNameHandling.All
@@ -38,7 +46,17 @@ internal sealed class ProcessOutboxMessagesJob : IJob
 
             if (domainNotification is null) continue;
 
-            //publish notification
+            var handlerType =
+                typeof(IDomainNotificationHandler<>).MakeGenericType(domainNotification.DomainEvent.GetType());
+            var handlers = scope.ServiceProvider.GetServices(handlerType);
+
+            var tasks = handlers.Select(x =>
+                (Task)handlerType
+                    .GetMethod(nameof(IDomainNotificationHandler<IDomainEvent>.HandleAsync))
+                    ?.Invoke(x, new object[] { domainNotification.DomainEvent }));
+
+            await Task.WhenAll(tasks);
+
             outboxMessage.ProcessedDate = DateTimeOffset.Now;
         }
 

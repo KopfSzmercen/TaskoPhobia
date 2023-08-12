@@ -1,6 +1,6 @@
 ﻿using TaskoPhobia.Shared.Abstractions.Domain;
 
-namespace TaskoPhobia.Shared.Processing;
+namespace TaskoPhobia.Shared.Events;
 
 public interface IDomainEventHandler<in TEvent> where TEvent : class, IDomainEvent
 {

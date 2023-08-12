@@ -116,8 +116,8 @@ public class ProjectTasksControllerTests : ControllerTests, IDisposable
         var passwordManager = new PasswordManager(new PasswordHasher<object>());
         var securedPassword = passwordManager.Secure("secret");
 
-        var user = new User(Guid.NewGuid(), "testUser@t.pl",
-            "testUser", securedPassword, Role.User(), DateTime.UtcNow, AccountType.Free());
+        var user = User.New(Guid.NewGuid(), "testUser@t.pl",
+            "testUser", securedPassword, DateTime.UtcNow);
 
         await _testDatabase.WriteDbContext.Users.AddAsync(user);
         await _testDatabase.WriteDbContext.SaveChangesAsync();

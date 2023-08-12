@@ -1,11 +1,12 @@
-﻿using TaskoPhobia.Core.ValueObjects;
+﻿using TaskoPhobia.Core.Entities.Users.Events;
+using TaskoPhobia.Core.ValueObjects;
 using TaskoPhobia.Shared.Abstractions.Domain;
 
 namespace TaskoPhobia.Core.Entities.Users;
 
 public class User : Entity
 {
-    public User(UserId id, Email email, Username username, Password password, Role role, DateTime createdAt,
+    private User(UserId id, Email email, Username username, Password password, Role role, DateTime createdAt,
         AccountType accountType)
     {
         Id = id;
@@ -15,6 +16,8 @@ public class User : Entity
         Role = role;
         CreatedAt = createdAt;
         AccountType = accountType;
+
+        AddDomainEvent(new UserRegisteredDomainEvent(id));
     }
 
     public User()
@@ -28,4 +31,9 @@ public class User : Entity
     public Role Role { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public AccountType AccountType { get; }
+
+    public static User New(UserId id, Email email, Username username, Password password, DateTime createdAt)
+    {
+        return new User(id, email, username, password, Role.User(), createdAt, AccountType.Basic());
+    }
 }

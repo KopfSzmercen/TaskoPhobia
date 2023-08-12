@@ -5,7 +5,6 @@ using TaskoPhobia.Shared.Abstractions.Domain;
 using TaskoPhobia.Shared.Abstractions.Outbox;
 using TaskoPhobia.Shared.Abstractions.Time;
 using TaskoPhobia.Shared.Events;
-using TaskoPhobia.Shared.Processing;
 
 namespace TaskoPhobia.Infrastructure.Events;
 

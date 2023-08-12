@@ -1,4 +1,4 @@
-﻿namespace TaskoPhobia.Shared.Processing;
+﻿namespace TaskoPhobia.Shared.Events;
 
 public interface IDomainEventsDispatcher
 {

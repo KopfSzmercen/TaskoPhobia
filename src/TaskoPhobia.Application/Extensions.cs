@@ -10,6 +10,7 @@ public static class Extensions
     {
         services.AddCommands();
         services.AddDomainEventHandlers();
+        services.AddDomainNotificationHandlers();
         return services;
     }
 }

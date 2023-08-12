@@ -1,5 +1,5 @@
 ﻿using TaskoPhobia.Infrastructure.DAL.Contexts;
-using TaskoPhobia.Shared.Processing;
+using TaskoPhobia.Shared.Events;
 
 namespace TaskoPhobia.Infrastructure.DAL;
 

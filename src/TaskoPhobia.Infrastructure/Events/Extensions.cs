@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using TaskoPhobia.Shared.Processing;
+using TaskoPhobia.Shared.Events;
 
 namespace TaskoPhobia.Infrastructure.Events;
 
