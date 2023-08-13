@@ -17,7 +17,7 @@ public class User : Entity
         CreatedAt = createdAt;
         AccountType = accountType;
 
-        AddDomainEvent(new UserRegisteredDomainEvent(id));
+        AddDomainEvent(new UserRegisteredDomainEvent(id, email));
     }
 
     public User()

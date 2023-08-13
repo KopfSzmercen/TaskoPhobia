@@ -1,16 +1,23 @@
 ﻿using TaskoPhobia.Core.Entities.Users.Events;
+using TaskoPhobia.Shared.Abstractions.Emails;
 using TaskoPhobia.Shared.Events;
 
 namespace TaskoPhobia.Application.DomainNotificationHandlers;
 
-public sealed class
+internal sealed class
     SendWelcomeEmailHandler : IDomainNotificationHandler<UserRegisteredDomainEvent>
 {
-    public Task HandleAsync(UserRegisteredDomainEvent domainEvent)
-    {
-        Console.BackgroundColor = ConsoleColor.Red;
-        Console.WriteLine($"Sending welcome email to user {domainEvent.UserId}");
+    private readonly IEmailSender _emailSender;
 
-        return Task.CompletedTask;
+
+    public SendWelcomeEmailHandler(IEmailSender emailSender)
+    {
+        _emailSender = emailSender;
+    }
+
+    public async Task HandleAsync(UserRegisteredDomainEvent domainEvent)
+    {
+        var emailMessage = new EmailMessage(domainEvent.Email, "Welcome in Taskophobia!", "<h1>Welcome</h1>");
+        await _emailSender.SendEmailAsync(emailMessage);
     }
 }

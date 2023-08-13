@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using TaskoPhobia.Infrastructure.Auth;
 using TaskoPhobia.Infrastructure.BackgroundJobs;
 using TaskoPhobia.Infrastructure.DAL;
+using TaskoPhobia.Infrastructure.Emails;
 using TaskoPhobia.Infrastructure.Events;
 using TaskoPhobia.Infrastructure.Exceptions;
 using TaskoPhobia.Infrastructure.Security;
@@ -25,7 +26,8 @@ public static class Extensions
             .AddSecurity()
             .AddExceptions()
             .AddContext()
-            .AddAuth(configuration);
+            .AddAuth(configuration)
+            .AddEmails(configuration);
 
         return services;
     }
