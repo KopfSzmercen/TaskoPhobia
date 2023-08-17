@@ -1,4 +1,4 @@
-﻿using TaskoPhobia.Shared.Abstractions.Domain;
+using TaskoPhobia.Shared.Abstractions.Domain;
 
 namespace TaskoPhobia.Core.Entities.Invitations.Events;
 

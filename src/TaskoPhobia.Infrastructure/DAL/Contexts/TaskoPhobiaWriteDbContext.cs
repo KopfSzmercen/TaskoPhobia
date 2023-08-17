@@ -25,6 +25,7 @@ internal sealed class TaskoPhobiaWriteDbContext : DbContext
     public DbSet<OutboxMessage> OutboxMessages { get; set; }
     public DbSet<AccountUpgradeProduct> AccountUpgradeProducts { get; set; }
 
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

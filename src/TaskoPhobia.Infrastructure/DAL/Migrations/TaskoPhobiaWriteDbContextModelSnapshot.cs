@@ -280,7 +280,7 @@ namespace TaskoPhobia.Infrastructure.DAL.Migrations
 
                     b.ToTable("OutboxMessages", "taskophobia");
                 });
-
+            
             modelBuilder.Entity("TaskoPhobia.Core.Entities.AccountUpgradeProducts.AccountUpgradeProduct", b =>
                 {
                     b.OwnsOne("TaskoPhobia.Shared.Abstractions.Domain.ValueObjects.Money.Money", "Price", b1 =>
@@ -308,7 +308,7 @@ namespace TaskoPhobia.Infrastructure.DAL.Migrations
                     b.Navigation("Price")
                         .IsRequired();
                 });
-
+            
             modelBuilder.Entity("TaskoPhobia.Core.Entities.Invitations.Invitation", b =>
                 {
                     b.HasOne("TaskoPhobia.Core.Entities.Projects.Project", "Project")

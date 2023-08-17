@@ -41,7 +41,7 @@ internal sealed class ProcessOutboxMessagesJob : IJob
                 .DeserializeObject<IDomainEventNotification<IDomainEvent>>(outboxMessage.Data,
                     new JsonSerializerSettings
                     {
-                        TypeNameHandling = TypeNameHandling.Auto
+                        TypeNameHandling = TypeNameHandling.All
                     });
 
             if (domainNotification is null) continue;
