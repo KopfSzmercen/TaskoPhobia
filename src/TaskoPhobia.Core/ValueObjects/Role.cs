@@ -2,7 +2,7 @@
 
 namespace TaskoPhobia.Core.ValueObjects;
 
-public sealed record Role
+public record Role
 {
     public Role(string value)
     {

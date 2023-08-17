@@ -18,11 +18,23 @@ public sealed record UserId
         return value.Value;
     }
 
+    public static implicit operator UserId(string value)
+    {
+        return new UserId(Guid.Parse(value));
+    }
+
     public static implicit operator UserId(Guid value)
     {
         return new UserId(value);
     }
 
-    public static bool operator ==(UserId userId, Guid guid) => userId!.Value == guid;
-    public static bool operator !=(UserId userId, Guid guid) => !(userId == guid);
+    public static bool operator ==(UserId userId, Guid guid)
+    {
+        return userId!.Value == guid;
+    }
+
+    public static bool operator !=(UserId userId, Guid guid)
+    {
+        return !(userId == guid);
+    }
 }

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TaskoPhobia.Infrastructure.DAL.Contexts;
@@ -11,9 +12,11 @@ using TaskoPhobia.Infrastructure.DAL.Contexts;
 namespace TaskoPhobia.Infrastructure.DAL.Migrations
 {
     [DbContext(typeof(TaskoPhobiaWriteDbContext))]
-    partial class TaskoPhobiaWriteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230817185842_Make-Price-Fields-Not-Nullable")]
+    partial class MakePriceFieldsNotNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -280,7 +283,7 @@ namespace TaskoPhobia.Infrastructure.DAL.Migrations
 
                     b.ToTable("OutboxMessages", "taskophobia");
                 });
-            
+
             modelBuilder.Entity("TaskoPhobia.Core.Entities.AccountUpgradeProducts.AccountUpgradeProduct", b =>
                 {
                     b.OwnsOne("TaskoPhobia.Shared.Abstractions.Domain.ValueObjects.Money.Money", "Price", b1 =>
@@ -308,7 +311,7 @@ namespace TaskoPhobia.Infrastructure.DAL.Migrations
                     b.Navigation("Price")
                         .IsRequired();
                 });
-            
+
             modelBuilder.Entity("TaskoPhobia.Core.Entities.Invitations.Invitation", b =>
                 {
                     b.HasOne("TaskoPhobia.Core.Entities.Projects.Project", "Project")

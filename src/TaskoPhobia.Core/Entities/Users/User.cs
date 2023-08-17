@@ -36,4 +36,9 @@ public class User : Entity
     {
         return new User(id, email, username, password, Role.User(), createdAt, AccountType.Basic());
     }
+
+    public static User NewAdmin(UserId id, Email email, Password password, DateTime createdAt)
+    {
+        return new User(id, email, "ADMIN", password, Role.Admin(), createdAt, AccountType.Extended());
+    }
 }

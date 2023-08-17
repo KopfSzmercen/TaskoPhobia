@@ -13,6 +13,11 @@ public sealed record ProjectId
 
     public Guid Value { get; }
 
+    public static implicit operator ProjectId(string value)
+    {
+        return Guid.Parse(value);
+    }
+
     public static implicit operator Guid(ProjectId value)
     {
         return value.Value;
