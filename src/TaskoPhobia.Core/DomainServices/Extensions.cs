@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using TaskoPhobia.Core.DomainServices.AccountUpgradeProducts;
 using TaskoPhobia.Core.DomainServices.Invitations;
 using TaskoPhobia.Core.DomainServices.Projects;
 
@@ -10,6 +11,7 @@ public static class Extensions
     {
         services.AddScoped<IInvitationService, InvitationService>();
         services.AddScoped<IProjectService, ProjectService>();
+        services.AddScoped<IAccountUpgradeProductService, AccountUpgradeProductService>();
         return services;
     }
 }

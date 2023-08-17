@@ -10,5 +10,5 @@ public class ProjectCreatedDomainEvent : DomainEventBase
         ProjectId = projectId;
     }
 
-    public ProjectId ProjectId { get; init; }
+    public Guid ProjectId { get; init; }
 }

@@ -11,6 +11,6 @@ public class UserRegisteredDomainEvent : DomainEventBase
         Email = email;
     }
 
-    public UserId UserId { get; }
-    public Email Email { get; }
+    public Guid UserId { get; }
+    public string Email { get; }
 }

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TaskoPhobia.Infrastructure.DAL.Contexts;
@@ -11,9 +12,11 @@ using TaskoPhobia.Infrastructure.DAL.Contexts;
 namespace TaskoPhobia.Infrastructure.DAL.Migrations
 {
     [DbContext(typeof(TaskoPhobiaWriteDbContext))]
-    partial class TaskoPhobiaWriteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230817135504_Add-Upgrade-Account-Products")]
+    partial class AddUpgradeAccountProducts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,13 +39,13 @@ namespace TaskoPhobia.Infrastructure.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("UpgradeTypeValue")
+                    b.Property<string>("TypeValue")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UpgradeTypeValue")
+                    b.HasIndex("TypeValue")
                         .IsUnique();
 
                     b.ToTable("AccountUpgradeProducts", "taskophobia");
@@ -305,8 +308,7 @@ namespace TaskoPhobia.Infrastructure.DAL.Migrations
                                 .HasForeignKey("AccountUpgradeProductId");
                         });
 
-                    b.Navigation("Price")
-                        .IsRequired();
+                    b.Navigation("Price");
                 });
 
             modelBuilder.Entity("TaskoPhobia.Core.Entities.Invitations.Invitation", b =>

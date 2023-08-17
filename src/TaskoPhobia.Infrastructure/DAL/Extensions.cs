@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TaskoPhobia.Core.Services;
 using TaskoPhobia.Infrastructure.DAL.Contexts;
+using TaskoPhobia.Infrastructure.DAL.DatabaseInitializer;
 using TaskoPhobia.Infrastructure.DAL.Decorators;
 using TaskoPhobia.Infrastructure.DAL.Repositories;
 using TaskoPhobia.Infrastructure.DAL.Services;
@@ -32,7 +33,7 @@ internal static class Extensions
         services.AddScoped<IInvitationReadService, PostgresInvitationReadService>();
         services.AddScoped<IProjectParticipationReadService, PostgresProjectParticipationReadService>();
 
-        services.AddHostedService<DatabaseInitializer>();
+        services.AddDatabaseInitializer(configuration);
         services.AddScoped<IUnitOfWork, PostgresUnitOfWork>();
         services.TryDecorate(typeof(ICommandHandler<>), typeof(UnitOfWorkCommandHandlerDecorator<>));
         services.AddQueries();

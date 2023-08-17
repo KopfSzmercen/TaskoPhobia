@@ -13,7 +13,6 @@ public sealed record ProjectName
     }
 
     public string Value { get; }
-
     public static implicit operator ProjectName(string value)
     {
         return new ProjectName(value);

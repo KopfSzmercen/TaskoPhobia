@@ -4,6 +4,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using TaskoPhobia.Application.Security;
+using TaskoPhobia.Core.ValueObjects;
+using TaskoPhobia.Shared.AuthorizationPolicies;
 
 namespace TaskoPhobia.Infrastructure.Auth;
 
@@ -30,7 +32,11 @@ internal static class Extensions
                 };
             });
 
-        services.AddAuthorization();
+        services.AddAuthorization(authorizationOptions =>
+        {
+            authorizationOptions.AddPolicy(nameof(AuthorizationPolicies.AdminPolicy),
+                policy => policy.RequireRole(Role.Admin()));
+        });
 
         services.AddSingleton<IAuthenticator, Authenticator>();
         services.AddSingleton<ITokenStorage, HttpContextTokenStorage>();
