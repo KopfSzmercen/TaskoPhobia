@@ -13,16 +13,14 @@ namespace TaskoPhobia.Infrastructure.Auth;
 public class Authenticator : IAuthenticator
 {
     private readonly string _audience;
+    private readonly IClock _clock;
     private readonly TimeSpan _expiry;
     private readonly string _issuer;
     private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler = new();
-    private readonly IOptions<AuthOptions> _options;
     private readonly SigningCredentials _signingCredentials;
-    private readonly IClock _clock;
 
     public Authenticator(IOptions<AuthOptions> options, IClock clock)
     {
-        _options = options;
         _clock = clock;
         _issuer = options.Value.Issuer;
         _audience = options.Value.Audience;

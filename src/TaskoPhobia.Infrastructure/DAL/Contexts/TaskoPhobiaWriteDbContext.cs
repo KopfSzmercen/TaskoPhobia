@@ -5,6 +5,7 @@ using TaskoPhobia.Core.Entities.Projects;
 using TaskoPhobia.Core.Entities.ProjectTasks;
 using TaskoPhobia.Core.Entities.Users;
 using TaskoPhobia.Infrastructure.DAL.Configurations.Write;
+using TaskoPhobia.Shared.Abstractions.Outbox;
 
 namespace TaskoPhobia.Infrastructure.DAL.Contexts;
 
@@ -20,6 +21,7 @@ internal sealed class TaskoPhobiaWriteDbContext : DbContext
     public DbSet<Invitation> Invitations { get; set; }
     public DbSet<ProjectParticipation> ProjectParticipations { get; set; }
     public DbSet<TaskAssignment> TaskAssignments { get; set; }
+    public DbSet<OutboxMessage> OutboxMessages { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -33,5 +35,6 @@ internal sealed class TaskoPhobiaWriteDbContext : DbContext
         modelBuilder.ApplyConfiguration(new ProjectParticipationWriteConfiguration());
         modelBuilder.ApplyConfiguration(new ProjectSummaryWriteConfiguration());
         modelBuilder.ApplyConfiguration(new TaskAssignmentWriteConfiguration());
+        modelBuilder.ApplyConfiguration(new OutboxMessageWriteConfiguration());
     }
 }

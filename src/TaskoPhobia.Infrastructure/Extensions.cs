@@ -2,7 +2,10 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TaskoPhobia.Infrastructure.Auth;
+using TaskoPhobia.Infrastructure.BackgroundJobs;
 using TaskoPhobia.Infrastructure.DAL;
+using TaskoPhobia.Infrastructure.Emails;
+using TaskoPhobia.Infrastructure.Events;
 using TaskoPhobia.Infrastructure.Exceptions;
 using TaskoPhobia.Infrastructure.Security;
 using TaskoPhobia.Infrastructure.Swagger;
@@ -17,11 +20,14 @@ public static class Extensions
         services.AddHttpContextAccessor();
         services.AddEndpointsApiExplorer()
             .AddSwaggerGen(ConfigureSwagger.ConfigureSwaggerOptions)
+            .AddDomainEventsDispatching()
             .AddPostgres(configuration)
+            .AddBackgroundJobs()
             .AddSecurity()
             .AddExceptions()
             .AddContext()
-            .AddAuth(configuration);
+            .AddAuth(configuration)
+            .AddEmails(configuration);
 
         return services;
     }

@@ -1,4 +1,5 @@
-﻿using TaskoPhobia.Core.Entities.Invitations.Rules;
+﻿using TaskoPhobia.Core.Entities.Invitations.Events;
+using TaskoPhobia.Core.Entities.Invitations.Rules;
 using TaskoPhobia.Core.Entities.Projects;
 using TaskoPhobia.Core.Entities.Users;
 using TaskoPhobia.Core.ValueObjects;
@@ -19,6 +20,12 @@ public class Invitation : Entity
         Status = status;
         CreatedAt = createdAt;
         ProjectId = projectId;
+
+        AddDomainEvent(new InvitationCreatedDomainEvent
+        {
+            ReceiverId = receiverId,
+            SenderId = senderId
+        });
     }
 
     public Invitation()
@@ -41,14 +48,15 @@ public class Invitation : Entity
         UserId receiverId,
         IClock clock)
     {
-        return new Invitation(id, projectId, title, senderId, receiverId,
+        var invitation = new Invitation(id, projectId, title, senderId, receiverId,
             InvitationStatus.Pending(), clock.Now());
+
+        return invitation;
     }
 
     internal void Accept()
     {
         CheckRule(new OnlyPendingInvitationStatusCanBeChangedRule(this));
-
         Status = InvitationStatus.Accepted();
     }
 

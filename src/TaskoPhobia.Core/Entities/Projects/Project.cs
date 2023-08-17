@@ -1,4 +1,5 @@
 ﻿using TaskoPhobia.Core.Common.Rules;
+using TaskoPhobia.Core.Entities.Projects.Events;
 using TaskoPhobia.Core.Entities.Projects.Rules;
 using TaskoPhobia.Core.Entities.ProjectTasks;
 using TaskoPhobia.Core.Entities.Users;
@@ -21,13 +22,15 @@ public class Project : Entity
         Status = status;
         CreatedAt = createdAt;
         OwnerId = ownerId;
+
+        AddDomainEvent(new ProjectCreatedDomainEvent(Id));
     }
 
     public Project()
     {
     }
 
-    public ProjectId Id { get; private set; }
+    public ProjectId Id { get; }
     public ProjectName Name { get; private set; }
     public ProjectDescription Description { get; private set; }
     public ProgressStatus Status { get; private set; }
