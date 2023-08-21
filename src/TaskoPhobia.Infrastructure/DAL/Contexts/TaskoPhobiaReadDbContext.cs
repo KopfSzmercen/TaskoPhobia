@@ -16,6 +16,7 @@ internal sealed class TaskoPhobiaReadDbContext : DbContext
     public DbSet<InvitationReadModel> Invitations { get; set; }
     public DbSet<ProjectParticipationReadModel> ProjectParticipations { get; set; }
     public DbSet<ProjectTaskAssignmentReadModel> ProjectTaskAssignments { get; set; }
+    public DbSet<AccountUpgradeProductReadModel> AccountUpgradeProducts { get; init; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -28,5 +29,6 @@ internal sealed class TaskoPhobiaReadDbContext : DbContext
         modelBuilder.ApplyConfiguration(new InvitationReadConfiguration());
         modelBuilder.ApplyConfiguration(new ProjectParticipationReadConfiguration());
         modelBuilder.ApplyConfiguration(new ProjectTaskAssignmentReadConfiguration());
+        modelBuilder.ApplyConfiguration(new AccountUpgradeProductReadConfiguration());
     }
 }

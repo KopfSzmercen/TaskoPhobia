@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TaskoPhobia.Infrastructure.DAL.Contexts;
@@ -11,9 +12,11 @@ using TaskoPhobia.Infrastructure.DAL.Contexts;
 namespace TaskoPhobia.Infrastructure.DAL.Migrations
 {
     [DbContext(typeof(TaskoPhobiaWriteDbContext))]
-    partial class TaskoPhobiaWriteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230820202017_Add-Orders")]
+    partial class AddOrders
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -364,7 +367,7 @@ namespace TaskoPhobia.Infrastructure.DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("TaskoPhobia.Core.Entities.Products.Order.Price#TaskoPhobia.Shared.Abstractions.Domain.ValueObjects.Money.Money", "Price", b1 =>
+                    b.OwnsOne("TaskoPhobia.Shared.Abstractions.Domain.ValueObjects.Money.Money", "Price", b1 =>
                         {
                             b1.Property<Guid>("OrderId")
                                 .HasColumnType("uuid");
@@ -392,7 +395,7 @@ namespace TaskoPhobia.Infrastructure.DAL.Migrations
 
             modelBuilder.Entity("TaskoPhobia.Core.Entities.Products.Product", b =>
                 {
-                    b.OwnsOne("TaskoPhobia.Core.Entities.Products.Product.Price#Price", "Price", b1 =>
+                    b.OwnsOne("Price", "Price", b1 =>
                         {
                             b1.Property<Guid>("ProductId")
                                 .HasColumnType("uuid");
@@ -454,7 +457,7 @@ namespace TaskoPhobia.Infrastructure.DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("TaskoPhobia.Core.Entities.ProjectTasks.ProjectTask.TimeSpan#TaskoPhobia.Core.ValueObjects.TaskTimeSpan", "TimeSpan", b1 =>
+                    b.OwnsOne("TaskoPhobia.Core.ValueObjects.TaskTimeSpan", "TimeSpan", b1 =>
                         {
                             b1.Property<Guid>("ProjectTaskId")
                                 .HasColumnType("uuid");

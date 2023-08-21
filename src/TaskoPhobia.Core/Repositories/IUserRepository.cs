@@ -5,7 +5,7 @@ namespace TaskoPhobia.Core.Repositories;
 
 public interface IUserRepository
 {
-    Task<User> GetByIdAsync(UserId id);
+    Task<User> FindByIdAsync(UserId id);
     Task AddAsync(User user);
     Task UpdateAsync(User user);
 }

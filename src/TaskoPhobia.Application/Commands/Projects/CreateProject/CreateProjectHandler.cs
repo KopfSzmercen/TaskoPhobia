@@ -29,7 +29,7 @@ internal sealed class CreateProjectHandler : ICommandHandler<CreateProject>
     {
         var ownerId = _context.Identity.Id;
 
-        var user = await _userRepository.GetByIdAsync(ownerId);
+        var user = await _userRepository.FindByIdAsync(ownerId);
 
         if (user is null) throw new UserNotFoundException(ownerId);
 

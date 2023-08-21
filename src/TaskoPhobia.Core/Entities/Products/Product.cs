@@ -14,12 +14,12 @@ public class Product
         Description = description;
     }
 
-    protected Product()
+    public Product()
     {
     }
 
     public ProductId Id { get; }
     public ProductName Name { get; }
-    public Money Price { get; }
+    public Money Price { get; init; }
     public ProductDescription Description { get; }
 }
