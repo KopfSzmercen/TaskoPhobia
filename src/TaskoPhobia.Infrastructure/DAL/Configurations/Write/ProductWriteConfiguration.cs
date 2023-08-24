@@ -26,10 +26,10 @@ public class ProductWriteConfiguration : IEntityTypeConfiguration<Product>
             .HasConversion(x => x.Value,
                 x => new ProductName(x));
 
-        builder.OwnsOne(x => x.Price, money =>
+        builder.OwnsOne(x => x.Price, navigationBuilder =>
         {
-            money.Property(x => x.Amount).HasColumnName("Amount");
-            money.Property(x => x.Currency).HasColumnName("Currency");
+            navigationBuilder.Property(x => x.Amount).IsRequired().HasColumnName("Amount");
+            navigationBuilder.Property(x => x.Currency).IsRequired().HasColumnName("Currency");
         });
     }
 }

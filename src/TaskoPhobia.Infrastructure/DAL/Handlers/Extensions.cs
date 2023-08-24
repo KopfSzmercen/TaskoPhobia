@@ -133,7 +133,7 @@ internal static class Extensions
             Name = accountUpgradeProduct.Name,
             Description = accountUpgradeProduct.Description,
             Currency = accountUpgradeProduct.Currency,
-            Price = accountUpgradeProduct.Price,
+            Amount = accountUpgradeProduct.Amount,
             UpgradeTypeValue = accountUpgradeProduct.UpgradeTypeValue
         };
     }

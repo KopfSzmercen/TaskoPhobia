@@ -4,12 +4,11 @@ using TaskoPhobia.Infrastructure.DAL.Configurations.Read.Model;
 
 namespace TaskoPhobia.Infrastructure.DAL.Configurations.Read;
 
-internal sealed class AccountUpgradeProductReadConfiguration : IEntityTypeConfiguration<AccountUpgradeProductReadModel>
+public class OrderReadConfiguration : IEntityTypeConfiguration<OrderReadModel>
 {
-    public void Configure(EntityTypeBuilder<AccountUpgradeProductReadModel> builder)
+    public void Configure(EntityTypeBuilder<OrderReadModel> builder)
     {
         builder.HasKey(x => x.Id);
-
-        builder.ToTable("Products");
+        builder.ToTable("Orders");
     }
 }

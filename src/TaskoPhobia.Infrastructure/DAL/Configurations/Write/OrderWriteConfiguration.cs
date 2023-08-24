@@ -7,7 +7,7 @@ using TaskoPhobia.Core.ValueObjects;
 
 namespace TaskoPhobia.Infrastructure.DAL.Configurations.Write;
 
-public class OrderWriteConfiguration : IEntityTypeConfiguration<Order>
+internal sealed class OrderWriteConfiguration : IEntityTypeConfiguration<Order>
 {
     public void Configure(EntityTypeBuilder<Order> builder)
     {
@@ -15,35 +15,37 @@ public class OrderWriteConfiguration : IEntityTypeConfiguration<Order>
 
         builder.Property(x => x.Id)
             .HasConversion(x => x.Value,
-                x => new OrderId(x));
+                guid => new OrderId(guid));
 
-        builder.Property(x => x.ProductId)
+        builder.OwnsOne(x => x.Price, navigationBuilder =>
+        {
+            navigationBuilder.Property(x => x.Amount).IsRequired().HasColumnName("Amount");
+            navigationBuilder.Property(x => x.Currency).IsRequired().HasColumnName("Currency");
+        });
+
+        builder.Property(x => x.CreatedAt).IsRequired();
+
+        builder.Property(x => x.Status)
             .IsRequired()
             .HasConversion(x => x.Value,
-                x => new ProductId(x));
-
-        builder.HasOne<Product>()
-            .WithMany()
-            .HasForeignKey(x => x.ProductId);
-
-        builder.Property(x => x.CreatedAt)
-            .IsRequired();
-
-        builder.OwnsOne(x => x.Price, money =>
-        {
-            money.Property(x => x.Amount).IsRequired().HasColumnName("Amount");
-            money.Property(x => x.Currency).IsRequired().HasColumnName("Currency");
-        });
+                s => new OrderStatus(s));
 
         builder.HasOne<User>()
             .WithMany()
             .HasForeignKey(x => x.CustomerId);
 
+        builder.HasOne<Product>()
+            .WithMany()
+            .HasForeignKey(x => x.ProductId);
+
         builder.Property(x => x.CustomerId)
             .IsRequired()
-            .HasConversion(x => x.Value, x => new UserId(x));
+            .HasConversion(x => x.Value,
+                guid => new UserId(guid));
 
-        builder.Property(x => x.Status)
-            .HasConversion(x => x.Value, x => new OrderStatus(x));
+        builder.Property(x => x.ProductId)
+            .IsRequired()
+            .HasConversion(x => x.Value,
+                guid => new ProductId(guid));
     }
 }

@@ -5,6 +5,7 @@ using TaskoPhobia.Core.Entities.ProjectTasks;
 using TaskoPhobia.Core.Entities.Users;
 using TaskoPhobia.Core.ValueObjects;
 using TaskoPhobia.Shared.Abstractions.Domain;
+using TaskoPhobia.Shared.Abstractions.Domain.ValueObjects.Money;
 using TaskoPhobia.Shared.Abstractions.Time;
 
 namespace TaskoPhobia.Core.Entities.Projects;
@@ -37,6 +38,8 @@ public class Project : Entity
     public DateTime CreatedAt { get; private set; }
     public UserId OwnerId { get; }
     public User Owner { get; init; }
+
+    public Money Price { get; }
 
     internal static Project CreateNew(ProjectId id, ProjectName name, ProjectDescription description,
         IClock clock, UserId ownerId)

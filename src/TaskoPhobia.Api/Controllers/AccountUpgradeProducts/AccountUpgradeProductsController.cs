@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using TaskoPhobia.Application.Commands.AccountUpgradeProducts.OrderAccountUpgradeProduct;
 using TaskoPhobia.Application.Commands.AccountUpgradeProducts.SeedAccountUpgradeProducts;
 using TaskoPhobia.Application.DTO;
 using TaskoPhobia.Application.Queries.AccountUpgradeProducts;
@@ -44,5 +45,20 @@ public class AccountUpgradeProductsController : ControllerBase
     {
         var result = await _queryDispatcher.QueryAsync(new BrowseAccountUpgradeProducts());
         return Ok(result);
+    }
+
+    [Authorize]
+    [HttpPost("{productId:guid}/orders")]
+    [SwaggerOperation("Create order for a product")]
+    [ProducesResponseType(typeof(void), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ErrorsResponse), StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult> CreateOrder([FromRoute] Guid productId)
+    {
+        var orderId = Guid.NewGuid();
+        var command = new OrderAccountUpgradeProduct(orderId, productId);
+
+        await _commandDispatcher.DispatchAsync(command);
+
+        return CreatedAtAction(nameof(Get), new { command.OrderId }, null);
     }
 }

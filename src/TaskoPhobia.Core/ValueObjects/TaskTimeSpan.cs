@@ -6,7 +6,7 @@ public record TaskTimeSpan
 {
     public TaskTimeSpan(DateTime start, DateTime end)
     {
-        if (start > end || end < DateTime.UtcNow) throw new InvalidTaskTimeSpanException();
+        if (start > end) throw new InvalidTaskTimeSpanException();
 
         Start = start;
         End = end;

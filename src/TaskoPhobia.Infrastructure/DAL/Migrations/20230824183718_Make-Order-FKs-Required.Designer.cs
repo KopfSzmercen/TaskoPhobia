@@ -12,8 +12,8 @@ using TaskoPhobia.Infrastructure.DAL.Contexts;
 namespace TaskoPhobia.Infrastructure.DAL.Migrations
 {
     [DbContext(typeof(TaskoPhobiaWriteDbContext))]
-    [Migration("20230820202017_Add-Orders")]
-    partial class AddOrders
+    [Migration("20230824183718_Make-Order-FKs-Required")]
+    partial class MakeOrderFKsRequired
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -389,13 +389,12 @@ namespace TaskoPhobia.Infrastructure.DAL.Migrations
                                 .HasForeignKey("OrderId");
                         });
 
-                    b.Navigation("Price")
-                        .IsRequired();
+                    b.Navigation("Price");
                 });
 
             modelBuilder.Entity("TaskoPhobia.Core.Entities.Products.Product", b =>
                 {
-                    b.OwnsOne("Price", "Price", b1 =>
+                    b.OwnsOne("TaskoPhobia.Shared.Abstractions.Domain.ValueObjects.Money.Money", "Price", b1 =>
                         {
                             b1.Property<Guid>("ProductId")
                                 .HasColumnType("uuid");
@@ -417,8 +416,7 @@ namespace TaskoPhobia.Infrastructure.DAL.Migrations
                                 .HasForeignKey("ProductId");
                         });
 
-                    b.Navigation("Price")
-                        .IsRequired();
+                    b.Navigation("Price");
                 });
 
             modelBuilder.Entity("TaskoPhobia.Core.Entities.ProjectParticipation", b =>

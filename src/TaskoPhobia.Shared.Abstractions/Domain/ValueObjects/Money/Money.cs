@@ -26,8 +26,8 @@ public record Money
         Currency = currency;
     }
 
-    public int Amount { get; init; }
-    public string Currency { get; init; }
+    public int Amount { get; private set; }
+    public string Currency { get; private set; }
 
     public static Money Create(int amount, string currency)
     {

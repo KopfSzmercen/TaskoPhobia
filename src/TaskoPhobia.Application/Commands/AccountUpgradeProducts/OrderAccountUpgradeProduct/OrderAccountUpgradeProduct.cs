@@ -2,4 +2,4 @@
 
 namespace TaskoPhobia.Application.Commands.AccountUpgradeProducts.OrderAccountUpgradeProduct;
 
-public sealed record OrderAccountUpgradeProduct(Guid ProductId) : ICommand;
+public sealed record OrderAccountUpgradeProduct(Guid OrderId, Guid ProductId) : ICommand;

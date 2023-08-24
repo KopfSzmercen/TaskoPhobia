@@ -1,5 +1,4 @@
-﻿#nullable enable
-using TaskoPhobia.Core.Entities.Products.ValueObjects;
+﻿using TaskoPhobia.Core.Entities.Products.ValueObjects;
 using TaskoPhobia.Shared.Abstractions.Domain.ValueObjects.Money;
 
 namespace TaskoPhobia.Core.Entities.Products;
@@ -20,6 +19,6 @@ public class Product
 
     public ProductId Id { get; }
     public ProductName Name { get; }
-    public Money Price { get; init; }
+    public Money Price { get; }
     public ProductDescription Description { get; }
 }

@@ -1,6 +1,4 @@
-﻿#nullable enable
-
-using TaskoPhobia.Core.Entities.Payments.ValueObjects;
+﻿using TaskoPhobia.Core.Entities.Payments.ValueObjects;
 using TaskoPhobia.Shared.Abstractions.Domain.ValueObjects.Url;
 
 namespace TaskoPhobia.Core.Entities.Payments;

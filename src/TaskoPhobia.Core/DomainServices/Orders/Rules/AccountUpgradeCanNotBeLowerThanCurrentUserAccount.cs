@@ -26,6 +26,9 @@ public class AccountUpgradeCanNotBeLowerThanCurrentUserAccount : IBusinessRule
                ||
                (_user.AccountType.Equals(AccountType.Basic()) &&
                 _accountUpgradeProduct.UpgradeTypeValue.Value.Equals(AccountType.Free()))
+               ||
+               (_user.AccountType.Equals(AccountType.Extended()) &&
+                _accountUpgradeProduct.UpgradeTypeValue.Value.Equals(AccountType.Extended()))
             ;
     }
 }

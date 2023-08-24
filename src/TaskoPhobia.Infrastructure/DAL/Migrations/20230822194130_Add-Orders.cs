@@ -37,6 +37,24 @@ namespace TaskoPhobia.Infrastructure.DAL.Migrations
                 oldClrType: typeof(string),
                 oldType: "text");
 
+            migrationBuilder.AlterColumn<string>(
+                name: "Currency",
+                schema: "taskophobia",
+                table: "Products",
+                type: "text",
+                nullable: true,
+                oldClrType: typeof(string),
+                oldType: "text");
+
+            migrationBuilder.AlterColumn<int>(
+                name: "Amount",
+                schema: "taskophobia",
+                table: "Products",
+                type: "integer",
+                nullable: true,
+                oldClrType: typeof(int),
+                oldType: "integer");
+
             migrationBuilder.AddColumn<string>(
                 name: "Discriminator",
                 schema: "taskophobia",
@@ -57,11 +75,11 @@ namespace TaskoPhobia.Infrastructure.DAL.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    ProductId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Amount = table.Column<int>(type: "integer", nullable: false),
-                    Currency = table.Column<string>(type: "text", nullable: false),
+                    ProductId = table.Column<Guid>(type: "uuid", nullable: true),
+                    Amount = table.Column<int>(type: "integer", nullable: true),
+                    Currency = table.Column<string>(type: "text", nullable: true),
                     CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    CustomerId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CustomerId = table.Column<Guid>(type: "uuid", nullable: true),
                     Status = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
@@ -72,15 +90,13 @@ namespace TaskoPhobia.Infrastructure.DAL.Migrations
                         column: x => x.ProductId,
                         principalSchema: "taskophobia",
                         principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Orders_Users_CustomerId",
                         column: x => x.CustomerId,
                         principalSchema: "taskophobia",
                         principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -134,6 +150,28 @@ namespace TaskoPhobia.Infrastructure.DAL.Migrations
                 defaultValue: "",
                 oldClrType: typeof(string),
                 oldType: "text",
+                oldNullable: true);
+
+            migrationBuilder.AlterColumn<string>(
+                name: "Currency",
+                schema: "taskophobia",
+                table: "AccountUpgradeProducts",
+                type: "text",
+                nullable: false,
+                defaultValue: "",
+                oldClrType: typeof(string),
+                oldType: "text",
+                oldNullable: true);
+
+            migrationBuilder.AlterColumn<int>(
+                name: "Amount",
+                schema: "taskophobia",
+                table: "AccountUpgradeProducts",
+                type: "integer",
+                nullable: false,
+                defaultValue: 0,
+                oldClrType: typeof(int),
+                oldType: "integer",
                 oldNullable: true);
 
             migrationBuilder.AddPrimaryKey(
