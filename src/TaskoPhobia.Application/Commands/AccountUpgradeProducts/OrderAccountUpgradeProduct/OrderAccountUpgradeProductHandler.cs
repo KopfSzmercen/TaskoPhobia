@@ -34,8 +34,7 @@ internal sealed class OrderAccountUpgradeProductHandler : ICommandHandler<OrderA
     public async Task HandleAsync(OrderAccountUpgradeProduct command)
     {
         var accountUpgradeProduct = await _accountUpgradeProductRepository.FindByIdAsync(command.ProductId);
-        if (accountUpgradeProduct?.Price is null) throw new AccountUpgradeProductNotFound();
-        //! Product Price value object is returned as null despite existing in DB
+        if (accountUpgradeProduct is null) throw new AccountUpgradeProductNotFound();
 
         var user = await _userRepository.FindByIdAsync(_context.Identity.Id);
         if (user is null) throw new UserNotFoundException(_context.Identity.Id);

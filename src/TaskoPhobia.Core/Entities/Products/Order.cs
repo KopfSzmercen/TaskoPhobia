@@ -1,4 +1,6 @@
-﻿using TaskoPhobia.Core.Entities.Products.ValueObjects;
+﻿#nullable enable
+
+using TaskoPhobia.Core.Entities.Products.ValueObjects;
 using TaskoPhobia.Core.ValueObjects;
 using TaskoPhobia.Shared.Abstractions.Domain.ValueObjects.Money;
 
@@ -30,6 +32,7 @@ public class Order
 
     public static Order NewFromProduct(OrderId orderId, Product product, UserId customerId, DateTimeOffset createdAt)
     {
-        return new Order(orderId, product.Id, product.Price, createdAt, customerId, OrderStatus.New());
+        return new Order(orderId, product.Id, Money.Create(product.Price.Amount, product.Price.Currency), createdAt,
+            customerId, OrderStatus.New());
     }
 }

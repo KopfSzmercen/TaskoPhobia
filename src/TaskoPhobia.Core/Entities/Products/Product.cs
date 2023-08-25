@@ -2,6 +2,7 @@
 using TaskoPhobia.Shared.Abstractions.Domain.ValueObjects.Money;
 
 namespace TaskoPhobia.Core.Entities.Products;
+#nullable enable
 
 public class Product
 {

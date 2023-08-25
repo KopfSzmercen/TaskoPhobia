@@ -59,6 +59,7 @@ public class AccountUpgradeProductsController : ControllerBase
 
         await _commandDispatcher.DispatchAsync(command);
 
+        //TODO - make location url valid when orders controller has been added
         return CreatedAtAction(nameof(Get), new { command.OrderId }, null);
     }
 }

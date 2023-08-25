@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TaskoPhobia.Core.Entities.AccountUpgradeProducts;
 using TaskoPhobia.Core.Entities.Products.ValueObjects;
+using TaskoPhobia.Core.Entities.Projects;
 using TaskoPhobia.Infrastructure.DAL.Contexts;
 
 namespace TaskoPhobia.Infrastructure.DAL.Repositories;
@@ -8,12 +9,12 @@ namespace TaskoPhobia.Infrastructure.DAL.Repositories;
 internal sealed class PostgresAccountUpgradeProductRepository : IAccountUpgradeProductRepository
 {
     private readonly DbSet<AccountUpgradeProduct> _accountUpgradeProducts;
+    private readonly DbSet<Project> _projects;
 
-
-    public PostgresAccountUpgradeProductRepository(TaskoPhobiaWriteDbContext dbContext,
-        TaskoPhobiaReadDbContext readDbContext)
+    public PostgresAccountUpgradeProductRepository(TaskoPhobiaWriteDbContext dbContext)
     {
         _accountUpgradeProducts = dbContext.AccountUpgradeProducts;
+        _projects = dbContext.Projects;
     }
 
     public async Task<IEnumerable<AccountUpgradeProduct>> FindAllAsync()
