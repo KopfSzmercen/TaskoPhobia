@@ -1,8 +1,8 @@
-﻿#nullable enable
-using TaskoPhobia.Core.Entities.Products.ValueObjects;
+﻿using TaskoPhobia.Core.Entities.Products.ValueObjects;
 using TaskoPhobia.Shared.Abstractions.Domain.ValueObjects.Money;
 
 namespace TaskoPhobia.Core.Entities.Products;
+#nullable enable
 
 public class Product
 {
@@ -14,7 +14,7 @@ public class Product
         Description = description;
     }
 
-    protected Product()
+    public Product()
     {
     }
 

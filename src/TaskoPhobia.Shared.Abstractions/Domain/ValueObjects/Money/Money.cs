@@ -6,6 +6,10 @@ public record Money
 {
     private static readonly HashSet<string> AllowedCurrencies = new() { "PLN", "EUR", "GBP" };
 
+    public Money()
+    {
+    }
+
     private Money(int amount, string currency)
     {
         if (amount is < 0 or > 1000000)
@@ -22,8 +26,8 @@ public record Money
         Currency = currency;
     }
 
-    public int Amount { get; set; }
-    public string Currency { get; set; }
+    public int Amount { get; private set; }
+    public string Currency { get; private set; }
 
     public static Money Create(int amount, string currency)
     {

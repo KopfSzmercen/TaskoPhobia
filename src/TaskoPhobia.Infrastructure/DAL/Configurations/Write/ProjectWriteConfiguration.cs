@@ -47,6 +47,7 @@ internal sealed class ProjectWriteConfiguration : IEntityTypeConfiguration<Proje
 
         builder.Property(x => x.OwnerId)
             .HasColumnName("OwnerId")
+            .IsRequired()
             .HasConversion(x => x.Value,
                 x => new UserId(x));
     }

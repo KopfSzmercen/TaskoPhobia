@@ -124,4 +124,17 @@ internal static class Extensions
             CreatedAt = projectTaskAssignment.CreatedAt
         };
     }
+
+    public static AccountUpgradeProductDto AsDto(this AccountUpgradeProductReadModel accountUpgradeProduct)
+    {
+        return new AccountUpgradeProductDto
+        {
+            Id = accountUpgradeProduct.Id,
+            Name = accountUpgradeProduct.Name,
+            Description = accountUpgradeProduct.Description,
+            Currency = accountUpgradeProduct.Currency,
+            Amount = accountUpgradeProduct.Amount,
+            UpgradeTypeValue = accountUpgradeProduct.UpgradeTypeValue
+        };
+    }
 }

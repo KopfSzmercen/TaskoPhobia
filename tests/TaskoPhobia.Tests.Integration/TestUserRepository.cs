@@ -8,7 +8,7 @@ internal class TestUserRepository : IUserRepository
 {
     private readonly List<User> _users = new();
 
-    public Task<User> GetByIdAsync(UserId id)
+    public Task<User> FindByIdAsync(UserId id)
     {
         return Task.FromResult(_users.SingleOrDefault(x => x.Id == id));
     }

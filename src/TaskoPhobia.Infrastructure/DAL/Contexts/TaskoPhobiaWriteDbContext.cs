@@ -2,6 +2,7 @@
 using TaskoPhobia.Core.Entities;
 using TaskoPhobia.Core.Entities.AccountUpgradeProducts;
 using TaskoPhobia.Core.Entities.Invitations;
+using TaskoPhobia.Core.Entities.Products;
 using TaskoPhobia.Core.Entities.Projects;
 using TaskoPhobia.Core.Entities.ProjectTasks;
 using TaskoPhobia.Core.Entities.Users;
@@ -23,8 +24,9 @@ internal sealed class TaskoPhobiaWriteDbContext : DbContext
     public DbSet<ProjectParticipation> ProjectParticipations { get; set; }
     public DbSet<TaskAssignment> TaskAssignments { get; set; }
     public DbSet<OutboxMessage> OutboxMessages { get; set; }
+    public DbSet<Product> Products { get; set; }
     public DbSet<AccountUpgradeProduct> AccountUpgradeProducts { get; set; }
-
+    public DbSet<Order> Orders { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -39,6 +41,8 @@ internal sealed class TaskoPhobiaWriteDbContext : DbContext
         modelBuilder.ApplyConfiguration(new ProjectSummaryWriteConfiguration());
         modelBuilder.ApplyConfiguration(new TaskAssignmentWriteConfiguration());
         modelBuilder.ApplyConfiguration(new OutboxMessageWriteConfiguration());
+        modelBuilder.ApplyConfiguration(new ProductWriteConfiguration());
         modelBuilder.ApplyConfiguration(new AccountUpgradeProductWriteConfiguration());
+        modelBuilder.ApplyConfiguration(new OrderWriteConfiguration());
     }
 }

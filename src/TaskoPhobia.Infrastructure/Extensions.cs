@@ -20,8 +20,8 @@ public static class Extensions
         services.AddHttpContextAccessor();
         services.AddEndpointsApiExplorer()
             .AddSwaggerGen(ConfigureSwagger.ConfigureSwaggerOptions)
-            .AddDomainEventsDispatching()
             .AddPostgres(configuration)
+            .AddDomainEventsDispatching()
             .AddBackgroundJobs()
             .AddSecurity()
             .AddExceptions()

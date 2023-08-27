@@ -23,31 +23,6 @@ namespace TaskoPhobia.Infrastructure.DAL.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("TaskoPhobia.Core.Entities.AccountUpgradeProducts.AccountUpgradeProduct", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("UpgradeTypeValue")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UpgradeTypeValue")
-                        .IsUnique();
-
-                    b.ToTable("AccountUpgradeProducts", "taskophobia");
-                });
-
             modelBuilder.Entity("TaskoPhobia.Core.Entities.Invitations.Invitation", b =>
                 {
                     b.Property<Guid>("Id")
@@ -87,6 +62,59 @@ namespace TaskoPhobia.Infrastructure.DAL.Migrations
                     b.HasIndex("SenderId");
 
                     b.ToTable("Invitations", "taskophobia");
+                });
+
+            modelBuilder.Entity("TaskoPhobia.Core.Entities.Products.Order", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Orders", "taskophobia");
+                });
+
+            modelBuilder.Entity("TaskoPhobia.Core.Entities.Products.Product", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Products", "taskophobia");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Product");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("TaskoPhobia.Core.Entities.ProjectParticipation", b =>
@@ -280,35 +308,21 @@ namespace TaskoPhobia.Infrastructure.DAL.Migrations
 
                     b.ToTable("OutboxMessages", "taskophobia");
                 });
-            
+
             modelBuilder.Entity("TaskoPhobia.Core.Entities.AccountUpgradeProducts.AccountUpgradeProduct", b =>
                 {
-                    b.OwnsOne("TaskoPhobia.Shared.Abstractions.Domain.ValueObjects.Money.Money", "Price", b1 =>
-                        {
-                            b1.Property<Guid>("AccountUpgradeProductId")
-                                .HasColumnType("uuid");
+                    b.HasBaseType("TaskoPhobia.Core.Entities.Products.Product");
 
-                            b1.Property<int>("Amount")
-                                .HasColumnType("integer")
-                                .HasColumnName("Amount");
+                    b.Property<string>("UpgradeTypeValue")
+                        .IsRequired()
+                        .HasColumnType("text");
 
-                            b1.Property<string>("Currency")
-                                .IsRequired()
-                                .HasColumnType("text")
-                                .HasColumnName("Currency");
+                    b.HasIndex("UpgradeTypeValue")
+                        .IsUnique();
 
-                            b1.HasKey("AccountUpgradeProductId");
-
-                            b1.ToTable("AccountUpgradeProducts", "taskophobia");
-
-                            b1.WithOwner()
-                                .HasForeignKey("AccountUpgradeProductId");
-                        });
-
-                    b.Navigation("Price")
-                        .IsRequired();
+                    b.HasDiscriminator().HasValue("AccountUpgradeProduct");
                 });
-            
+
             modelBuilder.Entity("TaskoPhobia.Core.Entities.Invitations.Invitation", b =>
                 {
                     b.HasOne("TaskoPhobia.Core.Entities.Projects.Project", "Project")
@@ -334,6 +348,74 @@ namespace TaskoPhobia.Infrastructure.DAL.Migrations
                     b.Navigation("Receiver");
 
                     b.Navigation("Sender");
+                });
+
+            modelBuilder.Entity("TaskoPhobia.Core.Entities.Products.Order", b =>
+                {
+                    b.HasOne("TaskoPhobia.Core.Entities.Users.User", null)
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TaskoPhobia.Core.Entities.Products.Product", null)
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsOne("TaskoPhobia.Shared.Abstractions.Domain.ValueObjects.Money.Money", "Price", b1 =>
+                        {
+                            b1.Property<Guid>("OrderId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("Amount")
+                                .HasColumnType("integer")
+                                .HasColumnName("Amount");
+
+                            b1.Property<string>("Currency")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("Currency");
+
+                            b1.HasKey("OrderId");
+
+                            b1.ToTable("Orders", "taskophobia");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OrderId");
+                        });
+
+                    b.Navigation("Price")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("TaskoPhobia.Core.Entities.Products.Product", b =>
+                {
+                    b.OwnsOne("TaskoPhobia.Shared.Abstractions.Domain.ValueObjects.Money.Money", "Price", b1 =>
+                        {
+                            b1.Property<Guid>("ProductId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("Amount")
+                                .HasColumnType("integer")
+                                .HasColumnName("Amount");
+
+                            b1.Property<string>("Currency")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("Currency");
+
+                            b1.HasKey("ProductId");
+
+                            b1.ToTable("Products", "taskophobia");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ProductId");
+                        });
+
+                    b.Navigation("Price")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("TaskoPhobia.Core.Entities.ProjectParticipation", b =>

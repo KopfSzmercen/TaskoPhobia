@@ -16,7 +16,7 @@ internal static class Extensions
                 );
         });
 
-        services.AddQuartzHostedService();
+        //services.AddQuartzHostedService();
         return services;
     }
 }

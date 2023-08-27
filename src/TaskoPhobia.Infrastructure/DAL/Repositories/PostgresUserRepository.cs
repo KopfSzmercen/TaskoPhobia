@@ -15,7 +15,7 @@ internal sealed class PostgresUserRepository : IUserRepository
         _users = dbContext.Users;
     }
 
-    public Task<User> GetByIdAsync(UserId id)
+    public Task<User> FindByIdAsync(UserId id)
     {
         return _users
             .SingleOrDefaultAsync(x => x.Id == id);
