@@ -30,15 +30,35 @@ public class User : Entity
     public Password Password { get; private set; }
     public Role Role { get; private set; }
     public DateTime CreatedAt { get; private set; }
-    public AccountType AccountType { get; }
+    public AccountType AccountType { get; private set; }
+
+    public void SetAccountType(AccountType accountType)
+    {
+        AccountType = accountType;
+    }
 
     public static User New(UserId id, Email email, Username username, Password password, DateTime createdAt)
     {
-        return new User(id, email, username, password, Role.User(), createdAt, AccountType.Basic());
+        return new User(id, email, username, password, Role.User(), createdAt, AccountType.Free());
     }
 
     public static User NewAdmin(UserId id, Email email, Password password, DateTime createdAt)
     {
         return new User(id, email, "ADMIN", password, Role.Admin(), createdAt, AccountType.Extended());
+    }
+
+    public bool HasFreeAccount()
+    {
+        return AccountType.Value.Equals(AccountType.Free());
+    }
+
+    public bool HasBasicAccount()
+    {
+        return AccountType.Value.Equals(AccountType.Basic());
+    }
+
+    public bool HasExtendedAccount()
+    {
+        return AccountType.Value.Equals(AccountType.Extended());
     }
 }

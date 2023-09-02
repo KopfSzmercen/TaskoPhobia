@@ -21,4 +21,9 @@ public record AccountUpgradeTypeValue
     {
         return value.Value;
     }
+
+    public static implicit operator AccountType(AccountUpgradeTypeValue value)
+    {
+        return new AccountType(value);
+    }
 }

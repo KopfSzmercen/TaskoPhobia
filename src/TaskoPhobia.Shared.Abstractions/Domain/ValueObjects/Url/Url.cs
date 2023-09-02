@@ -11,4 +11,14 @@ public sealed record Url
     }
 
     public string Value { get; }
+
+    public static implicit operator string(Url value)
+    {
+        return value.Value;
+    }
+
+    public static implicit operator Url(string value)
+    {
+        return new Url(value);
+    }
 }

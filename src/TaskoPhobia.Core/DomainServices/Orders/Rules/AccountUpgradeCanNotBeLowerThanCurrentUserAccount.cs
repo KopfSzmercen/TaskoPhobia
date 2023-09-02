@@ -1,6 +1,5 @@
 ﻿using TaskoPhobia.Core.Entities.AccountUpgradeProducts;
 using TaskoPhobia.Core.Entities.Users;
-using TaskoPhobia.Core.ValueObjects;
 using TaskoPhobia.Shared.Abstractions.Domain;
 
 namespace TaskoPhobia.Core.DomainServices.Orders.Rules;
@@ -21,21 +20,15 @@ internal sealed class AccountUpgradeCanNotBeLowerThanCurrentUserAccount : IBusin
 
     public bool IsBroken()
     {
-        var isExtendedAccountToBasicUpgrade = _user.AccountType.Equals(AccountType.Extended()) &&
-                                              _accountUpgradeProduct.UpgradeTypeValue.Value.Equals(AccountType.Basic());
+        var isExtendedAccountToBasicUpgrade = _user.HasExtendedAccount() &&
+                                              _accountUpgradeProduct.UpgradesAccountToBasic();
 
-        var isBasicAccountToFreeUpgrade = _user.AccountType.Equals(AccountType.Basic()) &&
-                                          _accountUpgradeProduct.UpgradeTypeValue.Value.Equals(AccountType.Free());
+        var isExtendedAccountToExtendedUpgrade =
+            _user.HasExtendedAccount() && _accountUpgradeProduct.UpgradesAccountToExtended();
 
-        var isExtendedAccountToExtendedUpgrade = _user.AccountType.Equals(AccountType.Extended()) &&
-                                                 _accountUpgradeProduct.UpgradeTypeValue.Value.Equals(
-                                                     AccountType.Extended());
-
-        var isBasicAccountToBasicUpgrade = _user.AccountType.Equals(AccountType.Basic()) &&
-                                           _accountUpgradeProduct.UpgradeTypeValue.Value.Equals(AccountType.Basic());
+        var isBasicAccountToBasicUpgrade = _user.HasBasicAccount() && _accountUpgradeProduct.UpgradesAccountToBasic();
 
         return isExtendedAccountToBasicUpgrade ||
-               isBasicAccountToFreeUpgrade ||
                isExtendedAccountToExtendedUpgrade ||
                isBasicAccountToBasicUpgrade;
     }

@@ -29,11 +29,10 @@ internal sealed class DomainEventsDispatcher : IDomainEventsDispatcher
         var domainEvents = _domainEventsAccessor.GetAllDomainEvents();
         var domainEventNotifications = new List<IDomainEventNotification<IDomainEvent>>();
 
-        using var scope = _serviceProvider.CreateScope();
         foreach (var domainEvent in domainEvents)
         {
             var handlerType = typeof(IDomainEventHandler<>).MakeGenericType(domainEvent.GetType());
-            var handlers = scope.ServiceProvider.GetServices(handlerType);
+            var handlers = _serviceProvider.GetServices(handlerType);
 
             var tasks = handlers.Select(x => (Task)handlerType
                 .GetMethod(nameof(IDomainEventHandler<IDomainEvent>.HandleAsync))

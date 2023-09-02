@@ -2,6 +2,7 @@
 using TaskoPhobia.Core.Entities;
 using TaskoPhobia.Core.Entities.AccountUpgradeProducts;
 using TaskoPhobia.Core.Entities.Invitations;
+using TaskoPhobia.Core.Entities.Payments;
 using TaskoPhobia.Core.Entities.Products;
 using TaskoPhobia.Core.Entities.Projects;
 using TaskoPhobia.Core.Entities.ProjectTasks;
@@ -27,6 +28,7 @@ internal sealed class TaskoPhobiaWriteDbContext : DbContext
     public DbSet<Product> Products { get; set; }
     public DbSet<AccountUpgradeProduct> AccountUpgradeProducts { get; set; }
     public DbSet<Order> Orders { get; set; }
+    public DbSet<Payment> Payments { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -44,5 +46,6 @@ internal sealed class TaskoPhobiaWriteDbContext : DbContext
         modelBuilder.ApplyConfiguration(new ProductWriteConfiguration());
         modelBuilder.ApplyConfiguration(new AccountUpgradeProductWriteConfiguration());
         modelBuilder.ApplyConfiguration(new OrderWriteConfiguration());
+        modelBuilder.ApplyConfiguration(new PaymentWriteConfiguration());
     }
 }

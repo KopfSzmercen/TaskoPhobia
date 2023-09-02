@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using TaskoPhobia.Core.Entities.AccountUpgradeProducts;
+using TaskoPhobia.Core.Entities.Payments;
 using TaskoPhobia.Core.Entities.Products;
 using TaskoPhobia.Core.Repositories;
 
@@ -16,6 +17,7 @@ internal static class Extensions
         services.AddScoped<IProjectTaskRepository, PostgresProjectTaskRepository>();
         services.AddScoped<IAccountUpgradeProductRepository, PostgresAccountUpgradeProductRepository>();
         services.AddScoped<IOrderRepository, PostgresOrderRepository>();
+        services.AddScoped<IPaymentRepository, PostgresPaymentRepository>();
         return services;
     }
 }
