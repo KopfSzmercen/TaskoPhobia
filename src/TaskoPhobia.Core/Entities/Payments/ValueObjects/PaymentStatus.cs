@@ -4,7 +4,7 @@ namespace TaskoPhobia.Core.Entities.Payments.ValueObjects;
 
 public record PaymentStatus
 {
-    private static readonly HashSet<string> AllowedValues = new() { "NEW", "PENDING", "CANCELED", "COMPLETED" };
+    public static readonly HashSet<string> AllowedValues = new() { "NEW", "PENDING", "CANCELED", "COMPLETED" };
 
     public PaymentStatus(string value)
     {
@@ -32,5 +32,15 @@ public record PaymentStatus
     public static PaymentStatus Completed()
     {
         return new PaymentStatus("COMPLETED");
+    }
+
+    public static implicit operator string(PaymentStatus value)
+    {
+        return value.Value;
+    }
+
+    public static implicit operator PaymentStatus(string value)
+    {
+        return new PaymentStatus(value);
     }
 }

@@ -7,6 +7,8 @@ using TaskoPhobia.Infrastructure.DAL;
 using TaskoPhobia.Infrastructure.Emails;
 using TaskoPhobia.Infrastructure.Events;
 using TaskoPhobia.Infrastructure.Exceptions;
+using TaskoPhobia.Infrastructure.HttpContextStorage;
+using TaskoPhobia.Infrastructure.Payments;
 using TaskoPhobia.Infrastructure.Security;
 using TaskoPhobia.Infrastructure.Swagger;
 using TaskoPhobia.Shared.Contexts;
@@ -27,7 +29,9 @@ public static class Extensions
             .AddExceptions()
             .AddContext()
             .AddAuth(configuration)
-            .AddEmails(configuration);
+            .AddEmails(configuration)
+            .AddHttpContextStorage()
+            .AddPayments(configuration);
 
         return services;
     }

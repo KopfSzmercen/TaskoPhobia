@@ -137,4 +137,19 @@ internal static class Extensions
             UpgradeTypeValue = accountUpgradeProduct.UpgradeTypeValue
         };
     }
+
+    public static OrderDto AsDto(this OrderReadModel order)
+    {
+        return new OrderDto
+        {
+            Id = order.Id,
+            CreatedAt = order.CreatedAt,
+            Price = new PriceDto
+            {
+                Currency = order.Currency,
+                Amount = order.Amount
+            },
+            ProductId = order.ProductId
+        };
+    }
 }

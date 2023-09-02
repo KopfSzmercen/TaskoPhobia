@@ -1,6 +1,7 @@
 ﻿using TaskoPhobia.Core.Entities.AccountUpgradeProducts.ValueObjects;
 using TaskoPhobia.Core.Entities.Products;
 using TaskoPhobia.Core.Entities.Products.ValueObjects;
+using TaskoPhobia.Core.ValueObjects;
 using TaskoPhobia.Shared.Abstractions.Domain.ValueObjects.Money;
 
 namespace TaskoPhobia.Core.Entities.AccountUpgradeProducts;
@@ -24,5 +25,15 @@ public class AccountUpgradeProduct : Product
         AccountUpgradeTypeValue upgradeTypeValue)
     {
         return new AccountUpgradeProduct(id, name, price, description, upgradeTypeValue);
+    }
+
+    public bool UpgradesAccountToBasic()
+    {
+        return UpgradeTypeValue.Value.Equals(AccountType.Basic());
+    }
+
+    public bool UpgradesAccountToExtended()
+    {
+        return UpgradeTypeValue.Value.Equals(AccountType.Extended());
     }
 }

@@ -4,7 +4,7 @@ using TaskoPhobia.Infrastructure.DAL.Configurations.Read.Model;
 
 namespace TaskoPhobia.Infrastructure.DAL.Configurations.Read;
 
-public class OrderReadConfiguration : IEntityTypeConfiguration<OrderReadModel>
+internal sealed class OrderReadConfiguration : IEntityTypeConfiguration<OrderReadModel>
 {
     public void Configure(EntityTypeBuilder<OrderReadModel> builder)
     {
