@@ -22,9 +22,4 @@ public class Product
     public ProductName Name { get; }
     public Money Price { get; }
     public ProductDescription Description { get; }
-
-    public static Product CreateToVerify(ProductId id, ProductName name, Money price, ProductDescription description)
-    {
-        return new Product(id, name, price, description);
-    }
 }

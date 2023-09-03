@@ -21,7 +21,7 @@ public class ProjectTask : Entity
         AssignmentsLimit = assignmentsLimit;
     }
 
-    public ProjectTask()
+    private ProjectTask()
     {
     }
 

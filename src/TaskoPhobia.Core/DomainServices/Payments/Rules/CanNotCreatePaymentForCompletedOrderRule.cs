@@ -1,13 +1,13 @@
 ﻿using TaskoPhobia.Core.Entities.Products;
 using TaskoPhobia.Shared.Abstractions.Domain;
 
-namespace TaskoPhobia.Core.Entities.Payments.Rules;
+namespace TaskoPhobia.Core.DomainServices.Payments.Rules;
 
-internal sealed class CanNotCreatePaymentForCompletedOrder : IBusinessRule
+internal sealed class CanNotCreatePaymentForCompletedOrderRule : IBusinessRule
 {
     private readonly Order _order;
 
-    public CanNotCreatePaymentForCompletedOrder(Order order)
+    public CanNotCreatePaymentForCompletedOrderRule(Order order)
     {
         _order = order;
     }

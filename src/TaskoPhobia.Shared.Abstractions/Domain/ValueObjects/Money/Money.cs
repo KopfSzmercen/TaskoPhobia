@@ -6,7 +6,7 @@ public record Money
 {
     private static readonly HashSet<string> AllowedCurrencies = new() { "PLN", "EUR", "GBP" };
 
-    public Money()
+    private Money()
     {
     }
 
@@ -26,11 +26,20 @@ public record Money
         Currency = currency;
     }
 
-    public int Amount { get; private set; }
-    public string Currency { get; private set; }
+    public int Amount { get; init; }
+    public string Currency { get; init; }
 
     public static Money Create(int amount, string currency)
     {
         return new Money(amount, currency);
+    }
+
+    public Money Copy()
+    {
+        return new Money
+        {
+            Amount = Amount,
+            Currency = Currency
+        };
     }
 }

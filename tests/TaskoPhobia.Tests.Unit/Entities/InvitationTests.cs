@@ -16,6 +16,25 @@ public class InvitationTests : TestBase
         AssertBrokenRule<OnlyPendingInvitationStatusCanBeChangedRule>(() => invitation.Reject(false));
     }
 
+    [Fact]
+    public void Accept_Accepted_Invitation_Should_Throw_OnlyPendingInvitationStatusCanBeChangedRule_Exception()
+    {
+        var invitation = CreateInvitation();
+        invitation.Accept();
+
+        AssertBrokenRule<OnlyPendingInvitationStatusCanBeChangedRule>(() => invitation.Accept());
+
+        AssertBrokenRule<OnlyPendingInvitationStatusCanBeChangedRule>(() => invitation.Accept());
+    }
+
+    [Fact]
+    public void Accept_Rejected_Invitation_Should_Throw_OnlyPendingInvitationStatusCanBeChangedRule_Exception()
+    {
+        var invitation = CreateInvitation();
+        invitation.Reject(true);
+        AssertBrokenRule<OnlyPendingInvitationStatusCanBeChangedRule>(() => invitation.Accept());
+    }
+
     #region setup
 
     private static readonly IClock Clock = new Clock();

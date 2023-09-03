@@ -15,7 +15,7 @@ public class AccountUpgradeProduct : Product
         UpgradeTypeValue = upgradeTypeValue;
     }
 
-    public AccountUpgradeProduct()
+    private AccountUpgradeProduct()
     {
     }
 
@@ -24,7 +24,7 @@ public class AccountUpgradeProduct : Product
     public static AccountUpgradeProduct New(Guid id, ProductName name, Money price, ProductDescription description,
         AccountUpgradeTypeValue upgradeTypeValue)
     {
-        return new AccountUpgradeProduct(id, name, price, description, upgradeTypeValue);
+        return new AccountUpgradeProduct(id, name, price.Copy(), description, upgradeTypeValue);
     }
 
     public bool UpgradesAccountToBasic()

@@ -38,7 +38,10 @@ internal sealed class DomainEventsDispatcher : IDomainEventsDispatcher
                 .GetMethod(nameof(IDomainEventHandler<IDomainEvent>.HandleAsync))
                 ?.Invoke(x, new object[] { domainEvent })
             );
-            await Task.WhenAll(tasks);
+
+            foreach (var task in tasks)
+                if (task is not null)
+                    await task.WaitAsync(new CancellationToken());
         }
 
         foreach (var domainEvent in domainEvents)

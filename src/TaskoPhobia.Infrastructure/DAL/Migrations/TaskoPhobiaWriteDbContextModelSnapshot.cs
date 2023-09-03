@@ -392,7 +392,7 @@ namespace TaskoPhobia.Infrastructure.DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("TaskoPhobia.Shared.Abstractions.Domain.ValueObjects.Money.Money", "MoneyToPay", b1 =>
+                    b.OwnsOne("TaskoPhobia.Core.Entities.Payments.Payment.MoneyToPay#TaskoPhobia.Shared.Abstractions.Domain.ValueObjects.Money.Money", "MoneyToPay", b1 =>
                         {
                             b1.Property<Guid>("PaymentId")
                                 .HasColumnType("uuid");
@@ -432,7 +432,7 @@ namespace TaskoPhobia.Infrastructure.DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("TaskoPhobia.Shared.Abstractions.Domain.ValueObjects.Money.Money", "Price", b1 =>
+                    b.OwnsOne("TaskoPhobia.Core.Entities.Products.Order.Price#TaskoPhobia.Shared.Abstractions.Domain.ValueObjects.Money.Money", "Price", b1 =>
                         {
                             b1.Property<Guid>("OrderId")
                                 .HasColumnType("uuid");
@@ -460,7 +460,7 @@ namespace TaskoPhobia.Infrastructure.DAL.Migrations
 
             modelBuilder.Entity("TaskoPhobia.Core.Entities.Products.Product", b =>
                 {
-                    b.OwnsOne("TaskoPhobia.Shared.Abstractions.Domain.ValueObjects.Money.Money", "Price", b1 =>
+                    b.OwnsOne("TaskoPhobia.Core.Entities.Products.Product.Price#TaskoPhobia.Shared.Abstractions.Domain.ValueObjects.Money.Money", "Price", b1 =>
                         {
                             b1.Property<Guid>("ProductId")
                                 .HasColumnType("uuid");
@@ -522,7 +522,7 @@ namespace TaskoPhobia.Infrastructure.DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("TaskoPhobia.Core.ValueObjects.TaskTimeSpan", "TimeSpan", b1 =>
+                    b.OwnsOne("TaskoPhobia.Core.Entities.ProjectTasks.ProjectTask.TimeSpan#TaskoPhobia.Core.ValueObjects.TaskTimeSpan", "TimeSpan", b1 =>
                         {
                             b1.Property<Guid>("ProjectTaskId")
                                 .HasColumnType("uuid");

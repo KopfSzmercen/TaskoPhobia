@@ -13,6 +13,7 @@ public class OrdersService : DomainService, IOrdersService
         DateTimeOffset now)
     {
         CheckRule(new AccountUpgradeCanNotBeLowerThanCurrentUserAccount(product, user));
-        return Order.NewFromProduct(orderId, product, user.Id, now);
+
+        return Order.New(orderId, product.Id, product.Price.Copy(), user.Id, now);
     }
 }
