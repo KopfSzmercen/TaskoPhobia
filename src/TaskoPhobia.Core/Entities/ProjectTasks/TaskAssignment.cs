@@ -15,7 +15,6 @@ public class TaskAssignment
         TaskId = taskId;
     }
 
-
     public TaskAssignmentId Id { get; }
     public DateTimeOffset CreatedAt { get; }
     public ProjectTaskId TaskId { get; }

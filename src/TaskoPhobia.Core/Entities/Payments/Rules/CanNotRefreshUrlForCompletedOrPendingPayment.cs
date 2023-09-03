@@ -2,11 +2,11 @@
 
 namespace TaskoPhobia.Core.Entities.Payments.Rules;
 
-public class UrlCanBeRefreshedRule : IBusinessRule
+public class CanNotRefreshUrlForCompletedOrPendingPayment : IBusinessRule
 {
     private readonly Payment _payment;
 
-    public UrlCanBeRefreshedRule(Payment payment)
+    public CanNotRefreshUrlForCompletedOrPendingPayment(Payment payment)
     {
         _payment = payment;
     }

@@ -1,5 +1,9 @@
 ﻿using Shouldly;
+using TaskoPhobia.Core.Entities.AccountUpgradeProducts;
+using TaskoPhobia.Core.Entities.AccountUpgradeProducts.ValueObjects;
+using TaskoPhobia.Core.ValueObjects;
 using TaskoPhobia.Shared.Abstractions.Domain;
+using TaskoPhobia.Shared.Abstractions.Domain.ValueObjects.Money;
 using TaskoPhobia.Shared.Abstractions.Exceptions;
 
 namespace TaskoPhobia.Tests.Unit;
@@ -10,6 +14,18 @@ public abstract class TestBase
     {
         var businessRuleValidationException = Should.Throw<BusinessRuleValidationException>(() => testDelegate());
         businessRuleValidationException.BrokenRule.ShouldBeOfType<TRule>();
+    }
+
+    protected static AccountUpgradeProduct CreateUpgradeToBasicAccountProduct()
+    {
+        return AccountUpgradeProduct.New(Guid.NewGuid(), "name", Money.Create(12, "PLN"), "description",
+            new AccountUpgradeTypeValue(AccountType.Basic()));
+    }
+
+    protected static AccountUpgradeProduct CreateUpgradeToExtendedAccountProduct()
+    {
+        return AccountUpgradeProduct.New(Guid.NewGuid(), "name", Money.Create(12, "PLN"), "description",
+            new AccountUpgradeTypeValue(AccountType.Extended()));
     }
 
     protected delegate void TestDelegate();

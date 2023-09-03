@@ -2,7 +2,6 @@
 using TaskoPhobia.Core.Entities.Payments.Events;
 using TaskoPhobia.Core.Entities.Payments.Rules;
 using TaskoPhobia.Core.Entities.Payments.ValueObjects;
-using TaskoPhobia.Core.Entities.Products;
 using TaskoPhobia.Core.Entities.Products.ValueObjects;
 using TaskoPhobia.Shared.Abstractions.Domain;
 using TaskoPhobia.Shared.Abstractions.Domain.ValueObjects.Money;
@@ -23,7 +22,7 @@ public class Payment : Entity
         MoneyToPay = moneyToPay;
     }
 
-    private Payment()
+    public Payment()
     {
     }
 
@@ -32,26 +31,19 @@ public class Payment : Entity
     public DateTimeOffset? PaidAt { get; private set; }
     public Url? RedirectUrl { get; private set; }
     public DateTimeOffset CreatedAt { get; private set; }
-    public OrderId OrderId { get; }
+    public OrderId OrderId { get; init; }
     public Money MoneyToPay { get; }
 
-    public static Payment InitiatePayment(PaymentId id, Order order, DateTimeOffset now, Url redirectUrl)
+    internal static Payment New(PaymentId id, OrderId orderId, Money price, DateTimeOffset now, Url redirectUrl)
     {
-        CheckRule(new CanNotCreatePaymentForCompletedOrder(order));
-        return new Payment(id, order.Id, now, PaymentStatus.New(), redirectUrl,
-            Money.Create(order.Price.Amount, order.Price.Currency));
+        return new Payment(id, orderId, now, PaymentStatus.New(), redirectUrl, price);
     }
 
     public void RefreshUrl(Url url)
     {
-        CheckRule(new UrlCanBeRefreshedRule(this));
+        CheckRule(new CanNotRefreshUrlForCompletedOrPendingPayment(this));
         RedirectUrl = url;
         Status = PaymentStatus.Pending();
-    }
-
-    public bool IsCanceled()
-    {
-        return Status.Equals(PaymentStatus.Canceled());
     }
 
     public bool IsNew()
@@ -92,13 +84,5 @@ public class Payment : Entity
         PaidAt = DateTimeOffset.Now;
 
         AddDomainEvent(new PaymentCompletedDomainEvent(Id, OrderId));
-    }
-
-    public static Payment CreateToVerify(PaymentId id, OrderId orderId, DateTimeOffset now, PaymentStatus status,
-        Url redirectUrl,
-        Money moneyToPay)
-    {
-        return new Payment(id, orderId, now, status, redirectUrl,
-            moneyToPay);
     }
 }

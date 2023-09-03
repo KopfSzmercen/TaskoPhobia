@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using TaskoPhobia.Core.Entities.Payments;
 using TaskoPhobia.Core.Entities.Payments.ValueObjects;
 using TaskoPhobia.Core.Entities.Products;
+using TaskoPhobia.Core.Entities.Products.ValueObjects;
 using TaskoPhobia.Shared.Abstractions.Domain.ValueObjects.Url;
 
 namespace TaskoPhobia.Infrastructure.DAL.Configurations.Write;
@@ -29,7 +30,13 @@ internal sealed class PaymentWriteConfiguration : IEntityTypeConfiguration<Payme
 
         builder.HasOne<Order>()
             .WithMany()
+            .IsRequired()
             .HasForeignKey(x => x.OrderId);
+
+        builder.Property(x => x.OrderId)
+            .IsRequired()
+            .HasConversion(x => x.Value,
+                x => new OrderId(x));
 
         builder.Property(x => x.PaidAt);
 

@@ -7,13 +7,14 @@ using TaskoPhobia.Shared.Events;
 
 namespace TaskoPhobia.Application.EventHandlers;
 
-internal sealed class UpgradeAccountWhenOrderIsPaidDomainEventHandler : IDomainEventHandler<PaymentCompletedDomainEvent>
+internal sealed class
+    UpgradeAccountWhenPaymentIsCompletedDomainEventHandler : IDomainEventHandler<PaymentCompletedDomainEvent>
 {
     private readonly IAccountUpgradeProductRepository _accountUpgradeProductRepository;
     private readonly IOrderRepository _orderRepository;
     private readonly IUserRepository _userRepository;
 
-    public UpgradeAccountWhenOrderIsPaidDomainEventHandler(
+    public UpgradeAccountWhenPaymentIsCompletedDomainEventHandler(
         IAccountUpgradeProductRepository accountUpgradeProductRepository, IOrderRepository orderRepository,
         IUserRepository userRepository)
     {
@@ -27,10 +28,6 @@ internal sealed class UpgradeAccountWhenOrderIsPaidDomainEventHandler : IDomainE
         var order = await _orderRepository.FindByIdAsync(domainEvent.OrderId);
 
         if (order is null) throw new OrderNotFound();
-
-        order.Complete();
-
-        await _orderRepository.UpdateAsync(order);
 
         var accountUpgradeProduct = await _accountUpgradeProductRepository.FindByIdAsync(order.ProductId);
 

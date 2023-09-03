@@ -1,4 +1,5 @@
 ﻿using TaskoPhobia.Application.Exceptions;
+using TaskoPhobia.Core.DomainServices.Payments;
 using TaskoPhobia.Core.Entities.Payments;
 using TaskoPhobia.Core.Entities.Products;
 using TaskoPhobia.Shared.Abstractions.Commands;
@@ -16,10 +17,11 @@ internal sealed class CreatePaymentLinkHandler : ICommandHandler<CreatePaymentLi
     private readonly IPaymentLinkStorage _paymentLinkStorage;
     private readonly IPaymentProcessor _paymentProcessor;
     private readonly IPaymentRepository _paymentRepository;
+    private readonly IPaymentsService _paymentsService;
 
     public CreatePaymentLinkHandler(IOrderRepository orderRepository, IContext context, IClock clock,
         IPaymentRepository paymentRepository, IPaymentLinkStorage paymentLinkStorage,
-        IPaymentProcessor paymentProcessor)
+        IPaymentProcessor paymentProcessor, IPaymentsService paymentsService)
     {
         _orderRepository = orderRepository;
         _context = context;
@@ -27,6 +29,7 @@ internal sealed class CreatePaymentLinkHandler : ICommandHandler<CreatePaymentLi
         _paymentRepository = paymentRepository;
         _paymentLinkStorage = paymentLinkStorage;
         _paymentProcessor = paymentProcessor;
+        _paymentsService = paymentsService;
     }
 
     public async Task HandleAsync(CreatePaymentLink command)
@@ -73,7 +76,7 @@ internal sealed class CreatePaymentLinkHandler : ICommandHandler<CreatePaymentLi
             newPaymentId,
             order.Price.Amount, order.Price.Currency);
 
-        var newPayment = Payment.InitiatePayment(newPaymentId, order, _clock.DateTimeOffsetNow(),
+        var newPayment = _paymentsService.CreatePaymentForOrder(order, newPaymentId, _clock.DateTimeOffsetNow(),
             paymentLinkDto.PaymentLink);
 
         await _paymentRepository.AddAsync(newPayment);
