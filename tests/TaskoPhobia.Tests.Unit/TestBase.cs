@@ -16,6 +16,16 @@ public abstract class TestBase
         businessRuleValidationException.BrokenRule.ShouldBeOfType<TRule>();
     }
 
+    protected static async Task AssertBrokenRuleAsync<TRule>(AsyncTestDelegate testDelegate)
+        where TRule : class, IBusinessRule
+    {
+        var requestAction = async () => await testDelegate();
+
+        var businessRuleValidationException = await requestAction.ShouldThrowAsync<BusinessRuleValidationException>();
+
+        businessRuleValidationException.BrokenRule.ShouldBeOfType<TRule>();
+    }
+
     protected static AccountUpgradeProduct CreateUpgradeToBasicAccountProduct()
     {
         return AccountUpgradeProduct.New(Guid.NewGuid(), "name", Money.Create(12, "PLN"), "description",
@@ -29,4 +39,6 @@ public abstract class TestBase
     }
 
     protected delegate void TestDelegate();
+
+    protected delegate Task AsyncTestDelegate();
 }
