@@ -22,7 +22,7 @@ public class Payment : Entity
         MoneyToPay = moneyToPay;
     }
 
-    public Payment()
+    private Payment()
     {
     }
 
