@@ -15,7 +15,7 @@ using Xunit;
 
 namespace TaskoPhobia.Tests.Integration.Controllers;
 
-public class ProjectsControllerTests : ControllerTests, IDisposable
+public class ProjectsControllerTests : ControllerTests
 {
     [Fact]
     public async Task given_valid_credentials_and_project_data_post_should_return_201_created_code()
@@ -70,18 +70,11 @@ public class ProjectsControllerTests : ControllerTests, IDisposable
 
     #region setup
 
-    private readonly TestDatabase _testDatabase;
     private readonly IClock _clock;
 
     public ProjectsControllerTests(OptionsProvider optionsProvider) : base(optionsProvider, new Clock())
     {
-        _testDatabase = new TestDatabase();
         _clock = new Clock();
-    }
-
-    public void Dispose()
-    {
-        _testDatabase.Dispose();
     }
 
     private async Task<User> CreateUserAndAuthorizeAsync()

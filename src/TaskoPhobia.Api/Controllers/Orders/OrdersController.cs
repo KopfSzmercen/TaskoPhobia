@@ -37,7 +37,7 @@ public class OrdersController : ControllerBase
     [HttpPost("{orderId:guid}/payments")]
     [SwaggerOperation("Create payment link")]
     [ProducesResponseType(typeof(PaymentLinkDto), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(PaymentLinkDto), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<PaymentLinkDto>> Post([FromRoute] Guid orderId)
     {
         var command = new CreatePaymentLink(orderId);
@@ -45,6 +45,6 @@ public class OrdersController : ControllerBase
 
         var paymentLink = _paymentLinkStorage.Get();
 
-        return Ok(paymentLink.PaymentLink);
+        return Ok(paymentLink);
     }
 }
