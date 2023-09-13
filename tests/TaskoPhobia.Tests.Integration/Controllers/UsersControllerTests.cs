@@ -1,13 +1,16 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Shouldly;
+using TaskoPhobia.Application.Commands.Invitations.RejectInvitation;
 using TaskoPhobia.Application.Commands.Users.SignIn;
 using TaskoPhobia.Application.Commands.Users.SignUp;
 using TaskoPhobia.Application.DTO;
 using TaskoPhobia.Core.Entities.Invitations;
 using TaskoPhobia.Core.Entities.Projects;
 using TaskoPhobia.Core.Entities.Users;
+using TaskoPhobia.Core.ValueObjects;
 using TaskoPhobia.Infrastructure.Security;
 using TaskoPhobia.Shared.Abstractions.Exceptions.Errors;
 using TaskoPhobia.Shared.Abstractions.Queries;
@@ -16,7 +19,7 @@ using Xunit;
 
 namespace TaskoPhobia.Tests.Integration.Controllers;
 
-public class UsersControllerTests : ControllerTests, IDisposable
+public class UsersControllerTests : ControllerTests
 {
     [Fact]
     public async Task given_valid_command_sign_up_should_return_created_201_code()
@@ -124,6 +127,33 @@ public class UsersControllerTests : ControllerTests, IDisposable
     }
 
     [Fact]
+    private async Task given_valid_credentials_and_invitation_id_post_invitations_status_rejected_should_succeed()
+    {
+        var projectOwner = await CreateUserAsync();
+        var invitationReceiver = await CreateUserAsync("secondUser@u.pl", "secondUserUsername");
+
+        var project = await CreateProjectAsync(projectOwner.Id);
+        var invitation = await CreateAndAddInvitationToProjectAsync(project, invitationReceiver.Id);
+
+        var request = new RejectInvitationRequest { BlockSendingMoreInvitations = true };
+
+        Authorize(invitationReceiver.Id, invitationReceiver.Role);
+
+        var response = await HttpClient.PatchAsJsonAsync($"users/me/invitations/{invitation.Id.Value}/status/rejected",
+            request);
+
+        var invitationAfterOperation = await _testDatabase.ReadDbContext.Invitations
+            .SingleOrDefaultAsync();
+
+        invitationAfterOperation.ShouldNotBeNull();
+
+        invitationAfterOperation.Status.ShouldBe(InvitationStatus.Rejected().Value);
+
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+    }
+
+
+    [Fact]
     private async Task
         given_valid_credentials_and_invalid_invitation_id_post_invitations_status_accepted_should_return_400_bad_request()
     {
@@ -138,16 +168,10 @@ public class UsersControllerTests : ControllerTests, IDisposable
     #region setup
 
     private const string Password = "secret";
-    private readonly TestDatabase _testDatabase;
+
 
     public UsersControllerTests(OptionsProvider optionsProvider) : base(optionsProvider, new Clock())
     {
-        _testDatabase = new TestDatabase();
-    }
-
-    public void Dispose()
-    {
-        _testDatabase.Dispose();
     }
 
     private async Task<User> CreateUserAsync(string email = "test@t.pl", string username = "username")

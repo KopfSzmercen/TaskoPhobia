@@ -1,14 +1,11 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
-using Microsoft.AspNetCore.Identity;
 using Shouldly;
 using TaskoPhobia.Application.Commands.ProjectTasks.CreateProjectTask;
 using TaskoPhobia.Application.DTO;
 using TaskoPhobia.Core.Entities.Projects;
 using TaskoPhobia.Core.Entities.ProjectTasks;
-using TaskoPhobia.Core.Entities.Users;
 using TaskoPhobia.Core.ValueObjects;
-using TaskoPhobia.Infrastructure.Security;
 using TaskoPhobia.Shared.Abstractions.Exceptions.Errors;
 using TaskoPhobia.Shared.Abstractions.Queries;
 using TaskoPhobia.Shared.Abstractions.Time;
@@ -17,12 +14,12 @@ using Xunit;
 
 namespace TaskoPhobia.Tests.Integration.Controllers;
 
-public class ProjectTasksControllerTests : ControllerTests, IDisposable
+public class ProjectTasksControllerTests : ControllerTests
 {
     [Fact]
     public async Task given_valid_task_data_post_tasks_should_return_status_201_created()
     {
-        var project = await CreateUserWithProjectAndAuthorizeAsync();
+        var (project, user) = await CreateUserWithProjectAsync();
         var request = new CreateProjectTaskRequest
         {
             End = _clock.Now().AddDays(5),
@@ -31,6 +28,7 @@ public class ProjectTasksControllerTests : ControllerTests, IDisposable
             AssignmentsLimit = 3
         };
 
+        Authorize(user.Id, user.Role);
         var response = await HttpClient.PostAsJsonAsync($"/projects/{project.Id.Value}/tasks", request);
 
         response.StatusCode.ShouldBe(HttpStatusCode.Created);
@@ -40,9 +38,10 @@ public class ProjectTasksControllerTests : ControllerTests, IDisposable
     [Fact]
     public async Task given_existing_task_id_get_task_should_return_status_200_ok()
     {
-        var project = await CreateUserWithProjectAndAuthorizeAsync();
+        var (project, user) = await CreateUserWithProjectAsync();
         var task = await CreateTaskForProject(project);
 
+        Authorize(user.Id, user.Role);
         var response = await HttpClient.GetAsync($"projects/{project.Id.Value}/tasks/{task.Id.Value}");
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
@@ -54,8 +53,10 @@ public class ProjectTasksControllerTests : ControllerTests, IDisposable
     [Fact]
     public async Task having_project_with_tasks_get_task_should_return_tasks_and_status_200_ok()
     {
-        var project = await CreateUserWithProjectAndAuthorizeAsync();
+        var (project, user) = await CreateUserWithProjectAsync();
         await CreateTaskForProject(project);
+
+        Authorize(user.Id, user.Role);
 
         var response = await HttpClient.GetAsync($"projects/{project.Id.Value}/tasks");
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -67,7 +68,7 @@ public class ProjectTasksControllerTests : ControllerTests, IDisposable
     [Fact]
     public async Task having_finished_project_post_task_should_return_400_bad_request()
     {
-        var project = await CreateUserWithProjectAndAuthorizeAsync();
+        var (project, user) = await CreateUserWithProjectAsync();
         project.Finish(project.OwnerId, true);
         await _testDatabase.WriteDbContext.SaveChangesAsync();
 
@@ -77,6 +78,8 @@ public class ProjectTasksControllerTests : ControllerTests, IDisposable
             Start = _clock.Now(),
             TaskName = "Task name"
         };
+
+        Authorize(user.Id, user.Role);
 
         var response = await HttpClient.PostAsJsonAsync($"/projects/{project.Id.Value}/tasks", request);
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
@@ -88,7 +91,9 @@ public class ProjectTasksControllerTests : ControllerTests, IDisposable
     [Fact]
     public async Task given_non_existing_task_id_get_task_should_return_status_404_not_found()
     {
-        var project = await CreateUserWithProjectAndAuthorizeAsync();
+        var (project, user) = await CreateUserWithProjectAsync();
+
+        Authorize(user.Id, user.Role);
 
         var response = await HttpClient.GetAsync($"projects/{project.Id.Value}/tasks/{Guid.NewGuid().ToString()}");
         response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
@@ -96,42 +101,14 @@ public class ProjectTasksControllerTests : ControllerTests, IDisposable
 
     #region setup
 
-    private readonly TestDatabase _testDatabase;
     private readonly IClock _clock;
 
     public ProjectTasksControllerTests(OptionsProvider optionsProvider) : base(optionsProvider,
         new Clock())
     {
-        _testDatabase = new TestDatabase();
         _clock = new Clock();
     }
 
-    public void Dispose()
-    {
-        _testDatabase.Dispose();
-    }
-
-    private async Task<Project> CreateUserWithProjectAndAuthorizeAsync()
-    {
-        var passwordManager = new PasswordManager(new PasswordHasher<object>());
-        var securedPassword = passwordManager.Secure("secret");
-
-        var user = User.New(Guid.NewGuid(), "testUser@t.pl",
-            "testUser", securedPassword, DateTime.UtcNow);
-
-        await _testDatabase.WriteDbContext.Users.AddAsync(user);
-        await _testDatabase.WriteDbContext.SaveChangesAsync();
-
-        Authorize(user.Id, user.Role);
-
-        var project = Project.CreateNew(Guid.NewGuid(), "Project name", "Project description",
-            _clock, user.Id);
-
-        await _testDatabase.WriteDbContext.Projects.AddAsync(project);
-        await _testDatabase.WriteDbContext.SaveChangesAsync();
-
-        return project;
-    }
 
     private async Task<ProjectTask> CreateTaskForProject(Project project)
     {
